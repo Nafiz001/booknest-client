@@ -13,6 +13,11 @@ const BookDetails = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addingToWishlist, setAddingToWishlist] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [canReview, setCanReview] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
+  const [submittingReview, setSubmittingReview] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     email: user?.email || '',
@@ -32,7 +37,48 @@ const BookDetails = () => {
       }
     };
     fetchBook();
-  }, [id]);
+    fetchReviews();
+    if (user) checkCanReview();
+  }, [id, user]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await api.get(`/reviews/book/${id}`);
+      setReviews(response.data.reviews);
+    } catch (error) {
+      console.error('Failed to load reviews');
+    }
+  };
+
+  const checkCanReview = async () => {
+    try {
+      const response = await api.get(`/reviews/can-review/${id}`);
+      setCanReview(response.data.canReview);
+    } catch (error) {
+      console.error('Failed to check review status');
+    }
+  };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    setSubmittingReview(true);
+    try {
+      await api.post('/reviews', {
+        bookId: id,
+        rating: reviewForm.rating,
+        comment: reviewForm.comment
+      });
+      toast.success('Review submitted successfully!');
+      setShowReviewForm(false);
+      setReviewForm({ rating: 5, comment: '' });
+      fetchReviews();
+      setCanReview(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to submit review');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -225,6 +271,126 @@ const BookDetails = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-12">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-3xl font-bold">Reviews</h2>
+            {canReview && !showReviewForm && (
+              <button
+                onClick={() => setShowReviewForm(true)}
+                className="btn-primary"
+              >
+                Write a Review
+              </button>
+            )}
+          </div>
+
+          {/* Review Form */}
+          {showReviewForm && (
+            <div className="card p-6 mb-6">
+              <h3 className="text-xl font-bold mb-4">Write Your Review</h3>
+              <form onSubmit={handleSubmitReview}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">Rating</label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                        className="focus:outline-none"
+                      >
+                        <Star
+                          className={`w-8 h-8 ${
+                            star <= reviewForm.rating
+                              ? 'fill-yellow-400 text-yellow-400'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-2">Your Review</label>
+                  <textarea
+                    value={reviewForm.comment}
+                    onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700"
+                    rows="4"
+                    placeholder="Share your thoughts about this book..."
+                    required
+                    minLength="10"
+                    maxLength="500"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowReviewForm(false)}
+                    className="btn-secondary"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submittingReview}
+                    className="btn-primary disabled:opacity-50"
+                  >
+                    {submittingReview ? 'Submitting...' : 'Submit Review'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Reviews List */}
+          <div className="space-y-4">
+            {reviews.length === 0 ? (
+              <div className="card p-8 text-center text-gray-500">
+                No reviews yet. Be the first to review this book!
+              </div>
+            ) : (
+              reviews.map((review) => (
+                <div key={review._id} className="card p-6">
+                  <div className="flex items-start gap-4">
+                    <img
+                      src={review.user.photoURL || 'https://via.placeholder.com/40'}
+                      alt={review.user.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <div>
+                          <h4 className="font-semibold">{review.user.name}</h4>
+                          <div className="flex items-center gap-2">
+                            <div className="flex">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < review.rating
+                                      ? 'fill-yellow-400 text-yellow-400'
+                                      : 'text-gray-300'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="text-sm text-gray-500">
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">{review.comment}</p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
