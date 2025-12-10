@@ -8,11 +8,11 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { user, logoutUser } = useAuth();
+  const { user, logOut } = useAuth();
 
   const navLinks = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Books', path: '/books', icon: BookOpen },
+    { name: 'All Books', path: '/all-books', icon: BookOpen },
     { name: 'Request Delivery', path: '/request-delivery', icon: Truck },
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, protected: true },
   ];
@@ -102,7 +102,7 @@ const Navbar = () => {
                     </Link>
                     <button
                       onClick={() => {
-                        logoutUser();
+                        logOut();
                         setIsProfileOpen(false);
                       }}
                       className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-800"

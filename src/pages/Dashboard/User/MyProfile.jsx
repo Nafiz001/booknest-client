@@ -29,15 +29,12 @@ const MyProfile = () => {
     e.preventDefault();
     try {
       // Update Firebase profile
-      await updateUserProfile({
-        displayName: formData.name,
-        photoURL: formData.photoURL
-      });
+      await updateUserProfile(formData.name, formData.photoURL);
       
       // Sync with backend
       await api.patch(`/users/${user._id}`, {
         name: formData.name,
-        profilePicture: formData.photoURL
+        photoURL: formData.photoURL
       });
       
       toast.success('Profile updated successfully!');

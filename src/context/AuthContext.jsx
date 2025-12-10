@@ -9,7 +9,6 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth } from '../config/firebase.config';
-import api from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -25,173 +24,93 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Register with email and password
-  const registerUser = async (email, password, name, photoURL) => {
+  // Create user with email and password
+  const createUser = (email, password) => {
     setLoading(true);
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Update profile with name and photo
-      await updateProfile(userCredential.user, {
-        displayName: name,
-        photoURL: photoURL
-      });
-      
-      // Get Firebase ID token
-      const idToken = await userCredential.user.getIdToken();
-      
-      // Sync with backend
-      const response = await api.post('/auth/register', {
-        name,
-        email,
-        photoURL,
-        authProvider: 'email',
-        uid: userCredential.user.uid
-      });
-      
-      // Store Firebase ID token instead of custom JWT
-      localStorage.setItem('booknest_token', idToken);
-      localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
-      
-      // Refresh user data
-      setUser({
-        ...userCredential.user,
-        displayName: name,
-        photoURL: photoURL,
-        role: response.data.user.role
-      });
-      
-      setLoading(false);
-      return userCredential;
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    }
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  // Login with email and password
-  const loginUser = async (email, password) => {
+  // Sign in with email and password
+  const signIn = (email, password) => {
     setLoading(true);
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      
-      // Get Firebase ID token
-      const idToken = await userCredential.user.getIdToken();
-      
-      // Sync with backend
-      const response = await api.post('/auth/login', {
-        email,
-        authProvider: 'email'
-      });
-      
-      // Store Firebase ID token instead of custom JWT
-      localStorage.setItem('booknest_token', idToken);
-      localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
-      
-      setLoading(false);
-      return userCredential;
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    }
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // Login with Google
-  const loginWithGoogle = async () => {
+  // Sign in with Google
+  const signInWithGoogle = () => {
     setLoading(true);
-    try {
-      const provider = new GoogleAuthProvider();
-      const userCredential = await signInWithPopup(auth, provider);
-      
-      // Get Firebase ID token
-      const idToken = await userCredential.user.getIdToken();
-      
-      // Sync with backend (include user info for first-time Google login)
-      const response = await api.post('/auth/login', {
-        email: userCredential.user.email,
-        name: userCredential.user.displayName,
-        photoURL: userCredential.user.photoURL,
-        authProvider: 'google',
-        uid: userCredential.user.uid
-      });
-      
-      // Store Firebase ID token instead of custom JWT
-      localStorage.setItem('booknest_token', idToken);
-      localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
-      
-      setLoading(false);
-      return userCredential;
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    }
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
   };
 
-  // Logout
-  const logoutUser = async () => {
+  // Log out
+  const logOut = async () => {
     setLoading(true);
-    try {
-      await api.post('/auth/logout');
-      localStorage.removeItem('booknest_token');
-      localStorage.removeItem('booknest_user');
-      await signOut(auth);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    }
+    return signOut(auth);
   };
 
   // Update user profile
-  const updateUserProfile = async (updates) => {
-    if (auth.currentUser) {
-      await updateProfile(auth.currentUser, updates);
-      setUser({ ...auth.currentUser, ...updates });
-    }
+  const updateUserProfile = (name, photo) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photo
+    });
   };
 
   // Monitor auth state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log('CurrentUser-->', currentUser?.email);
+      
       if (currentUser) {
-        // Get fresh Firebase ID token
+        // Get user data from backend to include MongoDB ID and role
         try {
-          const idToken = await currentUser.getIdToken(true); // Force refresh
-          localStorage.setItem('booknest_token', idToken);
+          const token = await currentUser.getIdToken();
+          const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/me`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            // Merge Firebase user with backend user data
+            setUser({
+              ...currentUser,
+              _id: data.user.id,
+              id: data.user.id,
+              role: data.user.role
+            });
+          } else {
+            // If backend request fails, just use Firebase user
+            setUser(currentUser);
+          }
         } catch (error) {
-          console.error('Error refreshing token:', error);
+          console.error('Error fetching user data:', error);
+          // If there's an error, just use Firebase user
+          setUser(currentUser);
         }
+      } else {
+        setUser(null);
       }
-      setUser(currentUser);
+      
       setLoading(false);
     });
 
-    // Refresh token every 50 minutes (Firebase tokens expire after 1 hour)
-    const tokenRefreshInterval = setInterval(async () => {
-      if (auth.currentUser) {
-        try {
-          const idToken = await auth.currentUser.getIdToken(true);
-          localStorage.setItem('booknest_token', idToken);
-          console.log('🔄 Firebase token refreshed');
-        } catch (error) {
-          console.error('Error refreshing token:', error);
-        }
-      }
-    }, 50 * 60 * 1000); // 50 minutes
-
     return () => {
-      unsubscribe();
-      clearInterval(tokenRefreshInterval);
+      return unsubscribe();
     };
   }, []);
 
   const authInfo = {
     user,
+    setUser,
     loading,
-    registerUser,
-    loginUser,
-    loginWithGoogle,
-    logoutUser,
+    setLoading,
+    createUser,
+    signIn,
+    signInWithGoogle,
+    logOut,
     updateUserProfile
   };
 

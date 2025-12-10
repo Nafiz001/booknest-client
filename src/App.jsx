@@ -9,6 +9,7 @@ import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import RequestDelivery from './pages/RequestDelivery';
 import DashboardLayout from './layouts/DashboardLayout';
+import DashboardHome from './pages/Dashboard/DashboardHome';
 import MyOrders from './pages/Dashboard/User/MyOrders';
 import MyProfile from './pages/Dashboard/User/MyProfile';
 import Invoices from './pages/Dashboard/User/Invoices';
@@ -29,7 +30,7 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<HomeGoodreads />} />
-              <Route path="/books" element={<AllBooks />} />
+              <Route path="/all-books" element={<AllBooks />} />
               <Route path="/books/:id" element={<BookDetails />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -37,6 +38,7 @@ function App() {
               
               {/* Dashboard Routes */}
               <Route path="/dashboard" element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
+                <Route index element={<DashboardHome />} />
                 {/* User Routes */}
                 <Route path="my-orders" element={<MyOrders />} />
                 <Route path="profile" element={<MyProfile />} />

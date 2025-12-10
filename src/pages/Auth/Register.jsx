@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, User, Upload, Check, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { saveOrUpdateUser } from '../../utils/auth';
 
 const PasswordRequirement = ({ met, text }) => (
   <div className="flex items-center space-x-2 text-sm">
@@ -21,7 +22,7 @@ const Register = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { registerUser, loginWithGoogle } = useAuth();
+  const { createUser, updateUserProfile, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -84,8 +85,41 @@ const Register = () => {
 
     try {
       setLoading(true);
-      // Use image preview as photo URL (in production, upload to storage first)
-      await registerUser(formData.email, formData.password, formData.name, imagePreview || 'https://via.placeholder.com/150');
+      
+      // Upload image to ImgBB if provided
+      let photoURL = 'https://via.placeholder.com/150';
+      if (formData.image) {
+        const imageData = new FormData();
+        imageData.append('image', formData.image);
+        
+        const response = await fetch(
+          `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+          {
+            method: 'POST',
+            body: imageData,
+          }
+        );
+        
+        const result = await response.json();
+        if (result.data) {
+          photoURL = result.data.display_url;
+        }
+      }
+      
+      // Create user in Firebase
+      const result = await createUser(formData.email, formData.password);
+      
+      // Update Firebase profile
+      await updateUserProfile(formData.name, photoURL);
+      
+      // Save to backend database with Firebase UID
+      await saveOrUpdateUser({
+        name: formData.name,
+        email: formData.email,
+        image: photoURL,
+        uid: result.user.uid
+      });
+      
       navigate('/');
     } catch (err) {
       setError(err.message || 'Failed to create account');
@@ -98,7 +132,16 @@ const Register = () => {
     try {
       setLoading(true);
       setError('');
-      await loginWithGoogle();
+      const result = await signInWithGoogle();
+      
+      // Save to backend database with Firebase UID
+      await saveOrUpdateUser({
+        name: result.user?.displayName,
+        email: result.user?.email,
+        image: result.user?.photoURL,
+        uid: result.user?.uid
+      });
+      
       navigate('/');
     } catch (err) {
       setError(err.message || 'Failed to sign up with Google');

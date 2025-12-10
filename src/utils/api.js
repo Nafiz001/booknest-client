@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { auth } from '../config/firebase.config';
 
 // Create axios instance
 const api = axios.create({
@@ -9,12 +10,17 @@ const api = axios.create({
   },
 });
 
-// Request interceptor - Add token to headers
+// Request interceptor - Add Firebase token to headers
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('booknest_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      try {
+        const token = await currentUser.getIdToken();
+        config.headers.Authorization = `Bearer ${token}`;
+      } catch (error) {
+        console.error('Error getting ID token:', error);
+      }
     }
     return config;
   },
@@ -30,10 +36,7 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid - clear storage and redirect to login
-      localStorage.removeItem('booknest_token');
-      localStorage.removeItem('booknest_user');
-      
+      // Token expired or invalid - redirect to login
       // Only redirect if not already on login/register page
       if (!window.location.pathname.includes('/login') && 
           !window.location.pathname.includes('/register')) {

@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { saveOrUpdateUser } from '../../utils/auth';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { loginUser, loginWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
@@ -27,7 +28,16 @@ const Login = () => {
     
     try {
       setLoading(true);
-      await loginUser(formData.email, formData.password);
+      const result = await signIn(formData.email, formData.password);
+      
+      // Save to backend database with Firebase UID
+      await saveOrUpdateUser({
+        name: result.user?.displayName,
+        email: result.user?.email,
+        image: result.user?.photoURL,
+        uid: result.user?.uid
+      });
+      
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message || 'Failed to sign in');
@@ -40,7 +50,16 @@ const Login = () => {
     try {
       setLoading(true);
       setError('');
-      await loginWithGoogle();
+      const result = await signInWithGoogle();
+      
+      // Save to backend database with Firebase UID
+      await saveOrUpdateUser({
+        name: result.user?.displayName,
+        email: result.user?.email,
+        image: result.user?.photoURL,
+        uid: result.user?.uid
+      });
+      
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message || 'Failed to sign in with Google');
