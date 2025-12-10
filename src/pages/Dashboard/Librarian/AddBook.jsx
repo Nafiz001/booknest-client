@@ -3,6 +3,7 @@ import { BookOpen, Upload, DollarSign } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../../context/AuthContext';
 import api from '../../../utils/api';
+import { uploadImage } from '../../../utils/imageUpload';
 
 const AddBook = () => {
   const { user } = useAuth();
