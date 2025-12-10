@@ -1,18 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { X, Star, ShoppingCart, Heart, Share2 } from 'lucide-react';
-import { getBookById } from '../../data/books';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
+import toast from 'react-hot-toast';
 
 const BookDetails = () => {
   const { id } = useParams();
-  const book = getBookById(id);
+  const { user } = useAuth();
+  const [book, setBook] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: 'John Doe', // Readonly - from auth
-    email: 'john.doe@example.com', // Readonly - from auth
+    name: user?.displayName || '',
+    email: user?.email || '',
     phone: '',
     address: ''
   });
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const response = await api.get(`/books/${id}`);
+        setBook(response.data.book);
+      } catch (error) {
+        toast.error(error.response?.data?.message || 'Failed to load book');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBook();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   if (!book) {
     return (
