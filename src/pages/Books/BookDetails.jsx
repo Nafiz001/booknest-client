@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { X, Star, ShoppingCart, Heart, Share2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
@@ -7,10 +7,12 @@ import toast from 'react-hot-toast';
 
 const BookDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addingToWishlist, setAddingToWishlist] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     email: user?.email || '',
@@ -55,6 +57,28 @@ const BookDetails = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleAddToWishlist = async () => {
+    if (!user) {
+      toast.error('Please login to add to wishlist');
+      navigate('/login');
+      return;
+    }
+
+    setAddingToWishlist(true);
+    try {
+      await api.post('/wishlist', { bookId: id });
+      toast.success('Added to wishlist!');
+    } catch (error) {
+      if (error.response?.status === 409) {
+        toast.error('Book already in wishlist');
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to add to wishlist');
+      }
+    } finally {
+      setAddingToWishlist(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -112,9 +136,13 @@ const BookDetails = () => {
                 className="w-full h-auto rounded-lg shadow-2xl"
               />
               <div className="flex gap-4 mt-6">
-                <button className="flex-1 btn-primary flex items-center justify-center gap-2">
+                <button 
+                  onClick={handleAddToWishlist}
+                  disabled={addingToWishlist}
+                  className="flex-1 btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+                >
                   <Heart className="w-5 h-5" />
-                  Add to Wishlist
+                  {addingToWishlist ? 'Adding...' : 'Add to Wishlist'}
                 </button>
                 <button className="btn-secondary flex items-center justify-center gap-2 px-4">
                   <Share2 className="w-5 h-5" />
