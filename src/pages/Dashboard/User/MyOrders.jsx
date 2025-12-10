@@ -1,50 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Clock, XCircle, CreditCard, Package, Truck, CheckCircle } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../utils/api';
 
 const MyOrders = () => {
-  // TODO: Fetch from backend
-  const [orders, setOrders] = useState([
-    {
-      id: 1,
-      bookTitle: 'The Midnight Library',
-      bookImage: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=200&h=300&fit=crop',
-      orderDate: '2025-12-05',
-      status: 'pending',
-      paymentStatus: 'unpaid',
-      price: 16.99
-    },
-    {
-      id: 2,
-      bookTitle: 'Atomic Habits',
-      bookImage: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=200&h=300&fit=crop',
-      orderDate: '2025-12-03',
-      status: 'shipped',
-      paymentStatus: 'paid',
-      price: 14.99
-    },
-    {
-      id: 3,
-      bookTitle: 'The Silent Patient',
-      bookImage: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=200&h=300&fit=crop',
-      orderDate: '2025-12-01',
-      status: 'delivered',
-      paymentStatus: 'paid',
-      price: 15.49
-    }
-  ]);
+  const { user } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleCancel = (orderId) => {
+  useEffect(() => {
+    if (user) {
+      fetchOrders();
+    }
+  }, [user]);
+
+  const fetchOrders = async () => {
+    try {
+      const userId = user?.id || user?._id;
+      const response = await api.get(`/orders/user/${userId}`);
+      setOrders(response.data.orders);
+    } catch (error) {
+      toast.error('Failed to load orders');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = async (orderId) => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
-      setOrders(orders.map(order => 
-        order.id === orderId ? { ...order, status: 'cancelled' } : order
-      ));
-      toast.success('Order cancelled successfully');
+      try {
+        await api.delete(`/orders/${orderId}`);
+        setOrders(orders.map(order => 
+          order._id === orderId ? { ...order, status: 'cancelled' } : order
+        ));
+        toast.success('Order cancelled successfully');
+      } catch (error) {
+        toast.error(error.response?.data?.message || 'Failed to cancel order');
+      }
     }
   };
 
   const handlePayNow = (orderId) => {
-    // TODO: Redirect to payment page
     toast.success('Redirecting to payment page...');
     setTimeout(() => {
       window.location.href = `/payment/${orderId}`;
