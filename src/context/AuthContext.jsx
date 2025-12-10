@@ -9,6 +9,7 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth } from '../config/firebase.config';
+import api from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -27,42 +28,113 @@ export const AuthProvider = ({ children }) => {
   // Register with email and password
   const registerUser = async (email, password, name, photoURL) => {
     setLoading(true);
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    
-    // Update profile with name and photo
-    await updateProfile(userCredential.user, {
-      displayName: name,
-      photoURL: photoURL
-    });
-    
-    // Refresh user data
-    setUser({
-      ...userCredential.user,
-      displayName: name,
-      photoURL: photoURL
-    });
-    
-    setLoading(false);
-    return userCredential;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Update profile with name and photo
+      await updateProfile(userCredential.user, {
+        displayName: name,
+        photoURL: photoURL
+      });
+      
+      // Sync with backend
+      const response = await api.post('/auth/register', {
+        name,
+        email,
+        photoURL,
+        authProvider: 'email',
+        uid: userCredential.user.uid
+      });
+      
+      // Store JWT token
+      if (response.data.token) {
+        localStorage.setItem('booknest_token', response.data.token);
+        localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
+      }
+      
+      // Refresh user data
+      setUser({
+        ...userCredential.user,
+        displayName: name,
+        photoURL: photoURL,
+        role: response.data.user.role
+      });
+      
+      setLoading(false);
+      return userCredential;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   // Login with email and password
-  const loginUser = (email, password) => {
+  const loginUser = async (email, password) => {
     setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Sync with backend
+      const response = await api.post('/auth/login', {
+        email,
+        authProvider: 'email'
+      });
+      
+      // Store JWT token
+      if (response.data.token) {
+        localStorage.setItem('booknest_token', response.data.token);
+        localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
+      }
+      
+      setLoading(false);
+      return userCredential;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   // Login with Google
-  const loginWithGoogle = () => {
+  const loginWithGoogle = async () => {
     setLoading(true);
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      
+      // Sync with backend
+      const response = await api.post('/auth/login', {
+        email: userCredential.user.email,
+        authProvider: 'google',
+        uid: userCredential.user.uid
+      });
+      
+      // Store JWT token
+      if (response.data.token) {
+        localStorage.setItem('booknest_token', response.data.token);
+        localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
+      }
+      
+      setLoading(false);
+      return userCredential;
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   // Logout
-  const logoutUser = () => {
+  const logoutUser = async () => {
     setLoading(true);
-    return signOut(auth);
+    try {
+      await api.post('/auth/logout');
+      localStorage.removeItem('booknest_token');
+      localStorage.removeItem('booknest_user');
+      await signOut(auth);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      throw error;
+    }
   };
 
   // Update user profile
