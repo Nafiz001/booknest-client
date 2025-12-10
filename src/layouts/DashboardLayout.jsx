@@ -20,8 +20,9 @@ const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user } = useAuth();
   
-  // TODO: Get user role from backend/context
-  const userRole = 'user'; // 'user', 'librarian', 'admin'
+  // Get user role from localStorage (stored from backend)
+  const storedUser = JSON.parse(localStorage.getItem('booknest_user') || '{}');
+  const userRole = storedUser.role || user?.role || 'user'; // 'user', 'librarian', 'admin'
 
   const userLinks = [
     { name: 'My Orders', path: '/dashboard/my-orders', icon: ShoppingBag },
