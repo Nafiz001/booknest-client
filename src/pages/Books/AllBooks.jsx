@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Search, ChevronDown, ShoppingCart, Menu, ArrowUpDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../utils/api';
@@ -10,39 +10,51 @@ const AllBooks = () => {
   const [sortBy, setSortBy] = useState('default');
   const [allBooks, setAllBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
 
+  // Debounce search query
   useEffect(() => {
-    fetchBooks();
-  }, []);
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-  const fetchBooks = async () => {
+  const fetchBooks = useCallback(async () => {
     try {
-      const response = await api.get('/books');
+      setLoading(true);
+      const params = new URLSearchParams();
+      
+      // Add search query if present
+      if (debouncedSearch.trim()) {
+        params.append('search', debouncedSearch.trim());
+      }
+      
+      // Add sort parameter if not default
+      if (sortBy !== 'default') {
+        params.append('sort', sortBy);
+      }
+      
+      const queryString = params.toString();
+      const response = await api.get(`/books${queryString ? `?${queryString}` : ''}`);
       setAllBooks(response.data.books);
     } catch (error) {
+      console.error('Failed to load books:', error);
       toast.error('Failed to load books');
     } finally {
       setLoading(false);
     }
-  };
-  
-  // Filter and sort books
-  const filteredBooks = allBooks
-    .filter(book => 
-      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (sortBy === 'price-asc') return a.price - b.price;
-      if (sortBy === 'price-desc') return b.price - a.price;
-      if (sortBy === 'title') return a.title.localeCompare(b.title);
-      return 0; // default order
-    });
+  }, [debouncedSearch, sortBy]);
+
+  useEffect(() => {
+    fetchBooks();
+  }, [fetchBooks]);
   
   // Group books for different sections
-  const bestSellers = filteredBooks.slice(0, 6);
-  const newReleases = filteredBooks.slice(6, 12);
-  const dailyDeals = filteredBooks.slice(12, 18);
+  const bestSellers = allBooks.slice(0, 6);
+  const newReleases = allBooks.slice(6, 12);
+  const dailyDeals = allBooks.slice(12, 18);
 
   if (loading) {
     return (
