@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { User, Mail, Camera } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import api from '../../../utils/api';
 import toast, { Toaster } from 'react-hot-toast';
 
 const MyProfile = () => {
@@ -27,14 +28,22 @@ const MyProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Update Firebase profile
       await updateUserProfile({
         displayName: formData.name,
         photoURL: formData.photoURL
       });
+      
+      // Sync with backend
+      await api.patch(`/users/${user._id}`, {
+        name: formData.name,
+        profilePicture: formData.photoURL
+      });
+      
       toast.success('Profile updated successfully!');
       setIsEditing(false);
     } catch (error) {
-      toast.error('Failed to update profile');
+      toast.error(error.response?.data?.message || 'Failed to update profile');
     }
   };
 
