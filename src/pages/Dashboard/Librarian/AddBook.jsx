@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { BookOpen, Upload, DollarSign } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../utils/api';
 
 const AddBook = () => {
+  const { user } = useAuth();
   const [imagePreview, setImagePreview] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
@@ -34,26 +37,35 @@ const AddBook = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Send to backend
-    console.log('Add Book:', formData);
-    toast.success('Book added successfully!');
-    // Reset form
-    setFormData({
-      title: '',
-      author: '',
-      image: null,
-      status: 'published',
-      price: '',
-      isbn: '',
-      publisher: '',
-      pages: '',
-      language: 'English',
-      category: 'Fiction',
-      description: ''
-    });
-    setImagePreview(null);
+    
+    try {
+      const response = await api.post('/books', formData);
+      
+      if (response.data.success) {
+        toast.success('Book added successfully!');
+        
+        // Reset form
+        setFormData({
+          title: '',
+          author: '',
+          image: null,
+          status: 'published',
+          price: '',
+          isbn: '',
+          publisher: '',
+          pages: '',
+          language: 'English',
+          category: 'Fiction',
+          description: ''
+        });
+        setImagePreview(null);
+      }
+    } catch (error) {
+      console.error('Add book error:', error);
+      toast.error(error.response?.data?.message || 'Failed to add book');
+    }
   };
 
   return (
