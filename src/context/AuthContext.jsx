@@ -37,6 +37,9 @@ export const AuthProvider = ({ children }) => {
         photoURL: photoURL
       });
       
+      // Get Firebase ID token
+      const idToken = await userCredential.user.getIdToken();
+      
       // Sync with backend
       const response = await api.post('/auth/register', {
         name,
@@ -46,11 +49,9 @@ export const AuthProvider = ({ children }) => {
         uid: userCredential.user.uid
       });
       
-      // Store JWT token
-      if (response.data.token) {
-        localStorage.setItem('booknest_token', response.data.token);
-        localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
-      }
+      // Store Firebase ID token instead of custom JWT
+      localStorage.setItem('booknest_token', idToken);
+      localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
       
       // Refresh user data
       setUser({
@@ -74,17 +75,18 @@ export const AuthProvider = ({ children }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       
+      // Get Firebase ID token
+      const idToken = await userCredential.user.getIdToken();
+      
       // Sync with backend
       const response = await api.post('/auth/login', {
         email,
         authProvider: 'email'
       });
       
-      // Store JWT token
-      if (response.data.token) {
-        localStorage.setItem('booknest_token', response.data.token);
-        localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
-      }
+      // Store Firebase ID token instead of custom JWT
+      localStorage.setItem('booknest_token', idToken);
+      localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
       
       setLoading(false);
       return userCredential;
@@ -101,6 +103,9 @@ export const AuthProvider = ({ children }) => {
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
       
+      // Get Firebase ID token
+      const idToken = await userCredential.user.getIdToken();
+      
       // Sync with backend
       const response = await api.post('/auth/login', {
         email: userCredential.user.email,
@@ -108,11 +113,9 @@ export const AuthProvider = ({ children }) => {
         uid: userCredential.user.uid
       });
       
-      // Store JWT token
-      if (response.data.token) {
-        localStorage.setItem('booknest_token', response.data.token);
-        localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
-      }
+      // Store Firebase ID token instead of custom JWT
+      localStorage.setItem('booknest_token', idToken);
+      localStorage.setItem('booknest_user', JSON.stringify(response.data.user));
       
       setLoading(false);
       return userCredential;
@@ -147,12 +150,37 @@ export const AuthProvider = ({ children }) => {
 
   // Monitor auth state
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // Get fresh Firebase ID token
+        try {
+          const idToken = await currentUser.getIdToken(true); // Force refresh
+          localStorage.setItem('booknest_token', idToken);
+        } catch (error) {
+          console.error('Error refreshing token:', error);
+        }
+      }
       setUser(currentUser);
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    // Refresh token every 50 minutes (Firebase tokens expire after 1 hour)
+    const tokenRefreshInterval = setInterval(async () => {
+      if (auth.currentUser) {
+        try {
+          const idToken = await auth.currentUser.getIdToken(true);
+          localStorage.setItem('booknest_token', idToken);
+          console.log('🔄 Firebase token refreshed');
+        } catch (error) {
+          console.error('Error refreshing token:', error);
+        }
+      }
+    }, 50 * 60 * 1000); // 50 minutes
+
+    return () => {
+      unsubscribe();
+      clearInterval(tokenRefreshInterval);
+    };
   }, []);
 
   const authInfo = {
