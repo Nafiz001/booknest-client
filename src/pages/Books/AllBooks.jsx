@@ -1,13 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, ChevronDown, ShoppingCart, Menu, ArrowUpDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getPublishedBooks } from '../../data/books';
+import api from '../../utils/api';
+import toast from 'react-hot-toast';
 
 const AllBooks = () => {
   const [selectedCategory, setSelectedCategory] = useState('Books');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
-  const allBooks = getPublishedBooks();
+  const [allBooks, setAllBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = async () => {
+    try {
+      const response = await api.get('/books');
+      setAllBooks(response.data.books);
+    } catch (error) {
+      toast.error('Failed to load books');
+    } finally {
+      setLoading(false);
+    }
+  };
   
   // Filter and sort books
   const filteredBooks = allBooks
@@ -26,6 +43,14 @@ const AllBooks = () => {
   const bestSellers = filteredBooks.slice(0, 6);
   const newReleases = filteredBooks.slice(6, 12);
   const dailyDeals = filteredBooks.slice(12, 18);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   // Mock data matching Amazon design
   const categories = ['Books', 'Kindle Ebooks', 'Print Books', 'Audible Audiobooks'];
