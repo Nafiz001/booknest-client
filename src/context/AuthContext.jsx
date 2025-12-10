@@ -106,9 +106,11 @@ export const AuthProvider = ({ children }) => {
       // Get Firebase ID token
       const idToken = await userCredential.user.getIdToken();
       
-      // Sync with backend
+      // Sync with backend (include user info for first-time Google login)
       const response = await api.post('/auth/login', {
         email: userCredential.user.email,
+        name: userCredential.user.displayName,
+        photoURL: userCredential.user.photoURL,
         authProvider: 'google',
         uid: userCredential.user.uid
       });
