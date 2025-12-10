@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MapPin, Phone, Mail, User, Calendar, MessageSquare } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import api from '../utils/api';
 import toast, { Toaster } from 'react-hot-toast';
 
 const RequestDelivery = () => {
@@ -9,6 +10,7 @@ const RequestDelivery = () => {
     name: user?.displayName || '',
     email: user?.email || '',
     phone: '',
+    bookId: '', // Will be passed from book details page
     address: '',
     city: '',
     zipCode: '',
@@ -16,26 +18,50 @@ const RequestDelivery = () => {
     notes: '',
     deliveryType: 'delivery' // delivery or pickup
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Send to backend
-    console.log('Request Delivery:', formData);
-    toast.success('Delivery request submitted successfully!');
-    // Reset form
-    setFormData({
-      ...formData,
-      phone: '',
-      address: '',
-      city: '',
-      zipCode: '',
-      preferredDate: '',
-      notes: ''
-    });
+    setLoading(true);
+    
+    try {
+      const orderData = {
+        book: formData.bookId,
+        deliveryType: formData.deliveryType,
+        deliveryAddress: {
+          street: formData.address,
+          city: formData.city,
+          zipCode: formData.zipCode
+        },
+        requestedDate: formData.preferredDate,
+        notes: formData.notes,
+        totalAmount: 0 // Will be calculated in backend
+      };
+      
+      const response = await api.post('/orders', orderData);
+      
+      if (response.data.success) {
+        toast.success('Delivery request submitted successfully!');
+        // Reset form
+        setFormData({
+          ...formData,
+          phone: '',
+          address: '',
+          city: '',
+          zipCode: '',
+          preferredDate: '',
+          notes: ''
+        });
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to submit request');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
