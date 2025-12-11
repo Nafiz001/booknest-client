@@ -4,7 +4,9 @@ A modern, responsive React application for library book delivery services built 
 
 ## 🚀 Live Demo
 
-Development server: http://localhost:5173/
+**Production:** https://booknest-client-jet.vercel.app
+
+**Development:** http://localhost:5173/
 
 ## ✨ Features Implemented
 
@@ -38,20 +40,56 @@ Development server: http://localhost:5173/
    - ✅ Password strength validation (5 criteria)
    - ✅ Responsive form design
 
-5. **Technical Features**
-   - ✅ React Router v6 setup
-   - ✅ Theme Context (dark/light mode)
-   - ✅ Tailwind CSS custom configuration
-   - ✅ Lucide React icons library
-   - ✅ Framer Motion for animations
+5. **All Books Page**
+   - ✅ Book grid with search and filters
+   - ✅ Category filtering (Fiction, Non-Fiction, Science, etc.)
+   - ✅ Price sorting (Newest, High-Low, Low-High)
+   - ✅ Debounced search functionality
+   - ✅ Skeleton loading states
 
-### 🚧 Pending Implementation
+6. **Book Details Page**
+   - ✅ Complete book information display
+   - ✅ Order modal with Stripe integration
+   - ✅ Review and rating system
+   - ✅ Responsive image gallery
+   - ✅ Related books section
 
-6. **All Books Page** - Book grid with search/filter/sort
-7. **Book Details Page** - Complete info with Order modal
-8. **User Dashboard** - Orders, Profile, Invoices, Wishlist
-9. **Librarian Dashboard** - Add Book, My Books, Orders
-10. **Admin Dashboard** - User management, Book management
+7. **User Dashboard**
+   - ✅ My Orders (view all orders with status)
+   - ✅ My Profile (update profile with image upload)
+   - ✅ Invoices (view and download paid orders)
+   - ✅ Wishlist (save favorite books)
+   - ✅ Responsive sidebar navigation
+
+8. **Librarian Dashboard**
+   - ✅ Add Book (create new books with image upload)
+   - ✅ My Books (manage librarian's books)
+   - ✅ Orders management
+   - ✅ Book editing and deletion
+
+9. **Admin Dashboard**
+   - ✅ All Users management (view, role change, delete)
+   - ✅ Manage Books (all books CRUD)
+   - ✅ User role switching (User/Librarian/Admin)
+   - ✅ Statistics and overview
+
+10. **Payment Integration**
+    - ✅ Stripe checkout integration
+    - ✅ Payment success/cancel pages
+    - ✅ Order status updates
+    - ✅ Invoice generation
+
+11. **Technical Features**
+    - ✅ React Router v7 with nested routes
+    - ✅ Firebase Authentication (Email/Password + Google)
+    - ✅ Theme Context (dark/light mode with persistence)
+    - ✅ Tailwind CSS 4.0 with custom configuration
+    - ✅ Tanstack Query for data fetching
+    - ✅ Axios interceptors for auth
+    - ✅ React Leaflet for interactive maps
+    - ✅ ImgBB for image uploads
+    - ✅ Lucide React icons
+    - ✅ Protected routes (User, Librarian, Admin)
 
 ## 📦 Technologies Used
 
