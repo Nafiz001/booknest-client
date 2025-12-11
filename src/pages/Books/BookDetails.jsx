@@ -25,7 +25,8 @@ const BookDetails = () => {
     name: user?.displayName || '',
     email: user?.email || '',
     phone: '',
-    address: ''
+    address: '',
+    deliveryMethod: 'delivery'
   });
 
   const fetchReviews = async () => {
@@ -175,6 +176,7 @@ const BookDetails = () => {
         email: formData.email,
         phone: formData.phone,
         address: formData.address,
+        deliveryMethod: formData.deliveryMethod,
         status: 'pending',
         paymentStatus: 'unpaid',
         librarianId: book.librarianId
@@ -187,7 +189,8 @@ const BookDetails = () => {
         name: user?.displayName || '',
         email: user?.email || '',
         phone: '',
-        address: ''
+        address: '',
+        deliveryMethod: 'delivery'
       });
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to place order');
@@ -573,7 +576,7 @@ const BookDetails = () => {
               </div>
 
               {/* Address (Editable) */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Delivery Address *
                 </label>
@@ -586,6 +589,28 @@ const BookDetails = () => {
                   placeholder="Enter your complete delivery address"
                   className="input-field resize-none"
                 />
+              </div>
+
+              {/* Delivery Method */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Delivery Method *
+                </label>
+                <select
+                  name="deliveryMethod"
+                  value={formData.deliveryMethod}
+                  onChange={handleChange}
+                  required
+                  className="input-field"
+                >
+                  <option value="delivery">Home Delivery</option>
+                  <option value="pickup">Pickup from Library</option>
+                </select>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  {formData.deliveryMethod === 'delivery' 
+                    ? 'Book will be delivered to your address' 
+                    : 'Pick up from your nearest library'}
+                </p>
               </div>
 
               {/* Submit Button */}

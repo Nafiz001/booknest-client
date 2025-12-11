@@ -30,6 +30,7 @@ import AllUsers from './pages/Dashboard/Admin/AllUsers';
 import ManageBooks from './pages/Dashboard/Admin/ManageBooks';
 import Payment from './pages/Payment/Payment';
 import PaymentSuccess from './pages/Payment/PaymentSuccess';
+import NotFound from './pages/NotFound';
 import PrivateRoute from './routes/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import LibrarianRoute from './components/LibrarianRoute';
@@ -69,6 +70,9 @@ function App() {
                 <Route path="all-users" element={<AdminRoute><AllUsers /></AdminRoute>} />
                 <Route path="manage-books" element={<AdminRoute><ManageBooks /></AdminRoute>} />
               </Route>
+
+              {/* 404 - Catch all unmatched routes */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />
