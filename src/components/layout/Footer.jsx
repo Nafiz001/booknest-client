@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { BookOpen, Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from 'lucide-react';
+import BookNestLogo from '../../assets/BookNestLogo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -24,9 +25,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand Section */}
           <div>
-            <Link to="/" className="flex items-center space-x-2 mb-4">
-              <BookOpen className="w-8 h-8 text-primary" />
-              <span className="text-2xl font-display font-bold text-primary">BookNest</span>
+            <Link to="/" className="flex items-center mb-4">
+              <BookNestLogo />
             </Link>
             <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
               Your trusted partner for library-to-home book delivery. Access thousands of books without leaving your home.

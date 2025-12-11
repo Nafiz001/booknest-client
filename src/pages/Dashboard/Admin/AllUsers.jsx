@@ -24,8 +24,9 @@ const AllUsers = () => {
 
   const updateUserRole = async (userId, newRole) => {
     try {
-      const response = await api.patch(`/users/${userId}/role`, { role: newRole });
-      setUsers(users.map(u => u._id === userId ? response.data.user : u));
+      await api.patch(`/users/${userId}/role`, { role: newRole });
+      // Re-fetch users to get updated data
+      await fetchUsers();
       toast.success(`User role updated to ${newRole}`);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to update role');
@@ -80,20 +81,20 @@ const AllUsers = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-border-light dark:divide-border-dark">
-              {users.map((user) => (
+              {users.map((user) => user && (
                 <tr key={user._id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {user.photoURL ? (
-                        <img className="h-10 w-10 rounded-full" src={user.photoURL} alt={user.name} />
+                        <img className="h-10 w-10 rounded-full" src={user.photoURL} alt={user.name || 'User'} />
                       ) : (
                         <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
-                          {user.name?.charAt(0).toUpperCase()}
+                          {user.name?.charAt(0)?.toUpperCase() || 'U'}
                         </div>
                       )}
                       <div className="ml-4">
-                        <div className="text-sm font-medium">{user.name}</div>
-                        <div className="text-sm text-gray-500">ID: {user._id.slice(-6)}</div>
+                        <div className="text-sm font-medium">{user.name || 'No Name'}</div>
+                        <div className="text-sm text-gray-500">ID: {user._id?.toString().slice(-6) || 'N/A'}</div>
                       </div>
                     </div>
                   </td>

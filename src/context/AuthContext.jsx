@@ -66,7 +66,8 @@ export const AuthProvider = ({ children }) => {
         // Get user data from backend to include MongoDB ID and role
         try {
           const token = await currentUser.getIdToken();
-          const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/me`, {
+          const apiUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api').trim();
+          const response = await fetch(`${apiUrl}/auth/me`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }

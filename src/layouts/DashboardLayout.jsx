@@ -20,9 +20,8 @@ const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user } = useAuth();
   
-  // Get user role from localStorage (stored from backend)
-  const storedUser = JSON.parse(localStorage.getItem('booknest_user') || '{}');
-  const userRole = storedUser.role || user?.role || 'user'; // 'user', 'librarian', 'admin'
+  // Get user role from user object (populated by AuthContext from backend)
+  const userRole = user?.role || 'user'; // 'user', 'librarian', 'admin'
 
   const userLinks = [
     { name: 'My Orders', path: '/dashboard/my-orders', icon: ShoppingBag },
@@ -64,7 +63,7 @@ const DashboardLayout = () => {
             <div className="mb-6 p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
               <div className="flex items-center space-x-3">
                 <img
-                  src={user?.photoURL || 'https://via.placeholder.com/48'}
+                  src={user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=48&background=2563eb&color=fff`}
                   alt={user?.displayName}
                   className="w-12 h-12 rounded-full object-cover border-2 border-primary"
                 />
@@ -130,7 +129,7 @@ const DashboardLayout = () => {
                 <div className="mb-6 p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <img
-                      src={user?.photoURL || 'https://via.placeholder.com/48'}
+                      src={user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=48&background=2563eb&color=fff`}
                       alt={user?.displayName}
                       className="w-12 h-12 rounded-full object-cover border-2 border-primary"
                     />

@@ -10,28 +10,33 @@ const MyWishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchWishlist();
-  }, [user]);
-
   const fetchWishlist = async () => {
     try {
       const response = await api.get(`/wishlist/${user?.id || user?._id}`);
       setWishlist(response.data.wishlist);
-    } catch (error) {
+    } catch (err) {
       toast.error('Failed to load wishlist');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      fetchWishlist();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const removeFromWishlist = async (id) => {
     try {
       await api.delete(`/wishlist/${id}`);
       setWishlist(wishlist.filter(item => item._id !== id));
       toast.success('Removed from wishlist');
-    } catch (error) {
+    } catch (err) {
       toast.error('Failed to remove item');
+      console.error(err);
     }
   };
 
@@ -62,35 +67,49 @@ const MyWishlist = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Start adding books you love to your wishlist
           </p>
-          <Link to="/books" className="btn-primary inline-block">
+          <Link to="/all-books" className="btn-primary inline-block">
             Browse Books
           </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {wishlist.map((item) => (
-            <div key={item._id} className="card overflow-hidden">
-              <img
-                src={item.book.image}
-                alt={item.book.title}
-                className="w-full h-64 object-cover"
-              />
+            <div key={item._id} className="card overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="relative">
+                <img
+                  src={item.book.image}
+                  alt={item.book.title}
+                  className="w-full h-64 object-cover"
+                />
+                <div className="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded-lg text-sm font-bold">
+                  ${item.book.price}
+                </div>
+              </div>
               <div className="p-4">
-                <h3 className="font-bold text-lg mb-1 line-clamp-1">{item.book.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">{item.book.author}</p>
-                <p className="text-primary font-bold text-xl mb-4">${item.book.price}</p>
+                <h3 className="font-bold text-lg mb-1 line-clamp-2">{item.book.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-1">by {item.book.author}</p>
+                <p className="text-gray-500 dark:text-gray-500 text-xs mb-3">{item.book.category}</p>
+                
+                {item.book.rating && (
+                  <div className="flex items-center gap-1 mb-3">
+                    <span className="text-yellow-500">★</span>
+                    <span className="text-sm font-medium">{item.book.rating}</span>
+                    <span className="text-gray-400 text-xs">({item.book.reviews || 0} reviews)</span>
+                  </div>
+                )}
                 
                 <div className="flex gap-2">
                   <Link
                     to={`/books/${item.book._id}`}
-                    className="flex-1 btn-secondary text-center"
+                    className="flex-1 btn-primary text-center text-sm"
                   >
                     <ShoppingCart className="w-4 h-4 inline mr-1" />
-                    View Details
+                    Buy Now
                   </Link>
                   <button
                     onClick={() => removeFromWishlist(item._id)}
                     className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+                    title="Remove from wishlist"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

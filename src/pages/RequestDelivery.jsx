@@ -1,16 +1,21 @@
-import { useState } from 'react';
-import { MapPin, Phone, Mail, User, Calendar, MessageSquare } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { MapPin, Phone, Mail, User, Calendar, MessageSquare, Book } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLocation } from 'react-router-dom';
 import api from '../utils/api';
 import toast, { Toaster } from 'react-hot-toast';
 
 const RequestDelivery = () => {
   const { user } = useAuth();
+  const location = useLocation();
+  const bookFromState = location.state?.book;
+  
+  const [books, setBooks] = useState([]);
+  const [selectedBook, setSelectedBook] = useState(bookFromState || null);
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     email: user?.email || '',
     phone: '',
-    bookId: '', // Will be passed from book details page
     address: '',
     city: '',
     zipCode: '',
@@ -20,45 +25,82 @@ const RequestDelivery = () => {
   });
   const [loading, setLoading] = useState(false);
 
+  // Fetch all books if none was passed
+  useEffect(() => {
+    if (!bookFromState) {
+      const fetchBooks = async () => {
+        try {
+          const response = await api.get('/books');
+          setBooks(response.data.books);
+        } catch (error) {
+          console.error('Failed to fetch books:', error);
+        }
+      };
+      fetchBooks();
+    }
+  }, [bookFromState]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!selectedBook) {
+      toast.error('Please select a book');
+      return;
+    }
+    
+    if (!formData.phone || !formData.address) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+    
     setLoading(true);
     
     try {
+      const userId = user?._id || user?.id;
       const orderData = {
-        book: formData.bookId,
+        userId: userId,
+        bookId: selectedBook._id,
+        bookTitle: selectedBook.title,
+        bookImage: selectedBook.image,
+        bookPrice: selectedBook.price,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: `${formData.address}, ${formData.city}, ${formData.zipCode}`,
         deliveryType: formData.deliveryType,
-        deliveryAddress: {
-          street: formData.address,
-          city: formData.city,
-          zipCode: formData.zipCode
-        },
         requestedDate: formData.preferredDate,
         notes: formData.notes,
-        totalAmount: 0 // Will be calculated in backend
+        status: 'pending',
+        paymentStatus: 'unpaid',
+        librarianId: selectedBook.librarianId
       };
       
       const response = await api.post('/orders', orderData);
       
       if (response.data.success) {
-        toast.success('Delivery request submitted successfully!');
+        toast.success('Order placed successfully!');
         // Reset form
         setFormData({
-          ...formData,
+          name: user?.displayName || '',
+          email: user?.email || '',
           phone: '',
           address: '',
           city: '',
           zipCode: '',
           preferredDate: '',
-          notes: ''
+          notes: '',
+          deliveryType: 'delivery'
         });
+        if (!bookFromState) {
+          setSelectedBook(null);
+        }
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to submit request');
+      toast.error(error.response?.data?.message || 'Failed to place order');
     } finally {
       setLoading(false);
     }
@@ -78,6 +120,58 @@ const RequestDelivery = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="card p-8 space-y-6">
+          {/* Book Selection */}
+          {!bookFromState && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                Select Book *
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Book className="h-5 w-5 text-gray-400" />
+                </div>
+                <select
+                  required
+                  value={selectedBook?._id || ''}
+                  onChange={(e) => {
+                    const book = books.find(b => b._id === e.target.value);
+                    setSelectedBook(book);
+                  }}
+                  className="input-field pl-10"
+                >
+                  <option value="">Choose a book...</option>
+                  {books.map((book) => (
+                    <option key={book._id} value={book._id}>
+                      {book.title} - ${book.price}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Selected Book Display */}
+          {selectedBook && (
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-center gap-4">
+              <img 
+                src={selectedBook.image} 
+                alt={selectedBook.title}
+                className="w-16 h-24 object-cover rounded"
+              />
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white">
+                  {selectedBook.title}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  by {selectedBook.author}
+                </p>
+                <p className="text-lg font-bold text-primary mt-1">
+                  ${selectedBook.price}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Delivery Type */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -273,9 +367,10 @@ const RequestDelivery = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full btn-primary py-4 text-lg font-semibold"
+            disabled={loading || !selectedBook}
+            className="w-full btn-primary py-4 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Submit Request
+            {loading ? 'Submitting...' : 'Place Order'}
           </button>
         </form>
       </div>

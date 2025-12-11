@@ -3,44 +3,90 @@ import { User, Mail, Camera } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import api from '../../../utils/api';
 import toast, { Toaster } from 'react-hot-toast';
+import axios from 'axios';
 
 const MyProfile = () => {
-  const { user, updateUserProfile } = useAuth();
+  const { user, updateUserProfile, loading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [imagePreview, setImagePreview] = useState(user?.photoURL);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     photoURL: user?.photoURL || ''
   });
 
+  // Show loading spinner until user data with MongoDB ID is loaded
+  if (loading || !user?._id && !user?.id) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-        setFormData({ ...formData, photoURL: reader.result });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const uploadImageToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    const response = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+      formData
+    );
+    
+    return response.data.data.url;
+  };
+
+  const handleSubmit = async () => {
+    if (!user?._id && !user?.id) {
+      toast.error('User ID not found. Please try logging in again.');
+      return;
+    }
+    
     try {
+      setUploading(true);
+      let photoURL = formData.photoURL;
+
+      // If a new image was selected, upload it to ImgBB first
+      if (selectedFile) {
+        toast.loading('Uploading image...');
+        photoURL = await uploadImageToImgBB(selectedFile);
+        toast.dismiss();
+      }
+
       // Update Firebase profile
-      await updateUserProfile(formData.name, formData.photoURL);
+      await updateUserProfile(formData.name, photoURL);
       
       // Sync with backend
-      await api.patch(`/users/${user._id}`, {
+      const userId = user._id || user.id;
+      await api.patch(`/users/${userId}`, {
         name: formData.name,
-        photoURL: formData.photoURL
+        photoURL: photoURL
       });
+      
+      // Update local state
+      setFormData({ ...formData, photoURL });
+      setSelectedFile(null);
       
       toast.success('Profile updated successfully!');
       setIsEditing(false);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update profile');
+      console.error('Update error:', error);
+      toast.error(error.response?.data?.message || error.message || 'Failed to update profile');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -54,12 +100,12 @@ const MyProfile = () => {
 
       <div className="max-w-2xl">
         <div className="card p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-6">
             {/* Profile Picture */}
             <div className="flex flex-col items-center">
               <div className="relative">
                 <img
-                  src={imagePreview || 'https://via.placeholder.com/150'}
+                  src={imagePreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=150&background=2563eb&color=fff`}
                   alt="Profile"
                   className="w-32 h-32 rounded-full object-cover border-4 border-primary"
                 />
@@ -122,7 +168,10 @@ const MyProfile = () => {
               {!isEditing ? (
                 <button
                   type="button"
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => {
+                    console.log('Edit Profile clicked');
+                    setIsEditing(true);
+                  }}
                   className="btn-primary px-6 py-2"
                 >
                   Edit Profile
@@ -130,10 +179,12 @@ const MyProfile = () => {
               ) : (
                 <>
                   <button
-                    type="submit"
-                    className="btn-primary px-6 py-2"
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={uploading}
+                    className="btn-primary px-6 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Save Changes
+                    {uploading ? 'Saving...' : 'Save Changes'}
                   </button>
                   <button
                     type="button"
@@ -144,15 +195,17 @@ const MyProfile = () => {
                         photoURL: user?.photoURL || ''
                       });
                       setImagePreview(user?.photoURL);
+                      setSelectedFile(null);
                     }}
-                    className="px-6 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    disabled={uploading}
+                    className="px-6 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </button>
                 </>
               )}
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

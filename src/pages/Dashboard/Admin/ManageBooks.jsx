@@ -14,7 +14,7 @@ const ManageBooks = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await api.get('/books');
+      const response = await api.get('/admin/books');
       setBooks(response.data.books);
     } catch (error) {
       toast.error('Failed to load books');
@@ -23,16 +23,16 @@ const ManageBooks = () => {
     }
   };
 
-  const toggleBookStatus = async (bookId, currentStatus) => {
+  const toggleBookStatus = async (bookId, currentPublished) => {
     try {
-      const newStatus = currentStatus === 'published' ? 'unpublished' : 'published';
-      const response = await api.patch(`/books/${bookId}/status`, { status: newStatus });
+      const newPublished = !currentPublished;
+      await api.patch(`/admin/books/${bookId}/publish`, { published: newPublished });
       
       setBooks(books.map(book => 
-        book._id === bookId ? response.data.book : book
+        book._id === bookId ? { ...book, published: newPublished } : book
       ));
       
-      toast.success(`Book ${newStatus} successfully`);
+      toast.success(`Book ${newPublished ? 'published' : 'unpublished'} successfully`);
     } catch (error) {
       toast.error('Failed to update book status');
     }
@@ -52,7 +52,9 @@ const ManageBooks = () => {
 
   const filteredBooks = books.filter(book => {
     if (filter === 'all') return true;
-    return book.status === filter;
+    if (filter === 'published') return book.published === true;
+    if (filter === 'unpublished') return book.published === false || book.published === undefined;
+    return true;
   });
 
   if (loading) {
@@ -133,25 +135,25 @@ const ManageBooks = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      book.status === 'published'
+                      book.published
                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
                         : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-400'
                     }`}>
-                      {book.status}
+                      {book.published ? 'Published' : 'Unpublished'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex gap-2">
                       <button
-                        onClick={() => toggleBookStatus(book._id, book.status)}
+                        onClick={() => toggleBookStatus(book._id, book.published)}
                         className={`px-3 py-1 rounded ${
-                          book.status === 'published'
+                          book.published
                             ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
                             : 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
                         } hover:opacity-80 transition-opacity`}
-                        title={book.status === 'published' ? 'Unpublish' : 'Publish'}
+                        title={book.published ? 'Unpublish' : 'Publish'}
                       >
-                        {book.status === 'published' ? (
+                        {book.published ? (
                           <><EyeOff className="w-4 h-4 inline mr-1" />Unpublish</>
                         ) : (
                           <><Eye className="w-4 h-4 inline mr-1" />Publish</>

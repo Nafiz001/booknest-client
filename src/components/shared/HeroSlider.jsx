@@ -82,7 +82,7 @@ const HeroSlider = () => {
                 {slide.description}
               </p>
               <Link
-                to="/books"
+                to="/all-books"
                 className="inline-flex items-center px-8 py-3 bg-primary hover:bg-primary-dark text-white font-semibold rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
               >
                 {slide.buttonText}

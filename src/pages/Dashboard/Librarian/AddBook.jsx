@@ -3,15 +3,17 @@ import { BookOpen, Upload, DollarSign } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../../context/AuthContext';
 import api from '../../../utils/api';
-import { uploadImage } from '../../../utils/imageUpload';
+import axios from 'axios';
 
 const AddBook = () => {
   const { user } = useAuth();
   const [imagePreview, setImagePreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     author: '',
-    image: null,
+    image: '',
     status: 'published',
     price: '',
     isbn: '',
@@ -29,20 +31,52 @@ const AddBook = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
-        setFormData({ ...formData, image: reader.result });
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const uploadImageToImgBB = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    
+    const response = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+      formData
+    );
+    
+    return response.data.data.url;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!selectedFile) {
+      toast.error('Please select a book cover image');
+      return;
+    }
+    
     try {
-      const response = await api.post('/books', formData);
+      setUploading(true);
+      
+      // Upload image to ImgBB first
+      toast.loading('Uploading book cover...');
+      const imageUrl = await uploadImageToImgBB(selectedFile);
+      toast.dismiss();
+      
+      // Create book with image URL
+      const bookData = {
+        ...formData,
+        image: imageUrl,
+        librarianId: user._id || user.id,
+        librarianEmail: user.email
+      };
+      
+      const response = await api.post('/books', bookData);
       
       if (response.data.success) {
         toast.success('Book added successfully!');
@@ -51,7 +85,7 @@ const AddBook = () => {
         setFormData({
           title: '',
           author: '',
-          image: null,
+          image: '',
           status: 'published',
           price: '',
           isbn: '',
@@ -62,10 +96,13 @@ const AddBook = () => {
           description: ''
         });
         setImagePreview(null);
+        setSelectedFile(null);
       }
     } catch (error) {
       console.error('Add book error:', error);
-      toast.error(error.response?.data?.message || 'Failed to add book');
+      toast.error(error.response?.data?.message || error.message || 'Failed to add book');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -273,8 +310,12 @@ const AddBook = () => {
             </div>
           </div>
 
-          <button type="submit" className="w-full btn-primary py-3 text-lg font-semibold">
-            Add Book
+          <button 
+            type="submit" 
+            disabled={uploading}
+            className="w-full btn-primary py-3 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {uploading ? 'Adding Book...' : 'Add Book'}
           </button>
         </form>
       </div>

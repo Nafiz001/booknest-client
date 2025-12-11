@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Search, ChevronDown, ShoppingCart, Menu, ArrowUpDown } from 'lucide-react';
+import { Search, Filter, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
+import BookCardSkeleton from '../../components/shared/BookCardSkeleton';
 
 const AllBooks = () => {
-  const [selectedCategory, setSelectedCategory] = useState('Books');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [allBooks, setAllBooks] = useState([]);
@@ -31,6 +32,11 @@ const AllBooks = () => {
         params.append('search', debouncedSearch.trim());
       }
       
+      // Add category filter if not 'all'
+      if (selectedCategory !== 'all') {
+        params.append('category', selectedCategory);
+      }
+      
       // Add sort parameter if not default
       if (sortBy !== 'default') {
         params.append('sort', sortBy);
@@ -45,37 +51,29 @@ const AllBooks = () => {
     } finally {
       setLoading(false);
     }
-  }, [debouncedSearch, sortBy]);
+  }, [debouncedSearch, sortBy, selectedCategory]);
 
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
-  
-  // Group books for different sections
-  const bestSellers = allBooks.slice(0, 6);
-  const newReleases = allBooks.slice(6, 12);
-  const dailyDeals = allBooks.slice(12, 18);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  // Mock data matching Amazon design
-  const categories = ['Books', 'Kindle Ebooks', 'Print Books', 'Audible Audiobooks'];
-
-  const topCategories = [
-    'Romance', 'Children\'s Books', 'Mystery, Thriller & Suspense', 'Science Fiction & Fantasy',
-    'Literature & Fiction', 'History', 'Biographies & Memoirs', 'Teen & Young Adult',
-    'Business & Money', 'Self-help'
-  ];
-
-  const popularAuthors = [
-    'DAN BROWN', 'THRONE OF GLASS', 'JASMINE MAS', 'Freida McFadden',
-    'STEPHEN KING', 'Mark Bittman', 'CSB', 'Priscilla Shirer', 'LEE STROBEL', 'MEGHAN QUINN'
+  // Real book categories
+  const categories = [
+    { value: 'all', label: 'All Books' },
+    { value: 'Fiction', label: 'Fiction' },
+    { value: 'Non-Fiction', label: 'Non-Fiction' },
+    { value: 'Science Fiction', label: 'Science Fiction' },
+    { value: 'Fantasy', label: 'Fantasy' },
+    { value: 'Mystery', label: 'Mystery' },
+    { value: 'Thriller', label: 'Thriller' },
+    { value: 'Romance', label: 'Romance' },
+    { value: 'Horror', label: 'Horror' },
+    { value: 'Biography', label: 'Biography' },
+    { value: 'History', label: 'History' },
+    { value: 'Self-Help', label: 'Self-Help' },
+    { value: 'Business', label: 'Business' },
+    { value: 'Technology', label: 'Technology' },
+    { value: 'Children', label: 'Children' },
   ];
 
   const renderStars = (rating) => {
@@ -90,237 +88,176 @@ const AllBooks = () => {
     );
   };
 
+  const clearFilters = () => {
+    setSelectedCategory('all');
+    setSearchQuery('');
+    setSortBy('default');
+  };
+
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark">
-      {/* Top Category Bar */}
-      <div className="bg-gray-100 dark:bg-gray-800 py-4">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">BookNest</h1>
-              <button className="flex items-center px-2 py-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-sm">
-                Categories <ChevronDown className="w-4 h-4 ml-1" />
-              </button>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Header */}
+      <div className="bg-white dark:bg-gray-800 shadow-sm">
+        <div className="container mx-auto px-4 py-6">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Explore All Books</h1>
+          
+          {/* Search & Sort Bar */}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search books by title, author, or category..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              )}
             </div>
             
-            {/* Search & Sort Controls */}
-            <div className="flex items-center gap-3 flex-1 max-w-2xl">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search books by title or author..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-              </div>
-              
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 focus:ring-2 focus:ring-primary focus:border-transparent"
-              >
-                <option value="default">Sort By</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="title">Title: A-Z</option>
-              </select>
-            </div>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-all min-w-[180px]"
+            >
+              <option value="default">Sort By Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="title">Title: A-Z</option>
+              <option value="newest">Newest First</option>
+            </select>
           </div>
         </div>
       </div>
 
-      {/* Filter Pills */}
-      <div className="bg-white dark:bg-gray-900 py-3 border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center space-x-2 text-sm overflow-x-auto pb-2">
-            {categories.map((cat) => (
+      {/* Category Filter Pills */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 shadow-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center gap-3">
+            <Filter className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+              {categories.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => setSelectedCategory(cat.value)}
+                  className={`px-4 py-2 rounded-full border whitespace-nowrap transition-all font-medium text-sm ${
+                    selectedCategory === cat.value
+                      ? 'bg-primary text-white border-primary shadow-md'
+                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+            {(selectedCategory !== 'all' || searchQuery || sortBy !== 'default') && (
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-1.5 rounded-full border whitespace-nowrap transition-colors ${
-                  selectedCategory === cat
-                    ? 'bg-primary text-white border-primary'
-                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600'
-                }`}
+                onClick={clearFilters}
+                className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors whitespace-nowrap ml-auto"
               >
-                {cat}
+                <X className="w-4 h-4" />
+                Clear Filters
               </button>
-            ))}
+            )}
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <section className="mb-12">
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 flex items-center justify-between">
-            <div className="flex-1">
-              <p className="text-lg text-amber-600 dark:text-amber-500 mb-2">Handpicked by BookNest Editors</p>
-              <h2 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">Best Books of 2025</h2>
-              <Link to="#" className="text-lg font-semibold text-blue-600 dark:text-blue-400 underline hover:text-blue-800">
-                Explore more
-              </Link>
-            </div>
-            <div className="hidden md:block ml-8">
-              <img
-                src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&h=300&fit=crop"
-                alt="Best Books Collage"
-                className="max-h-48 rounded-lg shadow-lg"
-              />
+
+        {/* Results Summary */}
+        {!loading && (
+          <div className="mb-6 flex items-center justify-between">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="font-semibold text-gray-900 dark:text-white">{allBooks.length}</span> books found
+              {selectedCategory !== 'all' && (
+                <span className="ml-2">
+                  in <span className="font-medium text-primary">{categories.find(c => c.value === selectedCategory)?.label}</span>
+                </span>
+              )}
             </div>
           </div>
-        </section>
+        )}
 
-        {/* Quick Links Grid */}
-        <section className="mb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            { title: 'Outstanding Fiction of the past 25 years', icon: '📚' },
-            { title: 'Unforgettable Nonfiction of the past 25 years', icon: '📖' },
-            { title: 'Most buzzworthy books of the past 25 years', icon: '⭐' },
-            { title: "Editors' personal favorites", icon: '👤' }
-          ].map((item, idx) => (
-            <Link
-              key={idx}
-              to="#"
-              className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
-            >
-              <span className="text-3xl mr-4">{item.icon}</span>
-              <span className="font-medium text-gray-800 dark:text-gray-200">{item.title}</span>
-            </Link>
-          ))}
-        </section>
-
-        {/* Best Sellers Section */}
-        <section className="mb-12">
-          <div className="flex justify-between items-baseline mb-4">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Best sellers in print</h3>
-            <Link to="#" className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center">
-              See more <ChevronDown className="w-4 h-4 ml-1 rotate-[-90deg]" />
-            </Link>
-          </div>
-          <div className="relative">
-            <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
-              {bestSellers.map((book) => (
-                <div key={book.id} className="flex-shrink-0 w-40">
-                  <Link to={`/books/${book.id}`}>
-                    <img
-                      src={book.image}
-                      alt={book.title}
-                      className="w-full h-60 object-cover rounded mb-2 shadow-lg hover:shadow-xl transition-shadow"
-                    />
-                  </Link>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 font-medium truncate">{book.title}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">by {book.author}</p>
-                  <div className="flex items-center mt-1">
-                    {renderStars(book.rating)}
-                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">{book.reviews}</span>
+        {/* All Books Grid */}
+        <section>
+          {loading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {[...Array(10)].map((_, i) => (
+                <BookCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : allBooks.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+                <Search className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No books found</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-4">
+                {searchQuery ? `No results for "${searchQuery}"` : 'Try adjusting your filters'}
+              </p>
+              {(selectedCategory !== 'all' || searchQuery || sortBy !== 'default') && (
+                <button
+                  onClick={clearFilters}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                  Clear All Filters
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {allBooks.map((book) => (
+                <Link 
+                  key={book._id} 
+                  to={`/books/${book._id}`} 
+                  className="group"
+                >
+                  <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                    <div className="relative overflow-hidden bg-gray-100 dark:bg-gray-700">
+                      <img
+                        src={book.image}
+                        alt={book.title}
+                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {book.published === false && (
+                        <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                          Unpublished
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4 flex-1 flex flex-col">
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 mb-1 group-hover:text-primary transition-colors">
+                        {book.title}
+                      </h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 truncate">by {book.author}</p>
+                      <div className="flex items-center mb-2">
+                        {renderStars(book.rating)}
+                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">({book.reviews || 0})</span>
+                      </div>
+                      <div className="mt-auto flex items-center justify-between">
+                        <p className="text-lg font-bold text-primary">${book.price}</p>
+                        {book.category && (
+                          <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-full">
+                            {book.category}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm font-bold mt-1 text-gray-900 dark:text-white">${book.price}</p>
-                </div>
+                </Link>
               ))}
             </div>
-          </div>
+          )}
         </section>
-
-        {/* New Releases Section */}
-        <section className="mb-12">
-          <div className="flex justify-between items-baseline mb-4">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">New releases on Kindle</h3>
-            <Link to="#" className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center">
-              See more <ChevronDown className="w-4 h-4 ml-1 rotate-[-90deg]" />
-            </Link>
-          </div>
-          <div className="relative">
-            <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
-              {newReleases.map((book) => (
-                <div key={book.id} className="flex-shrink-0 w-40">
-                  <Link to={`/books/${book.id}`}>
-                    <img
-                      src={book.image}
-                      alt={book.title}
-                      className="w-full h-60 object-cover rounded mb-2 shadow-lg hover:shadow-xl transition-shadow"
-                    />
-                  </Link>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 truncate">{book.title}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Daily Deals Section */}
-        <section className="mb-12">
-          <div className="flex justify-between items-baseline mb-4">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Kindle Daily Deals - today only</h3>
-            <Link to="#" className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center">
-              See more <ChevronDown className="w-4 h-4 ml-1 rotate-[-90deg]" />
-            </Link>
-          </div>
-          <div className="relative">
-            <div className="flex space-x-4 overflow-x-auto pb-4 scrollbar-hide">
-              {dailyDeals.map((deal) => (
-                <div key={deal.id} className="flex-shrink-0 w-40">
-                  <Link to={`/books/${deal.id}`}>
-                    <img
-                      src={deal.image}
-                      alt="Deal book"
-                      className="w-full h-60 object-cover rounded mb-2 shadow-lg hover:shadow-xl transition-shadow"
-                    />
-                  </Link>
-                  <p className="text-sm font-bold text-gray-900 dark:text-white">${deal.price}</p>
-                  <p className="text-xs text-red-600 bg-red-100 dark:bg-red-900 dark:text-red-200 inline-block px-2 py-0.5 rounded mt-1">
-                    Ends in {deal.timeLeft}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Popular Authors */}
-        <section className="mb-12">
-          <h3 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">Popular authors & series</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 text-center">
-            {popularAuthors.map((author, idx) => (
-              <Link
-                key={idx}
-                to="#"
-                className="text-xl tracking-widest text-gray-700 dark:text-gray-300 hover:text-primary transition-colors font-serif"
-              >
-                {author}
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Top Categories */}
-        <section className="mb-12">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Explore top categories</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-4">
-            {topCategories.map((category, idx) => (
-              <Link
-                key={idx}
-                to="#"
-                className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-              >
-                {category}
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* Feedback Section */}
-        <div className="pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
-          <p>
-            If you have any feedback on this page, we would appreciate hearing from you.{' '}
-            <Link to="#" className="text-blue-600 dark:text-blue-400 hover:underline">
-              Submit your feedback here
-            </Link>
-            .
-          </p>
-        </div>
       </div>
 
       <style jsx>{`

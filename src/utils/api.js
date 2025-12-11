@@ -13,15 +13,32 @@ const api = axios.create({
 // Request interceptor - Add Firebase token to headers
 api.interceptors.request.use(
   async (config) => {
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      try {
-        const token = await currentUser.getIdToken();
+    try {
+      // Wait for auth to be ready
+      const currentUser = auth.currentUser;
+      console.log('🔐 Current user:', currentUser ? currentUser.email : 'No user');
+      
+      if (currentUser) {
+        const token = await currentUser.getIdToken(true); // Force refresh
+        console.log('✅ Token obtained:', token ? 'Yes' : 'No');
         config.headers.Authorization = `Bearer ${token}`;
-      } catch (error) {
-        console.error('Error getting ID token:', error);
+      } else {
+        // If no current user, try to wait a bit for auth to initialize
+        console.log('⏳ Waiting for auth to initialize...');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const retryUser = auth.currentUser;
+        if (retryUser) {
+          const token = await retryUser.getIdToken(true);
+          console.log('✅ Token obtained after retry:', token ? 'Yes' : 'No');
+          config.headers.Authorization = `Bearer ${token}`;
+        } else {
+          console.warn('⚠️ No user found even after retry');
+        }
       }
+    } catch (error) {
+      console.error('❌ Error getting ID token:', error);
     }
+    console.log('📤 Request headers:', config.headers);
     return config;
   },
   (error) => {

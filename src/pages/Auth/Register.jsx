@@ -87,7 +87,7 @@ const Register = () => {
       setLoading(true);
       
       // Upload image to ImgBB if provided
-      let photoURL = 'https://via.placeholder.com/150';
+      let photoURL = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(formData.displayName) + '&size=150&background=2563eb&color=fff';
       if (formData.image) {
         const imageData = new FormData();
         imageData.append('image', formData.image);

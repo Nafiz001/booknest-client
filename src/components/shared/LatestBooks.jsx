@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Star, Heart } from 'lucide-react';
-import { getLatestBooks } from '../../data/books';
+import { useState, useEffect } from 'react';
+import api from '../../utils/api';
 
 const BookCard = ({ book }) => {
   return (
@@ -43,7 +44,7 @@ const BookCard = ({ book }) => {
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-primary">${book.price}</span>
           <Link
-            to={`/books/${book.id}`}
+            to={`/books/${book._id || book.id}`}
             className="px-4 py-2 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors duration-200 text-sm"
           >
             View Details
@@ -55,7 +56,19 @@ const BookCard = ({ book }) => {
 };
 
 const LatestBooks = () => {
-  const latestBooks = getLatestBooks(6);
+  const [latestBooks, setLatestBooks] = useState([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await api.get('/books?sort=newest');
+        setLatestBooks(response.data.books.slice(0, 6));
+      } catch (error) {
+        console.error('Failed to fetch books:', error);
+      }
+    };
+    fetchBooks();
+  }, []);
 
   return (
     <section className="py-16 bg-background-light dark:bg-background-dark">
@@ -69,13 +82,13 @@ const LatestBooks = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
           {latestBooks.map((book) => (
-            <BookCard key={book.id} book={book} />
+            <BookCard key={book._id || book.id} book={book} />
           ))}
         </div>
 
         <div className="text-center">
           <Link
-            to="/books"
+            to="/all-books"
             className="inline-flex items-center px-8 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold rounded-lg transition-all duration-200"
           >
             View All Books

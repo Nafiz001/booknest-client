@@ -1,17 +1,38 @@
 import { MapPin } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix for default marker icons in React Leaflet
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Custom blue marker icon
+const blueIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 const CoverageMap = () => {
   const cities = [
-    { name: 'New York', state: 'NY', libraries: 12, top: '35%', left: '85%' },
-    { name: 'Los Angeles', state: 'CA', libraries: 9, top: '58%', left: '15%' },
-    { name: 'Chicago', state: 'IL', libraries: 8, top: '42%', left: '70%' },
-    { name: 'Houston', state: 'TX', libraries: 7, top: '72%', left: '52%' },
-    { name: 'Phoenix', state: 'AZ', libraries: 6, top: '65%', left: '25%' },
-    { name: 'Philadelphia', state: 'PA', libraries: 5, top: '38%', left: '82%' },
-    { name: 'San Antonio', state: 'TX', libraries: 4, top: '75%', left: '48%' },
-    { name: 'San Diego', state: 'CA', libraries: 5, top: '68%', left: '12%' },
-    { name: 'Dallas', state: 'TX', libraries: 6, top: '68%', left: '52%' },
-    { name: 'San Jose', state: 'CA', libraries: 4, top: '48%', left: '10%' },
+    { name: 'New York', state: 'NY', libraries: 12, lat: 40.7128, lng: -74.0060 },
+    { name: 'Los Angeles', state: 'CA', libraries: 9, lat: 34.0522, lng: -118.2437 },
+    { name: 'Chicago', state: 'IL', libraries: 8, lat: 41.8781, lng: -87.6298 },
+    { name: 'Houston', state: 'TX', libraries: 7, lat: 29.7604, lng: -95.3698 },
+    { name: 'Phoenix', state: 'AZ', libraries: 6, lat: 33.4484, lng: -112.0740 },
+    { name: 'Philadelphia', state: 'PA', libraries: 5, lat: 39.9526, lng: -75.1652 },
+    { name: 'San Antonio', state: 'TX', libraries: 4, lat: 29.4241, lng: -98.4936 },
+    { name: 'San Diego', state: 'CA', libraries: 5, lat: 32.7157, lng: -117.1611 },
+    { name: 'Dallas', state: 'TX', libraries: 6, lat: 32.7767, lng: -96.7970 },
+    { name: 'San Jose', state: 'CA', libraries: 4, lat: 37.3382, lng: -121.8863 },
   ];
 
   return (
@@ -26,55 +47,45 @@ const CoverageMap = () => {
 
         <div className="max-w-5xl mx-auto">
           {/* Map Container */}
-          <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-8 overflow-hidden shadow-xl">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1"/>
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-              </svg>
-            </div>
-
-            {/* USA Map Silhouette */}
-            <div className="relative h-96 bg-white/50 dark:bg-gray-900/50 rounded-xl backdrop-blur-sm border-2 border-primary/20">
-              {/* City Markers */}
-              {cities.map((city, index) => (
-                <div
-                  key={index}
-                  className="absolute group cursor-pointer animate-fade-in"
-                  style={{ 
-                    top: city.top, 
-                    left: city.left,
-                    animationDelay: `${index * 0.1}s`
-                  }}
-                >
-                  {/* Marker Pin */}
-                  <div className="relative">
-                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-lg hover:scale-125 transition-transform duration-200 border-4 border-white dark:border-gray-800">
-                      <MapPin className="w-4 h-4 text-white" />
-                    </div>
-                    
-                    {/* Pulse Animation */}
-                    <div className="absolute inset-0 w-8 h-8 bg-primary rounded-full animate-ping opacity-25"></div>
-                    
-                    {/* Tooltip */}
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-10">
-                      <div className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-xl">
-                        <div className="font-semibold">{city.name}, {city.state}</div>
-                        <div className="text-xs opacity-75">{city.libraries} Libraries</div>
-                        {/* Arrow */}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
-                          <div className="border-8 border-transparent border-t-gray-900 dark:border-t-white"></div>
-                        </div>
+          <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-4 overflow-hidden shadow-xl">
+            {/* Real Interactive Leaflet Map with Dynamic Markers */}
+            <div className="relative h-96 rounded-xl overflow-hidden border-2 border-primary/20 shadow-lg">
+              <MapContainer
+                center={[39.8283, -98.5795]}
+                zoom={4}
+                style={{ height: '100%', width: '100%' }}
+                className="z-0"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {cities.map((city, index) => (
+                  <Marker 
+                    key={index} 
+                    position={[city.lat, city.lng]}
+                    icon={blueIcon}
+                  >
+                    <Popup>
+                      <div className="text-center">
+                        <div className="font-bold text-gray-900">{city.name}, {city.state}</div>
+                        <div className="text-sm text-gray-600">{city.libraries} Libraries</div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                    </Popup>
+                  </Marker>
+                ))}
+              </MapContainer>
+              
+              {/* Overlay Info Card */}
+              <div className="absolute bottom-4 left-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg p-4 shadow-xl max-w-xs z-[1000]">
+                <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-primary" />
+                  Service Coverage
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  We deliver to {cities.length} major cities across the USA with {cities.reduce((sum, city) => sum + city.libraries, 0)} partner libraries
+                </p>
+              </div>
             </div>
           </div>
 

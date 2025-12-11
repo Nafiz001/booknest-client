@@ -13,11 +13,14 @@ const BookDetails = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addingToWishlist, setAddingToWishlist] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
+  const [showWishlistModal, setShowWishlistModal] = useState(false);
   const [reviews, setReviews] = useState([]);
-  const [canReview, setCanReview] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [submittingOrder, setSubmittingOrder] = useState(false);
+  const [hasOrdered, setHasOrdered] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     email: user?.email || '',
@@ -25,39 +28,57 @@ const BookDetails = () => {
     address: ''
   });
 
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        const response = await api.get(`/books/${id}`);
-        setBook(response.data.book);
-      } catch (error) {
-        toast.error(error.response?.data?.message || 'Failed to load book');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBook();
-    fetchReviews();
-    if (user) checkCanReview();
-  }, [id, user]);
-
   const fetchReviews = async () => {
+    if (!id) return;
     try {
-      const response = await api.get(`/reviews/book/${id}`);
-      setReviews(response.data.reviews);
-    } catch (error) {
-      console.error('Failed to load reviews');
+      const response = await api.get(`/reviews/${id}`);
+      setReviews(response.data.reviews || []);
+    } catch (err) {
+      console.error('Failed to load reviews', err);
     }
   };
 
-  const checkCanReview = async () => {
+  const checkWishlistStatus = async () => {
+    if (!user || !id) return;
     try {
-      const response = await api.get(`/reviews/can-review/${id}`);
-      setCanReview(response.data.canReview);
-    } catch (error) {
-      console.error('Failed to check review status');
+      const response = await api.get(`/wishlist/${user?.id || user?._id}`);
+      const inWishlist = response.data.wishlist.some(item => item.bookId === id);
+      setIsInWishlist(inWishlist);
+    } catch (err) {
+      console.error('Failed to check wishlist status', err);
     }
   };
+
+  const checkIfOrdered = async () => {
+    if (!user || !id) return;
+    try {
+      const userId = user?.id || user?._id;
+      const response = await api.get(`/orders/user/${userId}/book/${id}`);
+      setHasOrdered(response.data.hasOrdered);
+    } catch (err) {
+      console.error('Failed to check order status', err);
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      const fetchBook = async () => {
+        try {
+          const response = await api.get(`/books/${id}`);
+          setBook(response.data.book);
+        } catch (err) {
+          toast.error(err.response?.data?.message || 'Failed to load book');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchBook();
+      fetchReviews();
+      checkWishlistStatus();
+      checkIfOrdered();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user]);
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -72,7 +93,6 @@ const BookDetails = () => {
       setShowReviewForm(false);
       setReviewForm({ rating: 5, comment: '' });
       fetchReviews();
-      setCanReview(false);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to submit review');
     } finally {
@@ -112,13 +132,20 @@ const BookDetails = () => {
       return;
     }
 
+    if (isInWishlist) {
+      setShowWishlistModal(true);
+      return;
+    }
+
     setAddingToWishlist(true);
     try {
       await api.post('/wishlist', { bookId: id });
+      setIsInWishlist(true);
       toast.success('Added to wishlist!');
     } catch (error) {
       if (error.response?.status === 409) {
-        toast.error('Book already in wishlist');
+        setIsInWishlist(true);
+        setShowWishlistModal(true);
       } else {
         toast.error(error.response?.data?.message || 'Failed to add to wishlist');
       }
@@ -127,13 +154,46 @@ const BookDetails = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Save order to database
-    console.log('Order placed:', { ...formData, bookId: book.id, status: 'pending', paymentStatus: 'unpaid' });
-    setIsModalOpen(false);
-    // Show success message
-    alert('Order placed successfully!');
+    
+    if (!formData.phone || !formData.address) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    setSubmittingOrder(true);
+    try {
+      const userId = user?._id || user?.id;
+      const orderData = {
+        userId: userId,
+        bookId: book._id,
+        bookTitle: book.title,
+        bookImage: book.image,
+        bookPrice: book.price,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        status: 'pending',
+        paymentStatus: 'unpaid',
+        librarianId: book.librarianId
+      };
+      
+      await api.post('/orders', orderData);
+      toast.success('Order placed successfully!');
+      setIsModalOpen(false);
+      setFormData({
+        name: user?.displayName || '',
+        email: user?.email || '',
+        phone: '',
+        address: ''
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to place order');
+    } finally {
+      setSubmittingOrder(false);
+    }
   };
 
   const renderStars = (rating) => {
@@ -154,7 +214,7 @@ const BookDetails = () => {
           />
         ))}
         <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
-          {rating} ({book.reviews.toLocaleString()} reviews)
+          {rating} {book.reviews ? `(${book.reviews.toLocaleString()} reviews)` : ''}
         </span>
       </div>
     );
@@ -167,7 +227,7 @@ const BookDetails = () => {
         <div className="mb-6 text-sm">
           <Link to="/" className="text-blue-600 dark:text-blue-400 hover:underline">Home</Link>
           <span className="mx-2">/</span>
-          <Link to="/books" className="text-blue-600 dark:text-blue-400 hover:underline">All Books</Link>
+          <Link to="/all-books" className="text-blue-600 dark:text-blue-400 hover:underline">All Books</Link>
           <span className="mx-2">/</span>
           <span className="text-gray-600 dark:text-gray-400">{book.title}</span>
         </div>
@@ -185,10 +245,14 @@ const BookDetails = () => {
                 <button 
                   onClick={handleAddToWishlist}
                   disabled={addingToWishlist}
-                  className="flex-1 btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+                  className={`flex-1 flex items-center justify-center gap-2 disabled:opacity-50 ${
+                    isInWishlist 
+                      ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-2 border-green-500 hover:bg-green-200 dark:hover:bg-green-900/50' 
+                      : 'btn-primary'
+                  } px-6 py-3 rounded-lg font-semibold transition-colors`}
                 >
-                  <Heart className="w-5 h-5" />
-                  {addingToWishlist ? 'Adding...' : 'Add to Wishlist'}
+                  <Heart className={`w-5 h-5 ${isInWishlist ? 'fill-current' : ''}`} />
+                  {addingToWishlist ? 'Adding...' : isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}
                 </button>
                 <button className="btn-secondary flex items-center justify-center gap-2 px-4">
                   <Share2 className="w-5 h-5" />
@@ -216,7 +280,7 @@ const BookDetails = () => {
               <div className="flex items-baseline gap-4">
                 <span className="text-3xl font-bold text-primary">${book.price}</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {book.status === 'published' ? 'In Stock' : 'Out of Stock'}
+                  {book.published ? 'In Stock' : 'Out of Stock'}
                 </span>
               </div>
             </div>
@@ -224,7 +288,7 @@ const BookDetails = () => {
             {/* Order Button */}
             <button
               onClick={() => setIsModalOpen(true)}
-              disabled={book.status !== 'published'}
+              disabled={!book.published}
               className="w-full mb-6 bg-accent hover:bg-amber-600 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <ShoppingCart className="w-6 h-6" />
@@ -269,22 +333,68 @@ const BookDetails = () => {
                   <span className="w-32 font-semibold text-gray-600 dark:text-gray-400">Category:</span>
                   <span className="text-gray-900 dark:text-white">{book.category}</span>
                 </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Wishlist Modal */}
+      {showWishlistModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6 relative animate-scale-in">
+            <button
+              onClick={() => setShowWishlistModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900/30 mb-4">
+                <Heart className="h-8 w-8 text-green-600 dark:text-green-400 fill-current" />
+              </div>
+              
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                Already in Your Wishlist
+              </h3>
+              
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
+                This book is already saved in your wishlist. Would you like to view your wishlist or continue browsing?
+              </p>
+              
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowWishlistModal(false)}
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  Continue Browsing
+                </button>
+                <button
+                  onClick={() => navigate('/dashboard/my-wishlist')}
+                  className="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+                >
+                  View Wishlist
+                </button>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Reviews Section */}
+      )}
+    </div>        {/* Reviews Section */}
         <div className="mt-12">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold">Reviews</h2>
-            {canReview && !showReviewForm && (
+            {user && hasOrdered && !showReviewForm && (
               <button
                 onClick={() => setShowReviewForm(true)}
                 className="btn-primary"
               >
                 Write a Review
               </button>
+            )}
+            {user && !hasOrdered && (
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                You must order this book to leave a review
+              </div>
             )}
           </div>
 
@@ -357,15 +467,13 @@ const BookDetails = () => {
               reviews.map((review) => (
                 <div key={review._id} className="card p-6">
                   <div className="flex items-start gap-4">
-                    <img
-                      src={review.user.photoURL || 'https://via.placeholder.com/40'}
-                      alt={review.user.name}
-                      className="w-12 h-12 rounded-full"
-                    />
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-xl">
+                      {(review.userName || review.userEmail || 'A')[0].toUpperCase()}
+                    </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <h4 className="font-semibold">{review.user.name}</h4>
+                          <h4 className="font-semibold">{review.userName || 'Anonymous'}</h4>
                           <div className="flex items-center gap-2">
                             <div className="flex">
                               {[...Array(5)].map((_, i) => (
@@ -481,8 +589,12 @@ const BookDetails = () => {
               </div>
 
               {/* Submit Button */}
-              <button type="submit" className="w-full btn-primary py-3 text-lg">
-                Place Order
+              <button 
+                type="submit" 
+                disabled={submittingOrder}
+                className="w-full btn-primary py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {submittingOrder ? 'Placing Order...' : 'Place Order'}
               </button>
             </form>
           </div>

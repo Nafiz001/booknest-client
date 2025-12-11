@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Clock, XCircle, CreditCard, Package, Truck, CheckCircle } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useAuth } from '../../../context/AuthContext';
@@ -6,6 +7,7 @@ import api from '../../../utils/api';
 
 const MyOrders = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,10 +44,7 @@ const MyOrders = () => {
   };
 
   const handlePayNow = (orderId) => {
-    toast.success('Redirecting to payment page...');
-    setTimeout(() => {
-      window.location.href = `/payment/${orderId}`;
-    }, 1000);
+    navigate(`/payment/${orderId}`);
   };
 
   const getStatusBadge = (status) => {
@@ -99,7 +98,7 @@ const MyOrders = () => {
             </thead>
             <tbody className="divide-y divide-border-light dark:divide-border-dark">
               {orders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <tr key={order._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-4">
                       <img
@@ -111,10 +110,10 @@ const MyOrders = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
-                    {new Date(order.orderDate).toLocaleDateString()}
+                    {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}
                   </td>
                   <td className="px-6 py-4 text-gray-900 dark:text-white font-semibold">
-                    ${order.price.toFixed(2)}
+                    ${Number(order.bookPrice || order.price || 0).toFixed(2)}
                   </td>
                   <td className="px-6 py-4">
                     {getStatusBadge(order.status)}
@@ -125,7 +124,7 @@ const MyOrders = () => {
                         <>
                           {order.paymentStatus === 'unpaid' && (
                             <button
-                              onClick={() => handlePayNow(order.id)}
+                              onClick={() => handlePayNow(order._id)}
                               className="inline-flex items-center space-x-1 px-3 py-1.5 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors"
                             >
                               <CreditCard className="w-4 h-4" />
@@ -133,7 +132,7 @@ const MyOrders = () => {
                             </button>
                           )}
                           <button
-                            onClick={() => handleCancel(order.id)}
+                            onClick={() => handleCancel(order._id)}
                             className="inline-flex items-center space-x-1 px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
                           >
                             <XCircle className="w-4 h-4" />
@@ -159,7 +158,7 @@ const MyOrders = () => {
       {/* Mobile Cards */}
       <div className="md:hidden space-y-4">
         {orders.map((order) => (
-          <div key={order.id} className="card p-4">
+          <div key={order._id} className="card p-4">
             <div className="flex space-x-4 mb-4">
               <img
                 src={order.bookImage}
@@ -169,9 +168,9 @@ const MyOrders = () => {
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{order.bookTitle}</h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                  {new Date(order.orderDate).toLocaleDateString()}
+                  {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A'}
                 </p>
-                <p className="text-lg font-bold text-primary">${order.price.toFixed(2)}</p>
+                <p className="text-lg font-bold text-primary">${Number(order.bookPrice || order.price || 0).toFixed(2)}</p>
               </div>
             </div>
             
@@ -183,7 +182,7 @@ const MyOrders = () => {
               <div className="flex space-x-2">
                 {order.paymentStatus === 'unpaid' && (
                   <button
-                    onClick={() => handlePayNow(order.id)}
+                    onClick={() => handlePayNow(order._id)}
                     className="flex-1 inline-flex items-center justify-center space-x-1 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors"
                   >
                     <CreditCard className="w-4 h-4" />
@@ -191,7 +190,7 @@ const MyOrders = () => {
                   </button>
                 )}
                 <button
-                  onClick={() => handleCancel(order.id)}
+                  onClick={() => handleCancel(order._id)}
                   className="flex-1 inline-flex items-center justify-center space-x-1 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
                 >
                   <XCircle className="w-4 h-4" />
