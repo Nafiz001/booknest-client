@@ -86,7 +86,7 @@ const HeroSlider = () => {
               </p>
               <Link
                 to="/all-books"
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-bold text-slate-900 transition-transform duration-200 hover:scale-[1.02]"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-bold text-slate-900 transition-transform duration-500 hover:scale-[1.02]"
               >
                 {slide.buttonText}
                 <ChevronRight className="h-5 w-5" />

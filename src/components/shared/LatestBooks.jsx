@@ -17,7 +17,7 @@ const BookCard = ({ book, onSave, savingId }) => {
         <button
           type="button"
           onClick={() => onSave(book._id || book.id)}
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 transition-all duration-200 hover:bg-white group-hover:opacity-100 dark:bg-slate-800/85 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 transition-all duration-300 hover:bg-white group-hover:opacity-100 dark:bg-slate-800/85 dark:text-slate-300 dark:hover:bg-slate-700"
           aria-label="Save to wishlist"
           title="Save to wishlist"
         >
@@ -30,7 +30,7 @@ const BookCard = ({ book, onSave, savingId }) => {
         )}
       </div>
       <div className="p-4">
-        <h3 className="line-clamp-2 text-lg font-semibold text-slate-900 transition-colors duration-200 group-hover:text-primary dark:text-white">
+        <h3 className="line-clamp-2 text-lg font-semibold text-slate-900 transition-colors duration-300 group-hover:text-primary dark:text-white">
           {book.title}
         </h3>
         <p className="mb-2 text-sm text-slate-600 dark:text-slate-400">by {book.author}</p>

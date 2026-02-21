@@ -33,6 +33,7 @@ import PaymentSuccess from './pages/Payment/PaymentSuccess';
 import NotFound from './pages/NotFound';
 import RequestDelivery from './pages/RequestDelivery';
 import InfoPage from './pages/Info/InfoPage';
+import Memberships from './pages/Memberships/Memberships';
 import PrivateRoute from './routes/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import LibrarianRoute from './components/LibrarianRoute';
@@ -56,6 +57,7 @@ function App() {
             <Route path="/books/:id" element={<BookDetails />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/memberships" element={<Memberships />} />
             <Route path="/payment/:orderId" element={<PrivateRoute><Payment /></PrivateRoute>} />
             <Route path="/payment-success" element={<PrivateRoute><PaymentSuccess /></PrivateRoute>} />
             <Route path="/request-delivery" element={<PrivateRoute><RequestDelivery /></PrivateRoute>} />

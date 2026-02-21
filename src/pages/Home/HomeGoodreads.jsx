@@ -4,11 +4,9 @@ import { ArrowRight, CheckCircle2, Clock3, Sparkles, Truck } from 'lucide-react'
 import api from '../../utils/api';
 import CoverageMap from '../../components/shared/CoverageMap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 
 const HomeGoodreads = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const { data: latestBooks = [], isLoading: booksLoading } = useQuery({
     queryKey: ['home-latest-books'],
@@ -51,7 +49,7 @@ const HomeGoodreads = () => {
                 </Link>
                 <button
                   type="button"
-                  onClick={() => navigate(user ? '/dashboard/profile' : '/register')}
+                  onClick={() => navigate('/memberships')}
                   className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-transparent dark:text-slate-200 dark:hover:bg-slate-800/70"
                 >
                   View Plans

@@ -180,6 +180,7 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
+  MEMBERSHIPS: '/memberships',
   BOOKS: '/books',
   BOOK_DETAILS: '/books/:id',
   DASHBOARD: '/dashboard',

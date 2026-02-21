@@ -99,7 +99,7 @@ const CoverageMap = ({ compact = false }) => {
             {cities.map((city) => (
               <div
                 key={`${city.name}-${city.state}`}
-                className="flex items-center space-x-2 rounded-lg border border-border-light bg-surface-light p-3 transition-colors duration-200 hover:border-primary dark:border-border-dark dark:bg-surface-dark"
+                className="flex items-center space-x-2 rounded-lg border border-border-light bg-surface-light p-3 transition-colors duration-300 hover:border-primary dark:border-border-dark dark:bg-surface-dark"
               >
                 <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
                 <div className="text-sm">

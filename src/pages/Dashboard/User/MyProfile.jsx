@@ -227,7 +227,7 @@ const MyProfile = () => {
             </div>
             <button
               type="button"
-              onClick={() => navigate('/dashboard/invoices')}
+              onClick={() => navigate('/memberships')}
               className="mt-6 w-full rounded-lg bg-white/15 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25"
             >
               Manage Subscription

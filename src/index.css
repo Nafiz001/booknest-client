@@ -24,38 +24,46 @@
   h3 {
     @apply tracking-tight;
   }
+
+  a,
+  button,
+  [role='button'] {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-duration: 320ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
 }
 
 @layer components {
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-semibold text-white;
     @apply bg-primary hover:bg-primary-dark shadow-lg shadow-primary/20 hover:shadow-primary/35;
-    @apply transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background-light dark:focus-visible:ring-offset-background-dark;
+    @apply transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background-light dark:focus-visible:ring-offset-background-dark;
     @apply active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
   }
   
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-semibold;
     @apply bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-surface-elevated dark:text-slate-100 dark:hover:bg-slate-700;
-    @apply transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30;
+    @apply transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30;
   }
   
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 font-semibold;
     @apply border border-primary/60 text-primary hover:bg-primary hover:text-white dark:border-primary/70;
-    @apply transition-all duration-200;
+    @apply transition-all duration-300;
   }
   
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium;
     @apply text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800;
-    @apply transition-colors duration-200;
+    @apply transition-colors duration-300;
   }
   
   .input-field {
     @apply w-full rounded-lg border border-border-light bg-surface-light px-4 py-2.5 text-sm text-slate-900;
     @apply placeholder:text-slate-400 dark:border-border-dark dark:bg-surface-dark dark:text-slate-100 dark:placeholder:text-slate-500;
-    @apply transition-all duration-200 outline-none focus:border-primary focus:ring-2 focus:ring-primary/40;
+    @apply transition-all duration-300 outline-none focus:border-primary focus:ring-2 focus:ring-primary/40;
   }
   
   .card {
@@ -99,7 +107,7 @@
   }
 
   .hover-lift {
-    @apply transition-transform duration-300 hover:-translate-y-1;
+    @apply transition-transform duration-500 hover:-translate-y-1;
   }
 
   .skeleton-shimmer {

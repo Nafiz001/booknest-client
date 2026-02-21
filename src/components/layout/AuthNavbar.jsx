@@ -9,7 +9,7 @@ const AuthNavbar = () => {
   const links = [
     { name: 'Home', path: '/' },
     { name: 'Catalog', path: '/all-books' },
-    { name: 'Membership', path: user ? '/dashboard/profile' : '/register' },
+    { name: 'Membership', path: '/memberships' },
   ];
 
   return (
