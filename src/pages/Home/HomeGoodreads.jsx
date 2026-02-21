@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, CheckCircle2, Clock3, Sparkles, Truck } from 'lucide-react';
 import api from '../../utils/api';
+import CoverageMap from '../../components/shared/CoverageMap';
 
 const HomeGoodreads = () => {
   const { data: latestBooks = [], isLoading: booksLoading } = useQuery({
@@ -156,12 +157,8 @@ const HomeGoodreads = () => {
 
         <section className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/45">
-            <img
-              src="https://images.unsplash.com/photo-1548345680-f5475ea5df84?w=900&h=480&fit=crop"
-              alt="Coverage map"
-              className="h-64 w-full object-cover opacity-85"
-            />
-            <div className="border-t border-slate-800 px-4 py-3 text-xs text-slate-400">
+            <CoverageMap compact />
+            <div className="border-t border-slate-800 px-4 py-3 text-xs text-slate-400 bg-[#0a1a39]/35">
               Active in 10+ major metros
             </div>
           </div>

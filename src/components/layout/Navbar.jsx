@@ -162,7 +162,7 @@ const Navbar = () => {
               if (link.protected && !user) return null;
               return (
                 <NavLink
-                  key={link.path}
+                  key={`${link.path}-${link.name}`}
                   to={link.path}
                   className={({ isActive }) =>
                     `${textClass} ${hoverClass} text-sm font-medium transition-colors ${
@@ -400,7 +400,7 @@ const Navbar = () => {
             <div className="space-y-1">
               {activeLinks.map((link) => (
                 <NavLink
-                  key={link.path}
+                  key={`${link.path}-${link.name}`}
                   to={link.path}
                   onClick={() => setIsMenuOpen(false)}
                   className={({ isActive }) =>

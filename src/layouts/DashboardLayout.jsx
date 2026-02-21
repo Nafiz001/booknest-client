@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -15,6 +15,7 @@ import {
   X,
   PlusCircle,
   Settings,
+  Home,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -102,10 +103,19 @@ const DashboardLayout = () => {
               </nav>
             </div>
 
-            <button className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#0b2c67] px-3 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-[#133781]">
-              <PlusCircle className="h-4 w-4" />
-              Request New Book
-            </button>
+            <div className="space-y-2">
+              <Link
+                to="/"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-2.5 text-sm font-semibold text-slate-200 transition-colors hover:border-primary/40 hover:text-white"
+              >
+                <Home className="h-4 w-4" />
+                Back to Home
+              </Link>
+              <button className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#0b2c67] px-3 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-[#133781]">
+                <PlusCircle className="h-4 w-4" />
+                Request New Book
+              </button>
+            </div>
           </div>
         </aside>
 
@@ -146,6 +156,14 @@ const DashboardLayout = () => {
                     <span>{link.name}</span>
                   </NavLink>
                 ))}
+                <Link
+                  to="/"
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="mt-2 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-300 transition-all hover:bg-slate-800/70 hover:text-white"
+                >
+                  <Home className="h-4 w-4" />
+                  <span>Back to Home</span>
+                </Link>
               </nav>
             </aside>
           </div>
