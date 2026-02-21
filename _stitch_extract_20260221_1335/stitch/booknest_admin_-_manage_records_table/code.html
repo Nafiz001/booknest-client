@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BookNest Admin - Manage Books</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#1754cf",
+                "background-light": "#f6f6f8",
+                "background-dark": "#111621",
+                "surface-dark": "#1e293b",
+                "surface-border": "#334155",
+              },
+              fontFamily: {
+                "display": ["Inter", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetic in dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111621; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="hidden lg:flex w-72 flex-col border-r border-surface-border bg-background-dark h-screen overflow-y-auto fixed left-0 top-0 bottom-0 z-50">
+<div class="flex flex-col gap-4 p-4 min-h-full justify-between">
+<div class="flex flex-col gap-6">
+<!-- Branding -->
+<div class="flex items-center gap-3 px-2">
+<div class="bg-primary/20 flex items-center justify-center rounded-lg h-10 w-10 text-primary">
+<span class="material-symbols-outlined text-3xl">local_library</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-white text-lg font-bold leading-tight tracking-tight">BookNest Admin</h1>
+<p class="text-slate-400 text-xs font-medium">Librarian Access</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary border border-primary/20" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="text-sm font-bold">Manage Books</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
+<span class="text-sm font-medium">Orders</span>
+<span class="ml-auto bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">12</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-medium">Customers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">analytics</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Settings -->
+<div class="flex flex-col gap-2 border-t border-surface-border pt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-surface-dark transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<div class="flex items-center gap-3 px-3 py-3 mt-2 rounded-lg bg-surface-dark/50 border border-surface-border">
+<div class="h-8 w-8 rounded-full bg-cover bg-center" data-alt="Profile picture of Sarah Jenkins" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDlNpDNl6hVxEqp8CRE4NdRIBgyK9T9rHGVRokss6ol25nP3OLoDKBLXB5THfIlVRmA9e60xbFJteNegdhDvh4vwjpXNv8AuDU0pGN3L7plSTyf8KT5VMLBOHY2jx7rkSmZBJRFPdc-i8dMizl4Wnp4euLJOWEHEb--Gt5sBC3WeylgUgBj9eUY-yr5NVckBcVbeFwRGjj-ExmZPRUSXQr70n_VEtANUpht2j83BRipgBHYDOiiqVNs96OpOPrY0SMfwyrQ8aDVBQ');"></div>
+<div class="flex flex-col overflow-hidden">
+<span class="text-sm font-medium text-white truncate">Sarah Jenkins</span>
+<span class="text-xs text-slate-400 truncate">Senior Librarian</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden relative">
+<!-- Top Bar -->
+<header class="h-16 border-b border-surface-border bg-background-dark/95 backdrop-blur flex items-center justify-between px-6 z-40 sticky top-0">
+<!-- Mobile Menu Toggle (Visible only on small screens) -->
+<button class="lg:hidden p-2 text-slate-400 hover:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Breadcrumbs -->
+<div class="hidden sm:flex items-center gap-2 text-sm">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">Home</a>
+<span class="text-slate-600">/</span>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">Dashboard</a>
+<span class="text-slate-600">/</span>
+<span class="text-white font-medium">Manage Books</span>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-4 ml-auto">
+<div class="relative hidden md:block">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-[20px]">search</span>
+<input class="bg-surface-dark border border-surface-border text-slate-200 text-sm rounded-full pl-10 pr-4 py-2 w-64 focus:ring-2 focus:ring-primary focus:border-transparent outline-none placeholder-slate-500" placeholder="Search global..." type="text"/>
+</div>
+<button class="relative p-2 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-surface-dark">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-background-dark"></span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h2 class="text-3xl font-bold text-white tracking-tight">Inventory Management</h2>
+<p class="text-slate-400">View and manage your library catalog, update stock, and track availability.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="hidden md:flex items-center gap-2 px-4 py-2.5 rounded-lg border border-surface-border bg-surface-dark text-slate-200 text-sm font-medium hover:bg-surface-border hover:text-white transition-all">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Export CSV
+                    </button>
+<button class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-blue-600 hover:shadow-primary/40 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Add New Book
+                    </button>
+</div>
+</div>
+<!-- Stats Overview (Quick Glance) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 hover:border-primary/30 transition-colors">
+<span class="text-slate-400 text-sm font-medium">Total Books</span>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-bold text-white">12,450</span>
+<span class="text-emerald-500 text-xs font-bold mb-1 flex items-center"><span class="material-symbols-outlined text-[14px]">arrow_upward</span> 12%</span>
+</div>
+</div>
+<div class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 hover:border-primary/30 transition-colors">
+<span class="text-slate-400 text-sm font-medium">Out on Loan</span>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-bold text-white">842</span>
+<span class="text-emerald-500 text-xs font-bold mb-1 flex items-center"><span class="material-symbols-outlined text-[14px]">arrow_upward</span> 5%</span>
+</div>
+</div>
+<div class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 hover:border-primary/30 transition-colors">
+<span class="text-slate-400 text-sm font-medium">Low Stock</span>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-bold text-white">125</span>
+<span class="text-rose-500 text-xs font-bold mb-1 flex items-center"><span class="material-symbols-outlined text-[14px]">warning</span> Action needed</span>
+</div>
+</div>
+<div class="bg-surface-dark border border-surface-border rounded-xl p-5 flex flex-col gap-1 hover:border-primary/30 transition-colors">
+<span class="text-slate-400 text-sm font-medium">Total Revenue</span>
+<div class="flex items-end gap-2">
+<span class="text-2xl font-bold text-white">$45,200</span>
+<span class="text-emerald-500 text-xs font-bold mb-1 flex items-center"><span class="material-symbols-outlined text-[14px]">arrow_upward</span> 8%</span>
+</div>
+</div>
+</div>
+<!-- Main Table Container -->
+<div class="bg-surface-dark border border-surface-border rounded-xl shadow-sm flex flex-col">
+<!-- Toolbar -->
+<div class="p-5 border-b border-surface-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<!-- Search -->
+<div class="relative flex-1 max-w-md">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500">search</span>
+<input class="w-full bg-background-dark/50 border border-surface-border text-slate-200 text-sm rounded-lg pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-transparent outline-none placeholder-slate-500 transition-all" placeholder="Search by title, author, or ISBN..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-surface-border bg-background-dark/50 text-slate-300 text-sm font-medium hover:bg-surface-border transition-colors whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                            Filter
+                        </button>
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-surface-border bg-background-dark/50 text-slate-300 text-sm font-medium hover:bg-surface-border transition-colors whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                            Date Range
+                        </button>
+<div class="h-6 w-px bg-surface-border mx-1"></div>
+<button class="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-surface-border transition-colors" title="Grid View">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-2 rounded-lg text-primary bg-primary/10 transition-colors" title="List View">
+<span class="material-symbols-outlined">view_list</span>
+</button>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-surface-border bg-background-dark/30">
+<th class="p-4 pl-6 w-12">
+<input class="rounded border-surface-border bg-background-dark text-primary focus:ring-offset-background-dark focus:ring-primary" type="checkbox"/>
+</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400 cursor-pointer group hover:text-primary">
+<div class="flex items-center gap-1">
+                                        Book Details
+                                        <span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">arrow_drop_down</span>
+</div>
+</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400 cursor-pointer group hover:text-primary">
+<div class="flex items-center gap-1">
+                                        Author
+                                        <span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">arrow_drop_down</span>
+</div>
+</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400 cursor-pointer group hover:text-primary">
+<div class="flex items-center gap-1">
+                                        Status
+                                        <span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">arrow_drop_down</span>
+</div>
+</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400 cursor-pointer group hover:text-primary text-right">
+<div class="flex items-center justify-end gap-1">
+                                        Price
+                                        <span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">arrow_drop_down</span>
+</div>
+</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400 cursor-pointer group hover:text-primary hidden md:table-cell">
+<div class="flex items-center gap-1">
+                                        Last Updated
+                                        <span class="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100 transition-opacity">arrow_drop_down</span>
+</div>
+</th>
+<th class="p-4 pr-6 text-xs font-semibold uppercase tracking-wider text-slate-400 text-right">
+                                    Actions
+                                </th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-border text-sm">
+<!-- Row 1 -->
+<tr class="group hover:bg-background-dark/40 transition-colors">
+<td class="p-4 pl-6">
+<input class="rounded border-surface-border bg-background-dark text-primary focus:ring-offset-background-dark focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<div class="h-12 w-9 rounded bg-cover bg-center shadow-md shrink-0" data-alt="Cover of The Great Gatsby book" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDQzwk5K_CFXaLce4s0L9HLX7o_zwPX5TRlT0Iu0PsMzutYiCRZ97Q0cZUA9nPgrA_vmi41Sf2gjkMkdU6vbq9mpduVDTuRo2lbKNGNdjLx6QtJOLTszyDmUnBsNcYWv5UF0-mhmMjku9IUKGc6uVwISE9uuM42Y0wfVkRyhbEwPd67vdDFuwqdFwpFMgMrjVFGO7MqXsqZYo94sXtZRbraC_QsQ3kbJq8JPagKD_HHkmF7pxocX415OLN6h51lh8NCQC5C5xrTjA');"></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-100 group-hover:text-primary transition-colors">The Great Gatsby</span>
+<span class="text-xs text-slate-500 font-mono">ISBN: 978-0743273565</span>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="text-slate-300">F. Scott Fitzgerald</span>
+<span class="text-xs text-slate-500">Classics</span>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        In Stock
+                                    </span>
+</td>
+<td class="p-4 text-right font-medium text-slate-200">$14.99</td>
+<td class="p-4 text-slate-400 text-xs hidden md:table-cell">Oct 24, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-slate-100 hover:bg-surface-border rounded transition-colors" title="More">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-background-dark/40 transition-colors">
+<td class="p-4 pl-6">
+<input class="rounded border-surface-border bg-background-dark text-primary focus:ring-offset-background-dark focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<div class="h-12 w-9 rounded bg-cover bg-center shadow-md shrink-0" data-alt="Cover of Atomic Habits book" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB7EPvYaZponCrMMNxHq16vj_LgYZxYE6SPMuW3Plw1XyRoQCTenGpQLunG4dJeiNTQZsSK4397DvPZ1BCLg2IevTpR-_CJSCYlai8DiQIVcMPQsugXgjcvtW6enLbptmIlOLeD9kcfSzZpc3R5ibDHPKU6IBtumyVSfdKs_Rw8BfsjtdtxGUZvH-1lk0KwFF7f7G2W735zre0stdhbP7eThgZVRZWm49bC_Z0Dur3dDOaaC9Fr0eNYUmXXI-fxJl9PZo0H7oHmTQ');"></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-100 group-hover:text-primary transition-colors">Atomic Habits</span>
+<span class="text-xs text-slate-500 font-mono">ISBN: 978-0735211292</span>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="text-slate-300">James Clear</span>
+<span class="text-xs text-slate-500">Self-Help</span>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                        Shipped
+                                    </span>
+</td>
+<td class="p-4 text-right font-medium text-slate-200">$24.00</td>
+<td class="p-4 text-slate-400 text-xs hidden md:table-cell">Oct 23, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-slate-100 hover:bg-surface-border rounded transition-colors" title="More">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-background-dark/40 transition-colors">
+<td class="p-4 pl-6">
+<input class="rounded border-surface-border bg-background-dark text-primary focus:ring-offset-background-dark focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<div class="h-12 w-9 rounded bg-cover bg-center shadow-md shrink-0" data-alt="Cover of Design Systems book" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBITHuuYKBL7XHphesSFEPR-ciQoqW1uqoEWgqXWPNH57WnTWy9IXXSHsayl_GLwEEB8BEFQVTpG5aUXPLfidP19jmHngLAJrnznaAuYwXF-wIapSGLB0X4nyepuiAjO0sCMhlcovqJyjbnTkeO7kOyn0xPluWw1Tk8fUDVbdUdWQlXcchdtSdOvtfSsGrwARfXds2HhEQ-d4jRh3OcS53PGn84I_o1UISAQepcHeZOTEKYskW0YK9JU3IbPyQ9c255zQTevcf-cA');"></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-100 group-hover:text-primary transition-colors">Design Systems</span>
+<span class="text-xs text-slate-500 font-mono">ISBN: 978-1933820241</span>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="text-slate-300">Alla Kholmatova</span>
+<span class="text-xs text-slate-500">Design</span>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                        Pending
+                                    </span>
+</td>
+<td class="p-4 text-right font-medium text-slate-200">$32.50</td>
+<td class="p-4 text-slate-400 text-xs hidden md:table-cell">Oct 22, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-slate-100 hover:bg-surface-border rounded transition-colors" title="More">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-background-dark/40 transition-colors">
+<td class="p-4 pl-6">
+<input class="rounded border-surface-border bg-background-dark text-primary focus:ring-offset-background-dark focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<div class="h-12 w-9 rounded bg-cover bg-center shadow-md shrink-0" data-alt="Cover of Thinking Fast and Slow book" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuChxWJ7N-2nU2O2X_c86WGrJlWlCbUX20qdqU8_q21LkjC6R-l-8AqrfgfurKqvmOfsoTVxFDQFONRA6VFMNfMBwjA5SWNCcpO1db2YoPU63TpQm2-x8lzUJ5-29dzvwBWuMNgs1fcrCMDXbmumU8ngkMiUVrmS9cEGL9F3_hDIGwX0N76yG2YDzNW5w1zsgQqfs7fHXEeBHXwZxlXUp3N7PRtfRQUqLn8KrAF5ksVNU8Wso8iB-l0Ze51rARCo8e_Fc3LTIFSQhw');"></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-100 group-hover:text-primary transition-colors">Thinking Fast and Slow</span>
+<span class="text-xs text-slate-500 font-mono">ISBN: 978-0374533557</span>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="text-slate-300">Daniel Kahneman</span>
+<span class="text-xs text-slate-500">Psychology</span>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-500 border border-purple-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+                                        Pre-Order
+                                    </span>
+</td>
+<td class="p-4 text-right font-medium text-slate-200">$18.00</td>
+<td class="p-4 text-slate-400 text-xs hidden md:table-cell">Oct 20, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-slate-100 hover:bg-surface-border rounded transition-colors" title="More">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-background-dark/40 transition-colors">
+<td class="p-4 pl-6">
+<input class="rounded border-surface-border bg-background-dark text-primary focus:ring-offset-background-dark focus:ring-primary" type="checkbox"/>
+</td>
+<td class="p-4">
+<div class="flex items-center gap-4">
+<div class="h-12 w-9 rounded bg-cover bg-center shadow-md shrink-0" data-alt="Cover of The Alchemist book" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDW2ywhSZJxNPF-DdBEOQDzFxqH3xEb7GCZ1lg-RDOqR-3ZxuERRk7TK4qJ8PyleQeJyYaOyVd4ZacCIsTaYCknW6-6FtThVrdkB2dCr_DL5_jPm2oc0JDnTvAr94ahl9PRLVsSREinAeJ71OVhQ0u-JHQFYduzZEDOjmxcPkvIGIQlx4dYHx-M9IlMxsUIxHLNGpMIhfTLV79xwdZEUvGMVN1mdAhYan-EBknKe1PMUTY9XZr-bV_LsyvILzy8nqYjjjBWbKrww');"></div>
+<div class="flex flex-col">
+<span class="font-semibold text-slate-100 group-hover:text-primary transition-colors">The Alchemist</span>
+<span class="text-xs text-slate-500 font-mono">ISBN: 978-0062315007</span>
+</div>
+</div>
+</td>
+<td class="p-4">
+<div class="flex flex-col">
+<span class="text-slate-300">Paulo Coelho</span>
+<span class="text-xs text-slate-500">Fiction</span>
+</div>
+</td>
+<td class="p-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-500 border border-rose-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                        Low Stock
+                                    </span>
+</td>
+<td class="p-4 text-right font-medium text-slate-200">$16.50</td>
+<td class="p-4 text-slate-400 text-xs hidden md:table-cell">Oct 19, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/10 rounded transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-slate-100 hover:bg-surface-border rounded transition-colors" title="More">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-4 border-t border-surface-border flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="text-sm text-slate-400">Showing <span class="text-white font-medium">1-5</span> of <span class="text-white font-medium">1,245</span> entries</p>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded border border-surface-border bg-background-dark text-slate-400 text-sm hover:text-white hover:border-slate-500 transition-colors disabled:opacity-50">Previous</button>
+<button class="w-8 h-8 rounded bg-primary text-white text-sm font-medium flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded border border-surface-border bg-transparent text-slate-400 text-sm font-medium hover:text-white hover:border-slate-500 transition-colors flex items-center justify-center">2</button>
+<button class="w-8 h-8 rounded border border-surface-border bg-transparent text-slate-400 text-sm font-medium hover:text-white hover:border-slate-500 transition-colors flex items-center justify-center">3</button>
+<span class="text-slate-500 text-sm px-1">...</span>
+<button class="w-8 h-8 rounded border border-surface-border bg-transparent text-slate-400 text-sm font-medium hover:text-white hover:border-slate-500 transition-colors flex items-center justify-center">42</button>
+<button class="px-3 py-1.5 rounded border border-surface-border bg-background-dark text-slate-400 text-sm hover:text-white hover:border-slate-500 transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Quick Tips Section -->
+<div class="flex flex-col gap-4">
+<div class="rounded-lg bg-gradient-to-r from-primary/20 to-transparent p-4 border border-primary/20 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-primary/20 p-2 rounded-full text-primary">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div>
+<h3 class="text-white font-semibold">Pro Tip: Bulk Actions</h3>
+<p class="text-slate-400 text-sm">Select multiple rows using the checkboxes to reveal bulk actions like 'Mark as Shipped' or 'Export Selected'.</p>
+</div>
+</div>
+<button class="text-sm text-primary font-medium hover:text-blue-400 whitespace-nowrap">Learn more</button>
+</div>
+</div>
+<footer class="mt-8 text-center text-xs text-slate-600 pb-4">
+                © 2024 BookNest Inc. All rights reserved.
+            </footer>
+</div>
+</main>
+</body></html>

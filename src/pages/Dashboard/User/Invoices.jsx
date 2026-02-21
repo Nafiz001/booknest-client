@@ -91,7 +91,8 @@ Visit us at BookNest
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Invoices</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Billing</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">Invoices</h1>
         <p className="text-gray-600 dark:text-gray-400">
           {invoices.length} {invoices.length === 1 ? 'invoice' : 'invoices'} found
         </p>
@@ -108,53 +109,53 @@ Visit us at BookNest
           </p>
         </div>
       ) : (
-        <div className="card overflow-hidden">
+        <div className="table-shell">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-800 border-b border-border-light dark:border-border-dark">
+            <thead className="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+                <th className="table-head-cell">
                   Payment ID
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+                <th className="table-head-cell">
                   Book Name
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+                <th className="table-head-cell">
                   Amount
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+                <th className="table-head-cell">
                   Date
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
+                <th className="table-head-cell">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border-light dark:divide-border-dark">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {invoices.map((invoice) => (
-                <tr key={invoice._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                  <td className="px-6 py-4">
+                <tr key={invoice._id} className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                  <td className="table-cell">
                     <span className="font-mono text-sm text-primary">
                       #{invoice._id.slice(-8).toUpperCase()}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-900 dark:text-white">{invoice.bookTitle}</td>
-                  <td className="px-6 py-4">
+                  <td className="table-cell text-gray-900 dark:text-white">{invoice.bookTitle}</td>
+                  <td className="table-cell">
                     <span className="inline-flex items-center space-x-1 text-green-600 dark:text-green-400 font-semibold">
                       <DollarSign className="w-4 h-4" />
                       <span>{Number(invoice.bookPrice).toFixed(2)}</span>
                     </span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="table-cell">
                     <span className="inline-flex items-center space-x-1 text-gray-600 dark:text-gray-400">
                       <Calendar className="w-4 h-4" />
                       <span>{new Date(invoice.paidAt || invoice.createdAt).toLocaleDateString()}</span>
                     </span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="table-cell">
                     <button 
                       onClick={() => downloadInvoice(invoice)}
-                      className="inline-flex items-center space-x-1 text-primary hover:text-primary-dark transition-colors"
+                      className="inline-flex items-center space-x-1 text-primary transition-colors hover:text-primary-dark"
                     >
                       <Download className="w-4 h-4" />
                       <span>Download</span>

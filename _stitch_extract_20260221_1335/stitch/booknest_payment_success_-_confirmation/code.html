@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BookNest Payment Success</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1754cf",
+                        "primary-foreground": "#ffffff",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "surface-dark": "#1a202e",
+                        "surface-border": "#292e38",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary selection:text-white">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Background Pattern -->
+<div class="absolute inset-0 pointer-events-none opacity-20" style="background-image: radial-gradient(#1754cf 1px, transparent 1px); background-size: 32px 32px;"></div>
+<div class="layout-container flex h-full grow flex-col z-10">
+<!-- Navbar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-surface-border bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-6 lg:px-10 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-[20px]">auto_stories</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">BookNest</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium" href="#">Home</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium" href="#">Library</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium" href="#">Account</a>
+</div>
+<div class="flex gap-3">
+<button class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-full hover:bg-slate-100 dark:hover:bg-surface-border text-slate-600 dark:text-slate-300 transition-colors">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-full hover:bg-slate-100 dark:hover:bg-surface-border text-slate-600 dark:text-slate-300 transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center px-4 py-12 md:py-16">
+<div class="w-full max-w-[800px] flex flex-col items-center gap-10">
+<!-- Success Header -->
+<div class="flex flex-col items-center gap-6 text-center animate-fade-in-up">
+<div class="relative">
+<div class="absolute inset-0 bg-primary/20 blur-xl rounded-full"></div>
+<div class="relative flex items-center justify-center size-24 rounded-full bg-primary text-white shadow-xl shadow-primary/30">
+<span class="material-symbols-outlined text-[48px]">check</span>
+</div>
+</div>
+<div class="space-y-2 max-w-[480px]">
+<h1 class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">Order Confirmed!</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg">
+                                Your literary journey begins soon, Alex. We've sent a confirmation email to <span class="text-slate-900 dark:text-slate-200 font-medium">alex@email.com</span>.
+                            </p>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-4 w-full">
+<button class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-8 text-sm font-semibold text-white shadow transition-transform hover:scale-105 hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+                                Track My Order
+                            </button>
+<button class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-200 dark:border-surface-border bg-transparent px-8 text-sm font-semibold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-surface-border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400">
+                                Continue Shopping
+                            </button>
+</div>
+</div>
+<!-- Order Summary Card -->
+<div class="w-full bg-white dark:bg-surface-dark border border-slate-200 dark:border-surface-border rounded-xl shadow-lg dark:shadow-none overflow-hidden">
+<!-- Card Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 border-b border-slate-100 dark:border-surface-border gap-4">
+<div class="flex flex-col">
+<span class="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold mb-1">Order Number</span>
+<span class="text-lg font-mono font-medium text-slate-900 dark:text-white">#BN-8291</span>
+</div>
+<div class="flex flex-col sm:items-end">
+<span class="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold mb-1">Estimated Delivery</span>
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="text-sm font-semibold">Oct 24th, 2023</span>
+</div>
+</div>
+</div>
+<!-- Progress Bar (Visual Flair) -->
+<div class="w-full bg-slate-100 dark:bg-background-dark h-1.5">
+<div class="h-full bg-primary w-1/4 rounded-r-full"></div>
+</div>
+<!-- Items Grid -->
+<div class="p-6">
+<h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-4">Items in your order</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+<!-- Book 1 -->
+<div class="flex gap-4 group">
+<div class="relative shrink-0 w-16 h-24 rounded bg-slate-200 dark:bg-surface-border overflow-hidden shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="Classic hardcover book with vintage styling" class="w-full h-full object-cover" data-alt="Classic hardcover book cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1xPR7Mif3xSqeX0jhGhLyuVtbP10nwAiAZwKz5lWYJalXEsGY2D6R2hK4AVxcpthie1yVxvDfahAjzemya1KxtQfAW-nLDVOA6kYJk5n_khvLESaDd1NFl106cpq7zLOXWWRUQ9_D6sPsdkkgkbi5nsc48OtzL8p1fZYIiKVoDEUIo0Ccd9EPLHP9quEqXkMyJVknmrV8RqLMr3ppO1y4_6qU0fLZ-64sjngPzyqP8aycrfxRlATd_fb8b_8YhGoyD2pFdFV6OA"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">The Great Gatsby</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">F. Scott Fitzgerald</p>
+<p class="text-xs font-medium text-slate-900 dark:text-slate-300 mt-2">$14.50</p>
+</div>
+</div>
+<!-- Book 2 -->
+<div class="flex gap-4 group">
+<div class="relative shrink-0 w-16 h-24 rounded bg-slate-200 dark:bg-surface-border overflow-hidden shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="Minimalist book cover design with bold typography" class="w-full h-full object-cover" data-alt="Modern book cover art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5YACc25ifxUvJlEl7z3tLViPSiy2TnYOVruacV3sw9flz2ekyGG1KrjAji-XEQ7eSRZzlTd6_vlTSXMqLLM84kXacIlJ2dEEA1OEePb--Gn_Qg39W_54mBT1qrs8VFeckEZH3_iU7zu5kYvcWqhDPfVwrd90sTehtANjuq4oMmT-MdR-laUeAGBMDKK41v06LVhQ_NFsxd0TatBV4VwwY_33a5M5WegBtDs3HL0p-TjTQGH6Joe_2Cafs_rBTH2gRgeKnNQ1Aqw"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">1984</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">George Orwell</p>
+<p class="text-xs font-medium text-slate-900 dark:text-slate-300 mt-2">$12.00</p>
+</div>
+</div>
+<!-- Book 3 -->
+<div class="flex gap-4 group">
+<div class="relative shrink-0 w-16 h-24 rounded bg-slate-200 dark:bg-surface-border overflow-hidden shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="Fantasy novel book cover with intricate details" class="w-full h-full object-cover" data-alt="Fantasy book cover illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpKyWvHvPy0EDXljuiIp-Os2ehabStM4mS00T4oTxXqv6qAG6UzA3o6DifMW4K85dcqujRzSY5nC46Yf8l9e7ywWl1X7dFxW_eOrkeR-j_Gs6WlJlC94D65t2fXF6QFekZloAmbWWyGzYGVaNsTgf5gu377e7UDFbSNKhCmgofonf71p5j_S0XdSLP_ztAoFJsxay0EZOQxw0V46QsavAjjMYl9rzaoHvf_b2_0vxxcL9wHxf7b6Gpc99UWHU7YkOzvj8HOnQv6Q"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100 line-clamp-2">Dune</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Frank Herbert</p>
+<p class="text-xs font-medium text-slate-900 dark:text-slate-300 mt-2">$18.99</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card Footer / Totals -->
+<div class="bg-slate-50 dark:bg-background-dark/50 p-6 border-t border-slate-100 dark:border-surface-border">
+<div class="flex flex-col gap-3">
+<div class="flex justify-between text-sm">
+<span class="text-slate-500 dark:text-slate-400">Subtotal</span>
+<span class="text-slate-900 dark:text-slate-200 font-medium">$45.49</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500 dark:text-slate-400">Shipping (Standard)</span>
+<span class="text-slate-900 dark:text-slate-200 font-medium">$5.90</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500 dark:text-slate-400">Tax</span>
+<span class="text-slate-900 dark:text-slate-200 font-medium">$3.64</span>
+</div>
+<div class="h-px bg-slate-200 dark:bg-surface-border my-2"></div>
+<div class="flex justify-between items-center">
+<span class="text-base font-semibold text-slate-900 dark:text-white">Total Paid</span>
+<span class="text-xl font-bold text-slate-900 dark:text-white">$55.03</span>
+</div>
+</div>
+</div>
+</div>
+<a class="text-sm text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-1" href="#">
+                        Need help with this order? 
+                        <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</div>
+</main>
+</div>
+</div>
+</body></html>

@@ -3,59 +3,61 @@ import { Home, Search, BookOpen, ArrowLeft } from 'lucide-react';
 
 const NotFound = () => {
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-background-light dark:bg-background-dark px-4">
-      <div className="max-w-2xl w-full text-center">
-        {/* 404 Text */}
-        <div className="relative mb-8">
-          <h1 className="text-[150px] md:text-[200px] font-bold text-gray-200 dark:text-gray-800 leading-none select-none">
-            404
-          </h1>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <BookOpen className="w-24 h-24 md:w-32 md:h-32 text-primary animate-pulse" />
+    <div className="min-h-screen bg-background-light px-4 py-16 dark:bg-background-dark">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary">Error 404</p>
+            <h1 className="mt-4 text-balance text-5xl font-black leading-tight text-slate-900 dark:text-white md:text-6xl">
+              A plot twist we didn&apos;t expect.
+            </h1>
+            <p className="mt-5 max-w-lg text-lg text-slate-600 dark:text-slate-400">
+              The page you are looking for seems to be misplaced in the archives. Try returning home or jump straight into the catalog.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link to="/" className="btn-primary">
+                <Home className="h-4 w-4" />
+                Go Home
+              </Link>
+              <Link to="/all-books" className="btn-outline">
+                <Search className="h-4 w-4" />
+                Browse Books
+              </Link>
+            </div>
+            <button
+              onClick={() => window.history.back()}
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-primary dark:text-slate-400"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Go back to previous page
+            </button>
           </div>
-        </div>
 
-        {/* Message */}
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Page Not Found
-        </h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-          Oops! The page you're looking for seems to have wandered off into the library stacks.
-        </p>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link
-            to="/"
-            className="flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors duration-200 shadow-lg hover:shadow-xl"
-          >
-            <Home className="w-5 h-5" />
-            <span>Go Home</span>
-          </Link>
-          
-          <Link
-            to="/all-books"
-            className="flex items-center gap-2 px-6 py-3 bg-surface-light dark:bg-surface-dark text-gray-900 dark:text-white border-2 border-border-light dark:border-border-dark rounded-lg hover:border-primary transition-colors duration-200"
-          >
-            <Search className="w-5 h-5" />
-            <span>Browse Books</span>
-          </Link>
-        </div>
-
-        {/* Go Back Link */}
-        <button
-          onClick={() => window.history.back()}
-          className="mt-8 inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Go back to previous page</span>
-        </button>
-
-        {/* Decorative Elements */}
-        <div className="mt-12 flex justify-center gap-8 text-gray-300 dark:text-gray-700">
-          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"></div>
-          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"></div>
-          <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full"></div>
+          <div className="relative">
+            <div className="absolute inset-0 rounded-3xl bg-primary/20 blur-3xl"></div>
+            <div className="card relative overflow-hidden p-10 text-center">
+              <h2 className="text-[150px] font-black leading-none text-slate-200 dark:text-slate-800 md:text-[220px]">
+            404
+              </h2>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <BookOpen className="h-24 w-24 animate-pulse text-primary md:h-32 md:w-32" />
+              </div>
+              <p className="relative z-10 mt-4 text-sm text-slate-500 dark:text-slate-400">
+                While you&apos;re here, explore trending reads and community picks.
+              </p>
+              <div className="relative z-10 mt-6 grid grid-cols-3 gap-3">
+                {[1, 2, 3].map((item) => (
+                  <div key={item} className="overflow-hidden rounded-lg border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800">
+                    <img
+                      src={`https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=450&fit=crop&sig=${item}`}
+                      alt="Trending book"
+                      className="h-28 w-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

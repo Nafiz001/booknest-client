@@ -34,7 +34,7 @@ const PaymentSuccess = () => {
       <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="animate-spin h-12 w-12 text-primary mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">Processing your payment...</p>
+          <p className="text-slate-600 dark:text-slate-400">Processing your payment...</p>
         </div>
       </div>
     );
@@ -42,20 +42,27 @@ const PaymentSuccess = () => {
 
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-gray-800 p-10 rounded-lg shadow-lg text-center max-w-md w-full">
-        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+      <div className="card relative max-w-2xl overflow-hidden p-10 text-center">
+        <div className="pointer-events-none absolute inset-0 bg-mesh-dark opacity-10"></div>
+        <div className="relative">
+          <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-primary text-white shadow-xl shadow-primary/35">
+            <CheckCircle className="h-10 w-10" />
+          </div>
+          <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
           Payment Successful!
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Thank you for your purchase. Your order is being processed and will be delivered soon.
-        </p>
-        <Link
-          to="/dashboard/my-orders"
-          className="inline-block bg-primary hover:bg-primary-dark text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
-        >
-          Go to My Orders
-        </Link>
+          </h1>
+          <p className="mx-auto mb-6 max-w-md text-slate-600 dark:text-slate-400">
+            Thank you for your purchase. Your order is now confirmed and we&apos;ve started processing it for delivery.
+          </p>
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            <Link to="/dashboard/my-orders" className="btn-primary px-7 py-3">
+              Go to My Orders
+            </Link>
+            <Link to="/all-books" className="btn-outline px-7 py-3">
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

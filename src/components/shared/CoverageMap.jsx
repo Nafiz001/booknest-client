@@ -36,20 +36,18 @@ const CoverageMap = () => {
   ];
 
   return (
-    <section className="py-16 bg-background-light dark:bg-background-dark">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+    <section className="section-wrap bg-background-light dark:bg-background-dark">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-12 text-center">
           <h2 className="section-title">Our Coverage Area</h2>
           <p className="section-subtitle">
             We deliver to major cities across the country. Find out if we're in your area!
           </p>
         </div>
 
-        <div className="max-w-5xl mx-auto">
-          {/* Map Container */}
-          <div className="relative bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 rounded-2xl p-4 overflow-hidden shadow-xl">
-            {/* Real Interactive Leaflet Map with Dynamic Markers */}
-            <div className="relative h-96 rounded-xl overflow-hidden border-2 border-primary/20 shadow-lg">
+        <div className="mx-auto max-w-5xl">
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 p-4 shadow-card dark:border-slate-700 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+            <div className="relative h-96 overflow-hidden rounded-xl border border-primary/20 shadow-lg">
               <MapContainer
                 center={[39.8283, -98.5795]}
                 zoom={4}
@@ -76,9 +74,8 @@ const CoverageMap = () => {
                 ))}
               </MapContainer>
               
-              {/* Overlay Info Card */}
-              <div className="absolute bottom-4 left-4 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm rounded-lg p-4 shadow-xl max-w-xs z-[1000]">
-                <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+              <div className="absolute bottom-4 left-4 z-[1000] max-w-xs rounded-lg border border-slate-200 bg-white/95 p-4 shadow-xl backdrop-blur-sm dark:border-slate-700 dark:bg-slate-900/95">
+                <h3 className="mb-2 flex items-center gap-2 font-bold text-gray-900 dark:text-white">
                   <MapPin className="w-4 h-4 text-primary" />
                   Service Coverage
                 </h3>
@@ -89,12 +86,11 @@ const CoverageMap = () => {
             </div>
           </div>
 
-          {/* City List */}
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {cities.map((city, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-2 p-3 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:border-primary transition-colors duration-200"
+                className="flex items-center space-x-2 rounded-lg border border-border-light bg-surface-light p-3 transition-colors duration-200 hover:border-primary dark:border-border-dark dark:bg-surface-dark"
               >
                 <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
                 <div className="text-sm">
@@ -105,15 +101,12 @@ const CoverageMap = () => {
             ))}
           </div>
 
-          {/* CTA */}
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Don't see your city? We're expanding! <br />
               Request service in your area.
             </p>
-            <button className="btn-primary">
-              Request Coverage
-            </button>
+            <button className="btn-primary">Request Coverage</button>
           </div>
         </div>
       </div>

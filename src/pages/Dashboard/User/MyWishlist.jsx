@@ -52,7 +52,8 @@ const MyWishlist = () => {
     <div>
       <Toaster position="top-right" />
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">My Wishlist</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Saved</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">My Wishlist</h1>
         <p className="text-gray-600 dark:text-gray-400">
           {wishlist.length} {wishlist.length === 1 ? 'book' : 'books'} in your wishlist
         </p>
@@ -74,14 +75,14 @@ const MyWishlist = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {wishlist.map((item) => (
-            <div key={item._id} className="card overflow-hidden hover:shadow-lg transition-shadow">
+            <div key={item._id} className="card overflow-hidden transition-all hover:-translate-y-1 hover:shadow-card-hover">
               <div className="relative">
                 <img
                   src={item.book.image}
                   alt={item.book.title}
                   className="w-full h-64 object-cover"
                 />
-                <div className="absolute top-2 right-2 bg-primary text-white px-2 py-1 rounded-lg text-sm font-bold">
+                <div className="absolute top-2 right-2 rounded-lg bg-primary px-2 py-1 text-sm font-bold text-white">
                   ${item.book.price}
                 </div>
               </div>
@@ -101,14 +102,14 @@ const MyWishlist = () => {
                 <div className="flex gap-2">
                   <Link
                     to={`/books/${item.book._id}`}
-                    className="flex-1 btn-primary text-center text-sm"
+                    className="btn-primary flex-1 text-center text-sm"
                   >
                     <ShoppingCart className="w-4 h-4 inline mr-1" />
                     Buy Now
                   </Link>
                   <button
                     onClick={() => removeFromWishlist(item._id)}
-                    className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+                    className="rounded-lg bg-red-100 px-4 py-2 text-red-600 transition-colors hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
                     title="Remove from wishlist"
                   >
                     <Trash2 className="w-4 h-4" />

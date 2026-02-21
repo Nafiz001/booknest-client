@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { BookOpen, Sparkles, Trophy, ArrowRight } from 'lucide-react';
 import HeroSlider from '../../components/shared/HeroSlider';
 import LatestBooks from '../../components/shared/LatestBooks';
 import WhyChooseUs from '../../components/shared/WhyChooseUs';
 import CoverageMap from '../../components/shared/CoverageMap';
-import BookNestLogo from '../../assets/BookNestLogo';
 import api from '../../utils/api';
 
 const HomeGoodreads = () => {
@@ -12,300 +12,163 @@ const HomeGoodreads = () => {
     queryKey: ['featuredBooks'],
     queryFn: async () => {
       const response = await api.get('/books?sort=newest');
-      return response.data.books.slice(0, 3);
+      return response.data.books.slice(0, 4);
     },
   });
 
   const renderStars = (rating) => {
     return (
-      <div className="flex items-center text-sm">
+      <div className="flex items-center text-xs">
         {[...Array(5)].map((_, i) => (
-          <span key={i} className={i < rating ? 'text-yellow-500' : 'text-gray-300'}>
+          <span key={i} className={i < Math.floor(rating || 0) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'}>
             ★
           </span>
         ))}
       </div>
     );
   };
+
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark">
-      {/* Hero Slider */}
       <HeroSlider />
-       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Sidebar */}
-          <aside className="lg:col-span-3 space-y-8">
-            {/* Currently Reading */}
-            <div>
-              <h2 className="text-xs font-bold uppercase text-on-surface-secondary-light dark:text-on-surface-secondary-dark tracking-wider mb-3">
-                Currently Reading
-              </h2>
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="w-12 h-16 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                  <span className="text-gray-500 dark:text-gray-400">📖</span>
-                </div>
-                <p className="text-on-surface-secondary-light dark:text-on-surface-secondary-dark text-sm">
-                  What are you reading?
-                </p>
-              </div>
-              <div className="relative mb-3">
-                <input
-                  className="w-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-md py-1.5 pl-3 pr-8 focus:ring-1 focus:ring-primary focus:border-primary"
-                  placeholder="Search books"
-                  type="text"
-                />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2">🔍</span>
-              </div>
-              <Link to="#" className="text-sm text-accent-green hover:underline">
-                Recommendations
-              </Link>
-              <span className="text-sm text-on-surface-secondary-light dark:text-on-surface-secondary-dark"> · </span>
-              <Link to="#" className="text-sm text-accent-green hover:underline">
-                General update
-              </Link>
-              <hr className="border-border-light dark:border-border-dark my-6" />
-            </div>
 
-            {/* Reading Challenge */}
-            <div>
-              <h2 className="text-xs font-bold uppercase text-on-surface-secondary-light dark:text-on-surface-secondary-dark tracking-wider mb-3">
-                2025 Reading Challenge
-              </h2>
-              <p className="text-sm mb-3">Challenge yourself to read more this year!</p>
-              <div className="flex items-center space-x-4">
-                <img
-                  alt="2025 Reading Challenge badge"
-                  className="w-24 h-auto"
-                  src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop"
-                />
-                <button className="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded px-4 py-1.5 text-sm font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                  Start Challenge
-                </button>
-              </div>
-              <hr className="border-border-light dark:border-border-dark my-6" />
-            </div>
-
-            {/* Want to Read */}
-            <div>
-              <h2 className="text-xs font-bold uppercase text-on-surface-secondary-light dark:text-on-surface-secondary-dark tracking-wider mb-3">
-                Want to Read
-              </h2>
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="w-12 h-16 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
-                  <span className="text-gray-500 dark:text-gray-400">📚</span>
-                </div>
-                <p className="text-on-surface-secondary-light dark:text-on-surface-secondary-dark text-sm">
-                  What do you want to read next?
-                </p>
-              </div>
-              <Link to="#" className="text-sm text-accent-green hover:underline">
-                Recommendations
-              </Link>
-              <hr className="border-border-light dark:border-border-dark my-6" />
-            </div>
-
-            {/* Bookshelves */}
-            <div>
-              <h2 className="text-xs font-bold uppercase text-on-surface-secondary-light dark:text-on-surface-secondary-dark tracking-wider mb-3">
-                Bookshelves
-              </h2>
-              <ul className="space-y-1 text-sm">
-                <li>
-                  <Link to="#" className="text-accent-green hover:underline">
-                    <span className="font-bold">0</span> Want to Read
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="text-accent-green hover:underline">
-                    <span className="font-bold">0</span> Currently Reading
-                  </Link>
-                </li>
-                <li>
-                  <Link to="#" className="text-accent-green hover:underline">
-                    <span className="font-bold">0</span> Read
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <div className="lg:col-span-6">
-            {/* Welcome Card */}
-            <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-md border border-border-light dark:border-border-dark mb-8 text-center">
-              <div className="flex justify-center mb-4">
-                <BookNestLogo className="scale-150" />
-              </div>
-              <h2 className="text-lg font-semibold mb-2">Welcome to BookNest</h2>
-              <p className="text-on-surface-secondary-light dark:text-on-surface-secondary-dark">
-                Meet your favorite book, find your reading community, and manage your reading life.
-              </p>
-            </div>
-
-            {/* Updates Feed */}
-            <div className="space-y-6">
-              <h2 className="text-xs font-bold uppercase text-on-surface-secondary-light dark:text-on-surface-secondary-dark tracking-wider">
-                Updates From Your Shelves
-              </h2>
-
-              {loading ? (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                </div>
-              ) : (
-                <>
-                  {/* Featured Books Feed */}
-                  {featuredBooks.map((book, index) => (
-                    <div key={book._id} className="bg-surface-light dark:bg-surface-dark p-4 rounded-md border border-border-light dark:border-border-dark">
-                      <div className="flex gap-4">
-                        <Link to={`/books/${book._id}`} className="flex-shrink-0">
-                          <img
-                            src={book.image}
-                            alt={book.title}
-                            className="w-24 h-36 object-cover rounded shadow-md hover:shadow-xl transition-shadow"
-                          />
-                        </Link>
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <Link to={`/books/${book._id}`} className="text-lg font-semibold hover:text-primary">
-                                {book.title}
-                              </Link>
-                              <p className="text-sm text-on-surface-secondary-light dark:text-on-surface-secondary-dark">
-                                by {book.author}
-                              </p>
-                            </div>
-                            {index === 0 && (
-                              <span className="bg-accent-yellow text-gray-900 text-xs font-bold px-2 py-1 rounded">
-                                NEW
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 mb-2">
-                            {renderStars(book.rating)}
-                            <span className="text-sm text-on-surface-secondary-light dark:text-on-surface-secondary-dark">
-                              {book.rating} · {book.reviews || 0} reviews
-                            </span>
-                          </div>
-                          <p className="text-sm text-on-surface-secondary-light dark:text-on-surface-secondary-dark mb-3 line-clamp-2">
-                            {book.description}
-                          </p>
-                          <div className="flex items-center gap-3">
-                            <Link
-                              to={`/books/${book._id}`}
-                              className="text-sm font-semibold text-primary hover:underline"
-                            >
-                              View Details
-                            </Link>
-                            <span className="text-sm text-on-surface-secondary-light dark:text-on-surface-secondary-dark">
-                              ${book.price}
-                            </span>
-                            <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
-                              {book.category}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-
-                  
-                 
-
-                  
-
-                  
-                  
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Right Sidebar */}
-          <aside className="lg:col-span-3 space-y-8">
-            {/* Goodreads Choice Awards */}
-            <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-md border border-border-light dark:border-border-dark text-center">
-              <div className="bg-gradient-to-br from-purple-600 to-blue-600 text-white py-8 px-4 rounded-md mb-4">
-                <div className="flex justify-center mb-2">
-                  <div className="bg-white px-2 py-1 dark:bg-surface-dark rounded">
-                    <BookNestLogo />
-                  </div>
-                </div>
-                <p className="text-lg">CHOICE AWARDS</p>
-                <p className="text-sm mt-2">The Best Books of 2024</p>
-              </div>
-              <Link
-                to="#"
-                className="inline-block w-full bg-accent-yellow text-gray-900 font-bold py-2 px-4 rounded hover:bg-yellow-500 transition-colors"
-              >
-                See the Winners
-              </Link>
-            </div>
-
-            {/* Recommendations */}
-            <div>
-              <h2 className="text-xs font-bold uppercase text-on-surface-secondary-light dark:text-on-surface-secondary-dark tracking-wider mb-3">
-                Recommendations
-              </h2>
-              <p className="text-sm mb-3">Get recommendations based on your taste</p>
-              <Link
-                to="#"
-                className="text-sm text-accent-green hover:underline"
-              >
-                Answer a few questions
-              </Link>
-            </div>
-
-            {/* News & Interviews */}
-            <div>
-              <h2 className="text-xs font-bold uppercase text-on-surface-secondary-light dark:text-on-surface-secondary-dark tracking-wider mb-3">
-                News & Interviews
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <img
-                    src="https://images.unsplash.com/photo-1519682337058-a94d519337bc?w=400&h=200&fit=crop"
-                    alt="News article"
-                    className="w-full h-32 object-cover rounded mb-2"
-                  />
-                  <Link to="#" className="text-sm font-semibold hover:text-primary">
-                    The Most Anticipated Books of 2025
-                  </Link>
-                </div>
-                <div>
-                  <Link to="#" className="text-sm hover:text-primary">
-                    50 Books to Read in 2025
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      </main>
-
-      {/* Latest Books Section */}
-      <LatestBooks />
-
-      {/* Why Choose Us */}
-      <WhyChooseUs />
-
-      {/* Coverage Map */}
-      <CoverageMap />
-      
-      {/* Top Banner */}
-      <div className="bg-[#026967] text-white py-2">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <Link to="#" className="flex items-center justify-center text-sm font-semibold hover:underline">
-            <span className="mr-2">📚</span>
-            2025 Challenge Faves
-            <span className="font-normal mx-2 text-gray-300">|</span>
-            <span>Explore the most popular books of the 2025 Reading Challenge</span>
-            <span className="ml-1">›</span>
+      <div className="border-y border-slate-200 bg-white/60 py-2 dark:border-slate-800 dark:bg-slate-900/40">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-4 text-sm font-medium text-slate-700 dark:text-slate-300 sm:px-6 lg:px-8">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <span>2026 Reader Favorites are now live.</span>
+          <Link to="/all-books" className="inline-flex items-center gap-1 text-primary hover:underline">
+            Explore
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </div>
 
-     
+      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <aside className="space-y-6 lg:col-span-4">
+            <div className="card overflow-hidden p-0">
+              <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-primary p-6 text-white">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-blue-200">Reader Hub</p>
+                <h2 className="mt-3 font-display text-3xl font-bold leading-tight">Build your next reading streak.</h2>
+                <p className="mt-3 text-sm text-slate-200">
+                  Save titles, track progress, and get recommendations tailored to your reading behavior.
+                </p>
+                <div className="mt-5 flex gap-2 text-xs text-slate-200">
+                  <span className="rounded-full bg-white/15 px-3 py-1">10k+ titles</span>
+                  <span className="rounded-full bg-white/15 px-3 py-1">48h delivery</span>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 border-t border-slate-200 text-center dark:border-slate-700">
+                <div className="border-r border-slate-200 p-4 dark:border-slate-700">
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">4.9</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Average Rating</p>
+                </div>
+                <div className="p-4">
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">25k+</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Community Reviews</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="card p-6">
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                Reading Challenge
+              </h3>
+              <div className="mt-4 flex items-start gap-4">
+                <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                  <Trophy className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="text-base font-semibold text-slate-900 dark:text-white">2026 BookNest Challenge</p>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    Finish 24 books this year and unlock exclusive recommendation collections.
+                  </p>
+                  <button className="mt-3 btn-outline text-sm">Join Challenge</button>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <section className="space-y-5 lg:col-span-8">
+            <div className="flex items-end justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Featured Feed</p>
+                <h2 className="mt-2 font-display text-3xl font-bold text-slate-900 dark:text-white">Editor picks for this week</h2>
+              </div>
+              <Link to="/all-books" className="hidden text-sm font-semibold text-primary hover:underline md:inline-flex">
+                View catalog
+              </Link>
+            </div>
+
+            {loading ? (
+              <div className="card p-8 text-center">
+                <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-primary"></div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                {featuredBooks.map((book, index) => (
+                  <article key={book._id} className="card group overflow-hidden">
+                    <div className="flex h-full flex-col">
+                      <div className="relative overflow-hidden">
+                        <img
+                          src={book.image}
+                          alt={book.title}
+                          className="h-60 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        {index === 0 && (
+                          <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
+                            Featured
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-1 flex-col p-5">
+                        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{book.category || 'General'}</p>
+                        <Link
+                          to={`/books/${book._id}`}
+                          className="mt-2 line-clamp-2 text-xl font-bold text-slate-900 transition-colors hover:text-primary dark:text-white"
+                        >
+                          {book.title}
+                        </Link>
+                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">by {book.author}</p>
+
+                        <div className="mt-3 flex items-center gap-2">
+                          {renderStars(book.rating)}
+                          <span className="text-xs text-slate-500 dark:text-slate-400">({book.reviews || 0} reviews)</span>
+                        </div>
+
+                        <p className="mt-3 line-clamp-2 text-sm text-slate-600 dark:text-slate-400">{book.description}</p>
+                        <div className="mt-4 flex items-center justify-between">
+                          <span className="text-2xl font-bold text-primary">${book.price}</span>
+                          <Link to={`/books/${book._id}`} className="btn-primary text-sm">
+                            Details
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            <div className="card bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white dark:from-slate-900 dark:to-slate-800">
+              <div className="flex flex-col justify-between gap-5 md:flex-row md:items-center">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-200">BookNest Membership</p>
+                  <h3 className="mt-2 text-2xl font-bold">Free delivery + early access to popular titles</h3>
+                  <p className="mt-2 text-sm text-slate-300">
+                    Start with a trial and unlock premium shelves curated by librarians and reviewers.
+                  </p>
+                </div>
+                <button className="btn-primary whitespace-nowrap">Start Free Trial</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <LatestBooks />
+      <WhyChooseUs />
+      <CoverageMap />
     </div>
   );
 };

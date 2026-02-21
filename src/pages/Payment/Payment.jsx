@@ -71,7 +71,7 @@ const Payment = () => {
       <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="animate-spin h-12 w-12 text-primary mx-auto" />
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading payment...</p>
+          <p className="mt-4 text-slate-600 dark:text-slate-400">Loading payment...</p>
         </div>
       </div>
     );
@@ -83,81 +83,91 @@ const Payment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark py-12">
-      <div className="container mx-auto px-4 max-w-2xl">
+    <div className="min-h-screen bg-background-light py-12 dark:bg-background-dark">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <button
           onClick={() => navigate('/dashboard/my-orders')}
-          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-primary mb-6"
+          className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-primary dark:text-slate-400"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="h-4 w-4" />
           <span>Back to Orders</span>
         </button>
 
-        <div className="card">
-          <div className="flex items-center space-x-3 mb-6 pb-6 border-b border-border-light dark:border-border-dark">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-              <CreditCard className="w-6 h-6 text-primary" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <div className="card lg:col-span-7">
+            <div className="border-b border-slate-200 p-6 dark:border-slate-700">
+              <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                <CreditCard className="h-4 w-4" />
+                Secure Checkout
+              </div>
+              <h1 className="mt-3 text-3xl font-bold text-slate-900 dark:text-white">Complete Payment</h1>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Secure checkout powered by Stripe</p>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Complete Payment</h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Secure checkout powered by Stripe</p>
-            </div>
+            {order && (
+              <div className="p-6">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800">
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                    Payment Details
+                  </h3>
+                  <div className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                    <div className="flex items-center justify-between">
+                      <span>Item price</span>
+                      <span>${Number(order.bookPrice).toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>Shipping</span>
+                      <span>$0.00</span>
+                    </div>
+                    <div className="border-t border-slate-200 pt-2 text-base font-bold text-slate-900 dark:border-slate-700 dark:text-white">
+                      <div className="flex items-center justify-between">
+                        <span>Total due</span>
+                        <span>${Number(order.bookPrice).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm text-slate-700 dark:text-slate-300">
+                  You will be redirected to Stripe&apos;s secure checkout page. This page never stores card data locally.
+                </div>
+
+                <button onClick={handlePayment} disabled={processing} className="btn-primary mt-6 w-full py-3 text-base">
+                  {processing ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <CreditCard className="h-5 w-5" />
+                      Proceed to Payment
+                    </>
+                  )}
+                </button>
+
+                <p className="mt-3 text-center text-xs text-slate-500 dark:text-slate-400">
+                  Test card: 4242 4242 4242 4242 | Any future expiry | Any 3-digit CVC
+                </p>
+              </div>
+            )}
           </div>
 
           {order && (
-            <div className="space-y-6">
-              <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                  Order Details
-                </h3>
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={order.bookImage}
-                    alt={order.bookTitle}
-                    className="w-20 h-28 object-cover rounded shadow-md"
-                  />
-                  <div className="flex-1">
-                    <p className="font-semibold text-gray-900 dark:text-white text-lg mb-1">
-                      {order.bookTitle}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      Order ID: {order._id}
-                    </p>
-                    <p className="text-3xl font-bold text-primary">
-                      ${Number(order.bookPrice).toFixed(2)}
-                    </p>
+            <aside className="card lg:col-span-5">
+              <div className="border-b border-slate-200 p-5 dark:border-slate-700">
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Order Summary</h2>
+              </div>
+              <div className="p-5">
+                <div className="flex gap-4">
+                  <img src={order.bookImage} alt={order.bookTitle} className="h-32 w-24 rounded object-cover shadow-md" />
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">{order.bookTitle}</h3>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Order ID: {order._id}</p>
+                    <p className="mt-3 text-3xl font-bold text-primary">${Number(order.bookPrice).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
-
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <p className="text-sm text-blue-800 dark:text-blue-200">
-                  <strong>Note:</strong> You will be redirected to Stripe's secure checkout page to complete your payment.
-                </p>
-              </div>
-
-              <button
-                onClick={handlePayment}
-                disabled={processing}
-                className="w-full btn-primary py-4 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-              >
-                {processing ? (
-                  <>
-                    <Loader2 className="animate-spin h-5 w-5" />
-                    <span>Processing...</span>
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-5 h-5" />
-                    <span>Proceed to Payment</span>
-                  </>
-                )}
-              </button>
-
-              <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                Test card: 4242 4242 4242 4242 | Any future expiry | Any 3-digit CVC
-              </p>
-            </div>
+            </aside>
           )}
         </div>
       </div>

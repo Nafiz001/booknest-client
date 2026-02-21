@@ -110,18 +110,19 @@ const AddBook = () => {
     <div>
       <Toaster position="top-right" />
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Add New Book</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Librarian</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">Add New Book</h1>
         <p className="text-gray-600 dark:text-gray-400">Add a new book to the library collection</p>
       </div>
 
       <div className="max-w-4xl">
-        <form onSubmit={handleSubmit} className="card p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="card space-y-6 p-8">
           {/* Book Image */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Book Cover Image
             </label>
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-6 rounded-xl bg-slate-50 p-4 dark:bg-slate-800/60">
               {imagePreview ? (
                 <img src={imagePreview} alt="Preview" className="w-32 h-44 object-cover rounded-lg shadow-lg" />
               ) : (
@@ -130,7 +131,7 @@ const AddBook = () => {
                 </div>
               )}
               <label className="cursor-pointer">
-                <div className="flex items-center space-x-2 px-6 py-3 border-2 border-dashed border-border-light dark:border-border-dark rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <div className="flex items-center space-x-2 rounded-lg border-2 border-dashed border-border-light px-6 py-3 transition-colors hover:bg-gray-50 dark:border-border-dark dark:hover:bg-gray-800">
                   <Upload className="w-5 h-5" />
                   <span>Upload Image</span>
                 </div>
@@ -313,7 +314,7 @@ const AddBook = () => {
           <button 
             type="submit" 
             disabled={uploading}
-            className="w-full btn-primary py-3 text-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary w-full py-3 text-lg font-semibold disabled:cursor-not-allowed disabled:opacity-50"
           >
             {uploading ? 'Adding Book...' : 'Add Book'}
           </button>

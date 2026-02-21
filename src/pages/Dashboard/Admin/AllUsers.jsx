@@ -16,6 +16,7 @@ const AllUsers = () => {
       const response = await api.get('/users');
       setUsers(response.data.users);
     } catch (error) {
+      console.error(error);
       toast.error('Failed to load users');
     } finally {
       setLoading(false);
@@ -54,39 +55,40 @@ const AllUsers = () => {
     <div>
       <Toaster position="top-right" />
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">All Users</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Administration</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">All Users</h1>
         <p className="text-gray-600 dark:text-gray-400">{users.length} registered users</p>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className="table-shell">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-border-light dark:divide-border-dark">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+            <thead className="bg-slate-50 dark:bg-slate-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   User
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Auth Provider
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Role
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border-light dark:divide-border-dark">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {users.map((user) => user && (
-                <tr key={user._id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <tr key={user._id} className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                  <td className="table-cell whitespace-nowrap">
                     <div className="flex items-center">
                       {user.photoURL ? (
-                        <img className="h-10 w-10 rounded-full" src={user.photoURL} alt={user.name || 'User'} />
+                        <img className="h-10 w-10 rounded-full object-cover" src={user.photoURL} alt={user.name || 'User'} />
                       ) : (
                         <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
                           {user.name?.charAt(0)?.toUpperCase() || 'U'}
@@ -98,23 +100,23 @@ const AllUsers = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="table-cell whitespace-nowrap">
                     <div className="text-sm">{user.email}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="table-cell whitespace-nowrap">
                     <span className="capitalize text-sm">{user.authProvider}</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="table-cell whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleColor(user.role)}`}>
                       {user.role}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="table-cell whitespace-nowrap text-sm">
                     <div className="flex gap-2">
                       {user.role !== 'librarian' && (
                         <button
                           onClick={() => updateUserRole(user._id, 'librarian')}
-                          className="flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                          className="flex items-center gap-1 rounded bg-blue-100 px-3 py-1 text-blue-600 transition-colors hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50"
                         >
                           <BookOpen className="w-3 h-3" />
                           Make Librarian
@@ -123,7 +125,7 @@ const AllUsers = () => {
                       {user.role !== 'admin' && (
                         <button
                           onClick={() => updateUserRole(user._id, 'admin')}
-                          className="flex items-center gap-1 px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+                          className="flex items-center gap-1 rounded bg-purple-100 px-3 py-1 text-purple-600 transition-colors hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:hover:bg-purple-900/50"
                         >
                           <Shield className="w-3 h-3" />
                           Make Admin
@@ -132,7 +134,7 @@ const AllUsers = () => {
                       {user.role !== 'user' && (
                         <button
                           onClick={() => updateUserRole(user._id, 'user')}
-                          className="flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                          className="flex items-center gap-1 rounded bg-gray-100 px-3 py-1 text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                         >
                           <Users className="w-3 h-3" />
                           Make User

@@ -94,24 +94,25 @@ const MyProfile = () => {
     <div>
       <Toaster position="top-right" />
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">My Profile</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Account</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">My Profile</h1>
         <p className="text-gray-600 dark:text-gray-400">Manage your account information</p>
       </div>
 
-      <div className="max-w-2xl">
+      <div className="max-w-3xl">
         <div className="card p-8">
           <div className="space-y-6">
             {/* Profile Picture */}
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center rounded-xl bg-slate-50 p-6 dark:bg-slate-800/50">
               <div className="relative">
                 <img
                   src={imagePreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=150&background=2563eb&color=fff`}
                   alt="Profile"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-primary"
+                  className="h-28 w-28 rounded-full border-4 border-primary object-cover"
                 />
                 {isEditing && (
-                  <label className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full cursor-pointer hover:bg-primary-dark transition-colors">
-                    <Camera className="w-5 h-5" />
+                  <label className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-primary p-2 text-white transition-colors hover:bg-primary-dark">
+                    <Camera className="h-5 w-5" />
                     <input
                       type="file"
                       accept="image/*"
@@ -121,11 +122,12 @@ const MyProfile = () => {
                   </label>
                 )}
               </div>
+              <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">Click camera icon to update your avatar</p>
             </div>
 
             {/* Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Full Name
               </label>
               <div className="relative">
@@ -137,14 +139,14 @@ const MyProfile = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   disabled={!isEditing}
-                  className="input-field pl-10 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="input-field pl-10 disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
             </div>
 
             {/* Email Field (Read-only) */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Email Address
               </label>
               <div className="relative">
@@ -155,7 +157,7 @@ const MyProfile = () => {
                   type="email"
                   value={user?.email || ''}
                   disabled
-                  className="input-field pl-10 opacity-60 cursor-not-allowed"
+                  className="input-field cursor-not-allowed pl-10 opacity-60"
                 />
               </div>
               <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -182,7 +184,7 @@ const MyProfile = () => {
                     type="button"
                     onClick={handleSubmit}
                     disabled={uploading}
-                    className="btn-primary px-6 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary px-6 py-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {uploading ? 'Saving...' : 'Save Changes'}
                   </button>
@@ -198,7 +200,7 @@ const MyProfile = () => {
                       setSelectedFile(null);
                     }}
                     disabled={uploading}
-                    className="px-6 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-secondary px-6 py-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Cancel
                   </button>

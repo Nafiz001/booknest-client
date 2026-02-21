@@ -19,6 +19,7 @@ const Orders = () => {
       const response = await api.get(`/orders/librarian/${userId}`);
       setOrders(response.data.orders);
     } catch (error) {
+      console.error(error);
       toast.error('Failed to load orders');
     } finally {
       setLoading(false);
@@ -33,6 +34,7 @@ const Orders = () => {
       ));
       toast.success('Order status updated');
     } catch (error) {
+      console.error(error);
       toast.error('Failed to update order status');
     }
   };
@@ -60,7 +62,8 @@ const Orders = () => {
     <div>
       <Toaster position="top-right" />
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Book Orders</h1>
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Operations</p>
+        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">Book Orders</h1>
         <p className="text-gray-600 dark:text-gray-400">{orders.length} total orders</p>
       </div>
 
@@ -75,60 +78,60 @@ const Orders = () => {
           </p>
         </div>
       ) : (
-        <div className="card overflow-hidden">
+        <div className="table-shell">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-border-light dark:divide-border-dark">
-              <thead className="bg-gray-50 dark:bg-gray-800">
+            <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+              <thead className="bg-slate-50 dark:bg-slate-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <th className="table-head-cell">
                     Order ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <th className="table-head-cell">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <th className="table-head-cell">
                     Book
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <th className="table-head-cell">
                     Type
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <th className="table-head-cell">
                     Amount
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <th className="table-head-cell">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                  <th className="table-head-cell">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-light dark:divide-border-dark">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
                 {orders.map((order) => (
-                  <tr key={order._id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">
+                  <tr key={order._id} className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td className="table-cell whitespace-nowrap text-sm font-mono">
                       #{order._id.slice(-6)}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="table-cell whitespace-nowrap">
                       <div className="text-sm font-medium">{order.user?.name}</div>
                       <div className="text-sm text-gray-500">{order.user?.email}</div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="table-cell">
                       <div className="text-sm font-medium">{order.book?.title}</div>
                       <div className="text-sm text-gray-500">{order.book?.author}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="table-cell whitespace-nowrap">
                       <span className="capitalize text-sm">{order.deliveryType}</span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="table-cell whitespace-nowrap">
                       <div className="text-sm font-medium text-primary">${order.totalAmount}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="table-cell whitespace-nowrap">
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <td className="table-cell whitespace-nowrap text-sm">
                       {order.status !== 'delivered' && order.status !== 'cancelled' && (
                         <select
                           value={order.status}

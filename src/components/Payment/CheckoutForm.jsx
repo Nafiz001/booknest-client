@@ -19,7 +19,7 @@ const CheckoutForm = ({ amount, orderId, onSuccess, onCancel }) => {
           orderId
         });
         setClientSecret(response.data.clientSecret);
-      } catch (error) {
+      } catch {
         toast.error('Failed to initialize payment');
       }
     };

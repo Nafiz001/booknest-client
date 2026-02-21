@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BookNest - Profile Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1754cf",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for dark mode elegance */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111621;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2d3748;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a5568;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display antialiased selection:bg-primary selection:text-white">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar Navigation -->
+<div class="hidden md:flex w-72 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-[#111318]">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-6">
+<!-- Brand -->
+<div class="flex items-center gap-3 px-2">
+<div class="bg-primary/20 flex items-center justify-center rounded-lg size-10 text-primary">
+<span class="material-symbols-outlined">local_library</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-white text-lg font-bold leading-none tracking-tight">BookNest</h1>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium">Premium Library</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">home</span>
+<span class="text-sm font-medium">Home</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">menu_book</span>
+<span class="text-sm font-medium">My Library</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined fill-1">person</span>
+<span class="text-sm font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</div>
+</div>
+<!-- Bottom Links -->
+<div class="flex flex-col gap-1 border-t border-slate-200 dark:border-slate-800 pt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">help</span>
+<span class="text-sm font-medium">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-red-500 transition-colors">logout</span>
+<span class="text-sm font-medium group-hover:text-red-600 dark:group-hover:text-red-400">Sign Out</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="mx-auto max-w-5xl px-4 py-8 md:px-8 md:py-12">
+<!-- Header & Breadcrumbs -->
+<div class="mb-8 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Dashboard</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-medium text-slate-900 dark:text-white">Profile Settings</span>
+</div>
+<div class="flex flex-wrap items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Account Settings</h1>
+<p class="mt-2 text-base text-slate-600 dark:text-slate-400">Manage your personal information and delivery preferences.</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+<!-- Left Column: Identity & Membership -->
+<div class="space-y-6 lg:col-span-1">
+<!-- Profile Card -->
+<div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-[#1A1D24]">
+<div class="flex flex-col items-center text-center">
+<div class="group relative mb-4">
+<div class="h-28 w-28 overflow-hidden rounded-full border-4 border-slate-100 dark:border-slate-700 shadow-lg">
+<img alt="User profile photo showing a smiling woman" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGXqpVpUyt6FYqeUEDXQaD8AjrTvgxkvHjiJ6UhqJ463UXKZB4lyhSCzAAEpWd5RYEamZEHKTcXBGM-KCcxhVd-iIu88ws3dwrWeIA8GNV7fW6_0Y78AVfJVYEadZapRLq3wi_RZyBprg4KFtCRWXCUK70NSGSkiDVlRBPH4ZxsrxHXe8go92t564dCOURGtTPSOVDz4iOFWkAxxdstCyvH_xlSeUENknh7WhsFmIb0J_KDgDxYyg8kOYvFJcLmvotsnkbJX8Gxg"/>
+</div>
+<button class="absolute bottom-0 right-0 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-slate-900">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+</button>
+</div>
+<h2 class="text-xl font-bold text-slate-900 dark:text-white">Alex Bibliophile</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-3">Member since 2023</p>
+<span class="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">
+                                    Bibliophile Tier
+                                </span>
+</div>
+</div>
+<!-- Membership Status -->
+<div class="rounded-xl bg-gradient-to-br from-primary to-[#2563EB] p-6 text-white shadow-lg">
+<div class="mb-4 flex items-center justify-between">
+<span class="rounded-lg bg-white/20 p-2 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white">diamond</span>
+</span>
+<span class="rounded-full bg-white/10 px-2 py-1 text-xs font-medium text-white/90">Auto-Renew On</span>
+</div>
+<h3 class="text-lg font-bold">Premium Subscription</h3>
+<p class="mt-1 text-sm text-blue-100">Your next billing date is <span class="font-semibold text-white">December 15, 2024</span>.</p>
+<div class="mt-6">
+<div class="mb-2 flex justify-between text-xs font-medium text-blue-100">
+<span>Usage</span>
+<span>8/10 Books</span>
+</div>
+<div class="h-1.5 w-full overflow-hidden rounded-full bg-black/20">
+<div class="h-full w-[80%] rounded-full bg-white"></div>
+</div>
+</div>
+<button class="mt-6 w-full rounded-lg bg-white/10 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20">
+                                Manage Subscription
+                            </button>
+</div>
+</div>
+<!-- Right Column: Settings Forms -->
+<div class="lg:col-span-2">
+<div class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#1A1D24]">
+<!-- Tabs (Visual Only) -->
+<div class="border-b border-slate-200 dark:border-slate-800">
+<nav aria-label="Tabs" class="-mb-px flex gap-6 px-6">
+<a class="border-b-2 border-primary py-4 text-sm font-medium text-primary" href="#">
+                                        General Profile
+                                    </a>
+<a class="border-b-2 border-transparent py-4 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300" href="#">
+                                        Password &amp; Security
+                                    </a>
+<a class="border-b-2 border-transparent py-4 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-300" href="#">
+                                        Notifications
+                                    </a>
+</nav>
+</div>
+<div class="p-6 md:p-8">
+<form action="#" class="space-y-8" method="POST">
+<!-- Personal Information Section -->
+<div>
+<div class="mb-5 border-b border-slate-200 pb-2 dark:border-slate-800">
+<h3 class="text-base font-semibold leading-7 text-slate-900 dark:text-white">Personal Information</h3>
+<p class="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">Use a permanent address where you can receive mail.</p>
+</div>
+<div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2">
+<div class="sm:col-span-1">
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200" for="first-name">First name</label>
+<div class="mt-2">
+<input autocomplete="given-name" class="block w-full rounded-lg border-0 bg-slate-50 dark:bg-slate-900/50 py-2.5 px-3 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="first-name" name="first-name" type="text" value="Alex"/>
+</div>
+</div>
+<div class="sm:col-span-1">
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200" for="last-name">Last name</label>
+<div class="mt-2">
+<input autocomplete="family-name" class="block w-full rounded-lg border-0 bg-slate-50 dark:bg-slate-900/50 py-2.5 px-3 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="last-name" name="last-name" type="text" value="Bibliophile"/>
+</div>
+</div>
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200" for="email">Email address</label>
+<div class="relative mt-2 rounded-md shadow-sm">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">lock</span>
+</div>
+<input class="block w-full rounded-lg border-0 bg-slate-100 dark:bg-slate-800 py-2.5 pl-10 text-slate-500 dark:text-slate-400 shadow-sm ring-1 ring-inset ring-slate-300/50 dark:ring-slate-700 sm:text-sm sm:leading-6 cursor-not-allowed" disabled="" id="email" name="email" type="email" value="alex.reads@example.com"/>
+</div>
+<p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Contact support to change your email address.</p>
+</div>
+</div>
+</div>
+<!-- Shipping Address Section -->
+<div>
+<div class="mb-5 border-b border-slate-200 pb-2 dark:border-slate-800 flex items-center justify-between">
+<div>
+<h3 class="text-base font-semibold leading-7 text-slate-900 dark:text-white">Shipping Address</h3>
+<p class="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">Where should we deliver your books?</p>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+<div class="col-span-full">
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200" for="street-address">Street address</label>
+<div class="mt-2">
+<input autocomplete="street-address" class="block w-full rounded-lg border-0 bg-slate-50 dark:bg-slate-900/50 py-2.5 px-3 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="street-address" name="street-address" type="text" value="123 Library Lane, Apt 4B"/>
+</div>
+</div>
+<div class="sm:col-span-2 sm:col-start-1">
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200" for="city">City</label>
+<div class="mt-2">
+<input autocomplete="address-level2" class="block w-full rounded-lg border-0 bg-slate-50 dark:bg-slate-900/50 py-2.5 px-3 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="city" name="city" type="text" value="Bookton"/>
+</div>
+</div>
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200" for="region">State / Province</label>
+<div class="mt-2">
+<input autocomplete="address-level1" class="block w-full rounded-lg border-0 bg-slate-50 dark:bg-slate-900/50 py-2.5 px-3 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="region" name="region" type="text" value="NY"/>
+</div>
+</div>
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium leading-6 text-slate-900 dark:text-slate-200" for="postal-code">ZIP / Postal code</label>
+<div class="mt-2">
+<input autocomplete="postal-code" class="block w-full rounded-lg border-0 bg-slate-50 dark:bg-slate-900/50 py-2.5 px-3 text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-700 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="postal-code" name="postal-code" type="text" value="10001"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="flex items-center justify-end gap-x-4 border-t border-slate-200 pt-6 dark:border-slate-800">
+<button class="text-sm font-semibold leading-6 text-slate-900 dark:text-slate-300 hover:text-slate-600 dark:hover:text-white transition-colors" type="button">Cancel</button>
+<button class="flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all active:scale-95" type="submit">
+<span>Save Changes</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

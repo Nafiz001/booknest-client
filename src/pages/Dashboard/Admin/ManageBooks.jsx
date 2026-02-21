@@ -17,6 +17,7 @@ const ManageBooks = () => {
       const response = await api.get('/admin/books');
       setBooks(response.data.books);
     } catch (error) {
+      console.error(error);
       toast.error('Failed to load books');
     } finally {
       setLoading(false);
@@ -34,6 +35,7 @@ const ManageBooks = () => {
       
       toast.success(`Book ${newPublished ? 'published' : 'unpublished'} successfully`);
     } catch (error) {
+      console.error(error);
       toast.error('Failed to update book status');
     }
   };
@@ -70,7 +72,8 @@ const ManageBooks = () => {
       <Toaster position="top-right" />
       <div className="mb-8 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Manage Books</h1>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Administration</p>
+          <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">Manage Books</h1>
           <p className="text-gray-600 dark:text-gray-400">{filteredBooks.length} books total</p>
         </div>
         <div>
@@ -86,35 +89,35 @@ const ManageBooks = () => {
         </div>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className="table-shell">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-border-light dark:divide-border-dark">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+            <thead className="bg-slate-50 dark:bg-slate-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Book
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Librarian
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Price
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Category
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+                <th className="table-head-cell">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border-light dark:divide-border-dark">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-700">
               {filteredBooks.map((book) => (
-                <tr key={book._id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <tr key={book._id} className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                  <td className="table-cell whitespace-nowrap">
                     <div className="flex items-center">
                       <img className="h-16 w-12 rounded object-cover" src={book.image} alt={book.title} />
                       <div className="ml-4">
@@ -123,17 +126,17 @@ const ManageBooks = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="table-cell whitespace-nowrap">
                     <div className="text-sm">{book.librarian?.name || 'Unknown'}</div>
                     <div className="text-sm text-gray-500">{book.librarian?.email}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="table-cell whitespace-nowrap">
                     <div className="text-sm font-medium text-primary">${book.price}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="table-cell whitespace-nowrap">
                     <div className="text-sm">{book.category}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="table-cell whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       book.published
                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
@@ -142,7 +145,7 @@ const ManageBooks = () => {
                       {book.published ? 'Published' : 'Unpublished'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="table-cell whitespace-nowrap text-sm font-medium">
                     <div className="flex gap-2">
                       <button
                         onClick={() => toggleBookStatus(book._id, book.published)}

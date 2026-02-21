@@ -1,54 +1,60 @@
 import { Link } from 'react-router-dom';
 import { BookOpen, Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from 'lucide-react';
-import BookNestLogo from '../../assets/BookNestLogo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const quickLinks = [
     { name: 'Home', path: '/' },
-    { name: 'All Books', path: '/books' },
-    { name: 'About Us', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: 'All Books', path: '/all-books' },
+    { name: 'Dashboard', path: '/dashboard' },
   ];
 
   const supportLinks = [
-    { name: 'Help Center', path: '/help' },
-    { name: 'Terms of Service', path: '/terms' },
-    { name: 'Privacy Policy', path: '/privacy' },
-    { name: 'FAQ', path: '/faq' },
+    { name: 'Help Center', path: '#' },
+    { name: 'Terms of Service', path: '#' },
+    { name: 'Privacy Policy', path: '#' },
+    { name: 'Shipping Policy', path: '#' },
   ];
 
   return (
-    <footer className="bg-surface-light dark:bg-surface-dark border-t border-border-light dark:border-border-dark mt-auto">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand Section */}
+    <footer className="relative mt-auto overflow-hidden border-t border-slate-200 bg-slate-950 text-slate-100 dark:border-slate-700">
+      <div className="pointer-events-none absolute inset-0 bg-mesh-dark opacity-80"></div>
+      <div className="pointer-events-none absolute -top-20 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl"></div>
+
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <Link to="/" className="flex items-center mb-4">
-              <BookNestLogo />
+            <Link to="/" className="inline-flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/30">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-display text-2xl font-bold leading-none text-white">BookNest</p>
+                <p className="text-[10px] uppercase tracking-[0.24em] text-slate-400">Premium Library</p>
+              </div>
             </Link>
-            <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-              Your trusted partner for library-to-home book delivery. Access thousands of books without leaving your home.
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-300">
+              A modern library-to-home platform for readers who want curated books, reliable delivery, and a better reading experience.
             </p>
-            <div className="flex space-x-3">
+            <div className="mt-5 flex items-center gap-2">
               <a
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-200"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 text-slate-300 transition-colors hover:border-primary hover:text-white"
                 aria-label="Facebook"
               >
-                <Facebook className="w-5 h-5" />
+                <Facebook className="h-4 w-4" />
               </a>
               <a
                 href="https://x.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-200"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 text-slate-300 transition-colors hover:border-primary hover:text-white"
                 aria-label="X (Twitter)"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
@@ -56,33 +62,29 @@ const Footer = () => {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-200"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 text-slate-300 transition-colors hover:border-primary hover:text-white"
                 aria-label="Instagram"
               >
-                <Instagram className="w-5 h-5" />
+                <Instagram className="h-4 w-4" />
               </a>
               <a
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-200"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 text-slate-300 transition-colors hover:border-primary hover:text-white"
                 aria-label="LinkedIn"
               >
-                <Linkedin className="w-5 h-5" />
+                <Linkedin className="h-4 w-4" />
               </a>
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h3>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-slate-300">Quick Links</h3>
             <ul className="space-y-2">
               {quickLinks.map((link) => (
-                <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200"
-                  >
+                <li key={link.name}>
+                  <Link to={link.path} className="text-sm text-slate-300 transition-colors hover:text-white">
                     {link.name}
                   </Link>
                 </li>
@@ -90,16 +92,12 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Support</h3>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-slate-300">Support</h3>
             <ul className="space-y-2">
               {supportLinks.map((link) => (
-                <li key={link.path}>
-                  <Link
-                    to={link.path}
-                    className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors duration-200"
-                  >
+                <li key={link.name}>
+                  <Link to={link.path} className="text-sm text-slate-300 transition-colors hover:text-white">
                     {link.name}
                   </Link>
                 </li>
@@ -107,31 +105,22 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact Us</h3>
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-slate-300">Contact</h3>
             <ul className="space-y-3">
-              <li className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                <span className="text-gray-600 dark:text-gray-400 text-sm">
-                  123 Library Street, Booktown, BK 12345
-                </span>
+              <li className="flex items-start gap-2 text-sm text-slate-300">
+                <MapPin className="mt-0.5 h-4 w-4 text-primary" />
+                <span>123 Library Street, Booktown, BK 12345</span>
               </li>
-              <li className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-primary flex-shrink-0" />
-                <a
-                  href="tel:+1234567890"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors duration-200 text-sm"
-                >
+              <li className="flex items-center gap-2 text-sm text-slate-300">
+                <Phone className="h-4 w-4 text-primary" />
+                <a href="tel:+1234567890" className="transition-colors hover:text-white">
                   +1 (234) 567-890
                 </a>
               </li>
-              <li className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-primary flex-shrink-0" />
-                <a
-                  href="mailto:info@booknest.com"
-                  className="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors duration-200 text-sm"
-                >
+              <li className="flex items-center gap-2 text-sm text-slate-300">
+                <Mail className="h-4 w-4 text-primary" />
+                <a href="mailto:info@booknest.com" className="transition-colors hover:text-white">
                   info@booknest.com
                 </a>
               </li>
@@ -139,11 +128,8 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-border-light dark:border-border-dark mt-8 pt-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
-            © {currentYear} BookNest. All rights reserved. | Designed with ❤️ for book lovers
-          </p>
+        <div className="mt-10 border-t border-slate-800 pt-6 text-center text-sm text-slate-400">
+          © {currentYear} BookNest. Crafted for readers and built for scale.
         </div>
       </div>
     </footer>

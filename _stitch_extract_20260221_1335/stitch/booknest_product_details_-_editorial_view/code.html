@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BookNest - The Midnight Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1754cf",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#111621",
+                        "surface-dark": "#1a202c",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for horizontal scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .glass-panel {
+            background: rgba(26, 32, 44, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col antialiased">
+<!-- Navbar -->
+<div class="relative flex w-full flex-col dark group/design-root z-50">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-[#292e38] px-4 lg:px-10 py-3 bg-background-light dark:bg-[#111318]/95 backdrop-blur-md sticky top-0">
+<div class="flex items-center gap-4 lg:gap-8">
+<div class="flex items-center gap-4 text-slate-900 dark:text-white">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-3xl">menu_book</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">BookNest</h2>
+</div>
+<div class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Library</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium leading-normal hover:text-primary transition-colors" href="#">Categories</a>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-4 lg:gap-8">
+<label class="hidden sm:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full ring-1 ring-slate-200 dark:ring-[#292e38] focus-within:ring-primary transition-all">
+<div class="text-slate-400 dark:text-[#9da6b8] flex border-none bg-white dark:bg-[#292e38] items-center justify-center pl-4 rounded-l-lg">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 border-none bg-white dark:bg-[#292e38] h-full placeholder:text-slate-400 dark:placeholder:text-[#9da6b8] px-4 rounded-l-none pl-2 text-sm font-normal leading-normal" placeholder="Search books, authors..." value=""/>
+</div>
+</label>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 sm:w-auto sm:px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-blue-700 transition-colors">
+<span class="hidden sm:block">Profile</span>
+<span class="material-symbols-outlined sm:hidden text-[20px]">person</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-200 dark:bg-[#292e38] text-slate-900 dark:text-white hover:bg-slate-300 dark:hover:bg-[#363b47] transition-colors relative">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+</div>
+</div>
+</header>
+</div>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[1400px] mx-auto px-4 lg:px-10 py-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
+<!-- Left Column: Book Cover & Sticky Info -->
+<div class="lg:col-span-4 xl:col-span-3 flex flex-col gap-6">
+<div class="sticky top-24">
+<!-- Book Cover with Glow -->
+<div class="relative group perspective-1000 w-full max-w-[340px] mx-auto lg:mx-0">
+<div class="absolute -inset-1 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-xl blur-2xl opacity-40 group-hover:opacity-60 transition duration-500"></div>
+<div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10">
+<img alt="The Midnight Library Book Cover" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A dark blue book cover with star constellations" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBymha8kwsjvfsD5yBY5rm7aZX7JW7KTOpM2J0uw6A9zdEBXdyFG_bbkZ6natisNh_tOT2usDf9UAntKZ2WKWkSlUJkcRM2dpm3Gt6Nn75NHYMtPuLVqPyLzglt7NwHfX53gI-FqLJng8B0fvNnLe3QNgDA0flz4QGtjzt-5UWQ9JnaaAbI8t170VA1niEFKkHVNssiOph-r4I5bDYTs_cxteRUXtQJ4G69t3KIdb0eUC0Cj2sXu_rcLXLicg2qnRqazElEiHjIEg"/>
+</div>
+</div>
+<!-- Desktop CTA Block -->
+<div class="hidden lg:flex flex-col gap-4 mt-8 glass-panel p-6 rounded-xl">
+<div class="flex items-baseline justify-between">
+<span class="text-3xl font-bold text-slate-900 dark:text-white">$14.99</span>
+<span class="text-sm text-slate-500 line-through">$26.00</span>
+</div>
+<div class="flex items-center gap-2 text-green-500 text-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+                        In Stock &amp; Ready to Ship
+                    </div>
+<button class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-3.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
+<span>Order Now</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<button class="w-full bg-slate-200 dark:bg-[#292e38] hover:bg-slate-300 dark:hover:bg-[#363b47] text-slate-900 dark:text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-red-500" style="font-variation-settings: 'FILL' 0;">favorite</span>
+                        Add to Wishlist
+                    </button>
+<div class="pt-4 border-t border-slate-200 dark:border-white/10 text-xs text-center text-slate-500">
+                        30-Day Money Back Guarantee
+                    </div>
+</div>
+</div>
+</div>
+<!-- Right Column: Editorial Content -->
+<div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-10 pb-24 lg:pb-0">
+<!-- Breadcrumbs & Header -->
+<div>
+<nav class="flex items-center gap-2 text-sm text-slate-500 mb-6">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Fiction</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-slate-900 dark:text-white font-medium">Contemporary</span>
+</nav>
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1] mb-2">
+                    The Midnight Library
+                </h1>
+<div class="flex flex-wrap items-center gap-4 md:gap-8 mt-4">
+<a class="text-xl md:text-2xl font-medium text-primary hover:underline decoration-2 underline-offset-4" href="#">Matt Haig</a>
+<div class="h-6 w-px bg-slate-300 dark:bg-white/20 hidden sm:block"></div>
+<div class="flex items-center gap-1.5">
+<div class="flex text-yellow-400">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<span class="text-slate-900 dark:text-white font-bold ml-1">4.8</span>
+<span class="text-slate-500 text-sm ml-1">(2,403 reviews)</span>
+</div>
+</div>
+</div>
+<!-- Format Tabs -->
+<div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+<button class="flex flex-col items-start gap-1 p-4 rounded-xl border-2 border-primary bg-primary/10 min-w-[140px] relative">
+<div class="absolute top-2 right-2 text-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-primary">Hardcover</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
+</button>
+<button class="flex flex-col items-start gap-1 p-4 rounded-xl border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-transparent min-w-[140px] transition-colors">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500">Paperback</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$12.50</span>
+</button>
+<button class="flex flex-col items-start gap-1 p-4 rounded-xl border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-transparent min-w-[140px] transition-colors">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500">Audiobook</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$22.00</span>
+</button>
+<button class="flex flex-col items-start gap-1 p-4 rounded-xl border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 bg-transparent min-w-[140px] transition-colors">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500">Kindle</span>
+<span class="text-lg font-bold text-slate-900 dark:text-white">$9.99</span>
+</button>
+</div>
+<!-- Synopsis / Narrative Block -->
+<div class="relative">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_stories</span>
+                    About the Book
+                </h3>
+<div class="prose prose-lg dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed">
+<p>
+                        Between life and death there is a library, and within that library, the shelves go on forever. Every book provides a chance to try another life you could have lived. To see how things would be if you had made other choices... Would you have done anything different, if you had the chance to undo your regrets?
+                    </p>
+<p class="mt-4">
+                        A dazzling novel about all the choices that go into a life well lived, from the internationally bestselling author of Reasons to Stay Alive and How To Stop Time. Somewhere out beyond the edge of the universe there is a library that contains an infinite number of books, each one the story of another reality. One tells the story of your life as it is, along with another book for the other life you could have lived if you had made a different choice at any point in your life.
+                    </p>
+<p class="mt-4">
+                        While we all wonder how our lives might have been, what if you had the chance to go to the library and see for yourself? Would any of these other lives truly be better?
+                    </p>
+</div>
+<button class="mt-4 text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4 flex items-center gap-1">
+                    Read more
+                    <span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+<hr class="border-slate-200 dark:border-white/10"/>
+<!-- Metadata Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+<div>
+<span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Publisher</span>
+<span class="text-slate-900 dark:text-white font-medium">Viking</span>
+</div>
+<div>
+<span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Release Date</span>
+<span class="text-slate-900 dark:text-white font-medium">Sept 29, 2020</span>
+</div>
+<div>
+<span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Print Length</span>
+<span class="text-slate-900 dark:text-white font-medium">304 Pages</span>
+</div>
+<div>
+<span class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">ISBN</span>
+<span class="text-slate-900 dark:text-white font-medium">978-0525559474</span>
+</div>
+</div>
+<hr class="border-slate-200 dark:border-white/10"/>
+<!-- Reviews Section -->
+<div class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Community Reviews</h3>
+<button class="text-sm font-bold text-primary hover:text-blue-400">Write a Review</button>
+</div>
+<div class="grid md:grid-cols-2 gap-4">
+<!-- Review Card 1 -->
+<div class="bg-white dark:bg-[#1a202c] p-5 rounded-xl border border-slate-200 dark:border-white/5">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-sm">
+                                    SK
+                                </div>
+<div>
+<div class="text-sm font-bold text-slate-900 dark:text-white">Sarah Jenkins</div>
+<div class="text-xs text-slate-500">2 days ago</div>
+</div>
+</div>
+<div class="flex text-yellow-400 text-[16px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            Absolutely profound. Haig manages to tackle heavy themes of regret and mental health with a touch that feels both magical and grounded.
+                        </p>
+</div>
+<!-- Review Card 2 -->
+<div class="bg-white dark:bg-[#1a202c] p-5 rounded-xl border border-slate-200 dark:border-white/5">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-sm">
+                                    MJ
+                                </div>
+<div>
+<div class="text-sm font-bold text-slate-900 dark:text-white">Mark Johnson</div>
+<div class="text-xs text-slate-500">1 week ago</div>
+</div>
+</div>
+<div class="flex text-yellow-400 text-[16px]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            A bit repetitive in the middle, but the concept is brilliant. The ending tied everything together beautifully.
+                        </p>
+</div>
+</div>
+</div>
+<!-- People Also Liked Carousel -->
+<div class="flex flex-col gap-6 mt-4">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">People also liked</h3>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 dark:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+</button>
+<button class="w-8 h-8 rounded-full border border-slate-200 dark:border-white/10 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-white/5 text-slate-500 dark:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex gap-6 overflow-x-auto no-scrollbar pb-4 snap-x">
+<!-- Book 1 -->
+<div class="min-w-[140px] md:min-w-[160px] snap-start group cursor-pointer">
+<div class="aspect-[2/3] rounded-lg overflow-hidden mb-3 relative shadow-lg">
+<img alt="The Song of Achilles Book Cover" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Golden helmet on a book cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKjdsvx6sKsd4jAHB03DeUUqMGrcyc3POZozmbEhkNgq3qqQWu50yW5v3uEW_7_I9XhLUXXpMiMBPFVNr_PASbP-_IEmziUOvwUQQAA8H-Xxcs-j0lA_FJYEYmkKwd9uSgxvf7cg8YTdTTAHo2adhOHrn1yudZe01-8L5bskBg6nW1jhFOFn3ppFp66diNMa9_la7YueJuTxiFlOc5aDZAXPaweo7aMBMQO_MXZjYYsyn3aM0wGBpq6tXMah4vSJs93lxaGhaS2A"/>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">The Song of Achilles</h4>
+<p class="text-xs text-slate-500 truncate">Madeline Miller</p>
+</div>
+<!-- Book 2 -->
+<div class="min-w-[140px] md:min-w-[160px] snap-start group cursor-pointer">
+<div class="aspect-[2/3] rounded-lg overflow-hidden mb-3 relative shadow-lg">
+<img alt="Circe Book Cover" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Abstract classical art book cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmMjAIECMsemAfEiv5pfFsIC5x_PMqr4NcFs_3AJnXVP2TUV9s60NQRPhGYcjMI1AxhHkuN4-7oB6p7R_7MtzPosrrQ2A928dK7wfQ73Dy5A0NW0QNdMeVqk8WuTPfweFR1RWXVX8CsJqj8Ao-KCxEnVJHVHY27lwRT-8_5uI06pLf6dolDboJIcvZrnHabt4OV_qDQT9xIGCFBsHWuupOnqENmeqzodplTKFwIvrS_PCq0GVnK-YU_b94wNTpSoTtdhgUdR5eRw"/>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">Circe</h4>
+<p class="text-xs text-slate-500 truncate">Madeline Miller</p>
+</div>
+<!-- Book 3 -->
+<div class="min-w-[140px] md:min-w-[160px] snap-start group cursor-pointer">
+<div class="aspect-[2/3] rounded-lg overflow-hidden mb-3 relative shadow-lg">
+<img alt="A Man Called Ove Book Cover" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="A book with a minimal illustration of a man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9umSP5FbMaHrdtbIaITKowAspjwRIDnLSlyrQBlcIkh0FymgzGICEaq3BcaTPheh-4hOiTnsWtMWGz8SwAEaIOmKlqAqbam1n-HyujrvqXDXSbp-MAlCdQQPQdpNdthh10QPNVcpk3K_G3XOE_j__YbIPlA8DP3Tc5jKu4Hvv7StfmhDrq0L-fYy0Uvu-CoVHyv2DTlIikntAjsCubzAL5b77uHcjG7TBQl_sKUts5jPaeWSX9G2jMKpA-aa2k8R8FrkUQO1sIQ"/>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">A Man Called Ove</h4>
+<p class="text-xs text-slate-500 truncate">Fredrik Backman</p>
+</div>
+<!-- Book 4 -->
+<div class="min-w-[140px] md:min-w-[160px] snap-start group cursor-pointer">
+<div class="aspect-[2/3] rounded-lg overflow-hidden mb-3 relative shadow-lg">
+<img alt="Normal People Book Cover" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" data-alt="Abstract colorful book cover art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWukuCuSGuSUiuOp4kpnPS7cADPAd-mZdoRMjqEyVbN_CK-x_YkuUA2PNl6P5LaEyUS1jG5aF_AgSy2c_nKrntXWWe2ALG_FzWqogURZZ_Uu7PU37L-j7D-wslnKk-0QsDWCLIlExDjWqpebfO58SMcIL_u12TwElJS7yFHIqQ-lbZEbCOWCyRyw4ucTBHeq2rDwR6fYtpGfot5FZSUS4GtYa-wZk0WRNzw_ZVW1DG1MpeemO1CzxT-JpkONuBcPuBJ8Gz8t3cRg"/>
+</div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white truncate">Normal People</h4>
+<p class="text-xs text-slate-500 truncate">Sally Rooney</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Sticky Footer CTA -->
+<div class="fixed bottom-0 left-0 w-full p-4 glass-panel border-t border-white/10 lg:hidden z-40 flex items-center justify-between gap-4">
+<div class="flex flex-col">
+<span class="text-xl font-bold text-white">$14.99</span>
+<span class="text-xs text-green-400">In Stock</span>
+</div>
+<div class="flex gap-2 flex-1 justify-end">
+<button class="bg-slate-700 text-white p-3 rounded-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</button>
+<button class="bg-primary text-white font-bold py-3 px-6 rounded-lg flex-1 max-w-[200px] shadow-lg shadow-blue-900/40">
+                Order Now
+            </button>
+</div>
+</div>
+</body></html>

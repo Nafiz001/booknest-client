@@ -48,148 +48,133 @@ const DashboardLayout = () => {
   return (
     <div className="min-h-screen bg-background-light dark:bg-background-dark">
       <div className="flex">
-        {/* Sidebar - Desktop */}
-        <aside className="hidden lg:block w-64 bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark min-h-screen sticky top-0">
-          <div className="p-6">
-            <div className="flex items-center space-x-3 mb-8">
-              <LayoutDashboard className="w-8 h-8 text-primary" />
-              <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard</h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{userRole}</p>
-              </div>
+        <aside className="sticky top-0 hidden h-screen w-72 flex-col border-r border-slate-200 bg-white/90 p-4 backdrop-blur lg:flex dark:border-slate-800 dark:bg-background-dark/95">
+          <div className="mb-6 flex items-center gap-3 px-2 py-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/25">
+              <LayoutDashboard className="h-5 w-5" />
             </div>
-
-            {/* User Profile Card */}
-            <div className="mb-6 p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <img
-                  src={user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=48&background=2563eb&color=fff`}
-                  alt={user?.displayName}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-primary"
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                    {user?.displayName}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {user?.email}
-                  </p>
-                </div>
-              </div>
+            <div>
+              <h2 className="font-display text-2xl font-semibold text-slate-900 dark:text-white">BookNest</h2>
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                {userRole} panel
+              </p>
             </div>
-
-            {/* Navigation Links */}
-            <nav className="space-y-2">
-              {links.map((link) => (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  className={({ isActive }) =>
-                    `flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                      isActive
-                        ? 'bg-primary text-white shadow-lg'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }`
-                  }
-                >
-                  <link.icon className="w-5 h-5" />
-                  <span className="font-medium">{link.name}</span>
-                </NavLink>
-              ))}
-            </nav>
           </div>
+
+          <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-surface-dark">
+            <div className="flex items-center gap-3">
+              <img
+                src={
+                  user?.photoURL ||
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=80&background=1754cf&color=fff`
+                }
+                alt={user?.displayName || 'User'}
+                className="h-12 w-12 rounded-full border border-primary/30 object-cover"
+              />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user?.displayName}</p>
+                <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
+              </div>
+            </div>
+          </div>
+
+          <nav className="space-y-1">
+            {links.map((link) => (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                className={({ isActive }) =>
+                  `group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-md shadow-primary/25'
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                  }`
+                }
+              >
+                <link.icon className="h-4 w-4" />
+                <span>{link.name}</span>
+              </NavLink>
+            ))}
+          </nav>
         </aside>
 
-        {/* Mobile Sidebar */}
         {isSidebarOpen && (
           <div className="fixed inset-0 z-50 lg:hidden">
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={() => setIsSidebarOpen(false)}
-            ></div>
-            <aside className="absolute left-0 top-0 bottom-0 w-64 bg-surface-light dark:bg-surface-dark animate-slide-right">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center space-x-3">
-                    <LayoutDashboard className="w-8 h-8 text-primary" />
-                    <div>
-                      <h2 className="text-xl font-bold text-gray-900 dark:text-white">Dashboard</h2>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 capitalize">{userRole}</p>
-                    </div>
+            <div className="absolute inset-0 bg-black/55" onClick={() => setIsSidebarOpen(false)}></div>
+            <aside className="absolute left-0 top-0 h-full w-72 animate-slide-right bg-white p-4 dark:bg-background-dark">
+              <div className="mb-6 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">
+                    <LayoutDashboard className="h-5 w-5" />
                   </div>
-                  <button
-                    onClick={() => setIsSidebarOpen(false)}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">Dashboard</h2>
                 </div>
-
-                {/* User Profile Card */}
-                <div className="mb-6 p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=48&background=2563eb&color=fff`}
-                      alt={user?.displayName}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-primary"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                        {user?.displayName}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                        {user?.email}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Navigation Links */}
-                <nav className="space-y-2">
-                  {links.map((link) => (
-                    <NavLink
-                      key={link.path}
-                      to={link.path}
-                      onClick={() => setIsSidebarOpen(false)}
-                      className={({ isActive }) =>
-                        `flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                          isActive
-                            ? 'bg-primary text-white shadow-lg'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-                        }`
-                      }
-                    >
-                      <link.icon className="w-5 h-5" />
-                      <span className="font-medium">{link.name}</span>
-                    </NavLink>
-                  ))}
-                </nav>
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
+
+              <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-surface-dark">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={
+                      user?.photoURL ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=80&background=1754cf&color=fff`
+                    }
+                    alt={user?.displayName || 'User'}
+                    className="h-12 w-12 rounded-full border border-primary/30 object-cover"
+                  />
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user?.displayName}</p>
+                    <p className="truncate text-xs text-slate-500 dark:text-slate-400">{user?.email}</p>
+                  </div>
+                </div>
+              </div>
+
+              <nav className="space-y-1">
+                {links.map((link) => (
+                  <NavLink
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ${
+                        isActive
+                          ? 'bg-primary text-white'
+                          : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+                      }`
+                    }
+                  >
+                    <link.icon className="h-4 w-4" />
+                    <span>{link.name}</span>
+                  </NavLink>
+                ))}
+              </nav>
             </aside>
           </div>
         )}
 
-        {/* Main Content */}
-        <main className="flex-1 min-w-0">
-          {/* Mobile Header */}
-          <div className="lg:hidden sticky top-0 z-40 bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark px-4 py-3">
+        <main className="min-w-0 flex-1">
+          <div className="sticky top-0 z-40 border-b border-slate-200 bg-white/85 px-4 py-3 backdrop-blur lg:hidden dark:border-slate-800 dark:bg-background-dark/85">
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setIsSidebarOpen(true)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
               >
-                <Menu className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+                <Menu className="h-5 w-5" />
               </button>
-              <div className="flex items-center space-x-2">
-                <LayoutDashboard className="w-6 h-6 text-primary" />
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Dashboard</h1>
+              <div className="flex items-center gap-2">
+                <LayoutDashboard className="h-5 w-5 text-primary" />
+                <h1 className="text-base font-semibold text-slate-900 dark:text-white">Dashboard</h1>
               </div>
-              <div className="w-10"></div> {/* Spacer for centering */}
+              <div className="w-9"></div>
             </div>
           </div>
 
-          {/* Page Content */}
-          <div className="p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 lg:p-8">
             <Outlet />
           </div>
         </main>
