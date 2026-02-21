@@ -1,6 +1,6 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, LogIn, BookOpen, Github } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, LogIn, Github } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { saveOrUpdateUser } from '../../utils/auth';
 import AuthNavbar from '../../components/layout/AuthNavbar';
@@ -68,7 +68,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#111621] text-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 text-slate-900 dark:from-[#111621] dark:via-[#0f1a33] dark:to-[#111621] dark:text-slate-100">
       <AuthNavbar />
       <div className="flex min-h-screen w-full overflow-hidden pt-20">
         <section
@@ -93,24 +93,24 @@ const Login = () => {
 
         <section className="relative flex w-full items-center justify-center px-6 py-12 lg:w-1/2 lg:px-20 xl:px-28">
           <div className="w-full max-w-md space-y-7">
-            <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800/70 p-1">
+            <div className="grid grid-cols-2 gap-1 rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-800/70">
               <Link
                 to="/login"
-                className="rounded px-4 py-2.5 text-center text-sm font-medium text-primary shadow-sm bg-slate-900"
+                className="rounded bg-blue-50 px-4 py-2.5 text-center text-sm font-medium text-primary shadow-sm dark:bg-slate-900"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="rounded px-4 py-2.5 text-center text-sm font-medium text-slate-400 transition-colors hover:text-slate-200"
+                className="rounded px-4 py-2.5 text-center text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 Join BookNest
               </Link>
             </div>
 
             <div className="space-y-1 text-center lg:text-left">
-              <h1 className="text-3xl font-bold tracking-tight text-white">Welcome back</h1>
-              <p className="text-slate-400">Enter your details to access your personal library.</p>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome back</h1>
+              <p className="text-slate-600 dark:text-slate-400">Enter your details to access your personal library.</p>
             </div>
 
             {error && (
@@ -124,7 +124,7 @@ const Login = () => {
                 type="button"
                 onClick={handleGoogleLogin}
                 disabled={loading}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800 disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 disabled:opacity-60 dark:border-slate-700 dark:bg-transparent dark:text-slate-200 dark:hover:bg-slate-800"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
@@ -150,7 +150,7 @@ const Login = () => {
               <button
                 type="button"
                 disabled
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-500"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-400 dark:border-slate-700 dark:bg-transparent dark:text-slate-500"
                 title="GitHub auth is not configured for this app"
               >
                 <Github className="h-4 w-4" />
@@ -159,18 +159,18 @@ const Login = () => {
             </div>
 
             <div className="relative flex items-center py-1">
-              <div className="h-px flex-1 bg-slate-700"></div>
-              <span className="mx-4 text-xs font-medium uppercase tracking-wider text-slate-500">Or continue with</span>
-              <div className="h-px flex-1 bg-slate-700"></div>
+              <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700"></div>
+              <span className="mx-4 text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-500">Or continue with</span>
+              <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700"></div>
             </div>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-300">
+                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Email address
                 </label>
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                   <input
                     id="email"
                     name="email"
@@ -180,14 +180,14 @@ const Login = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    className="h-11 w-full rounded-lg border border-slate-300 bg-white px-10 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="mb-1.5 flex items-center justify-between">
-                  <label htmlFor="password" className="text-sm font-medium text-slate-300">
+                  <label htmlFor="password" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     Password
                   </label>
                   <Link to="#" className="text-sm font-medium text-primary hover:text-blue-400">
@@ -195,7 +195,7 @@ const Login = () => {
                   </Link>
                 </div>
                 <div className="relative">
-                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                   <input
                     id="password"
                     name="password"
@@ -204,12 +204,12 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="********"
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 pr-10 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    className="h-11 w-full rounded-lg border border-slate-300 bg-white px-10 pr-10 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -235,7 +235,7 @@ const Login = () => {
               </button>
             </form>
 
-            <p className="text-center text-sm text-slate-500">
+            <p className="text-center text-sm text-slate-500 dark:text-slate-500">
               By clicking continue, you agree to our{' '}
               <Link to="#" className="font-medium text-primary hover:underline">
                 Terms of Service
@@ -247,7 +247,7 @@ const Login = () => {
               .
             </p>
 
-            <p className="text-center text-xs text-slate-600">© {new Date().getFullYear()} BookNest Inc.</p>
+            <p className="text-center text-xs text-slate-500 dark:text-slate-600">© {new Date().getFullYear()} BookNest Inc.</p>
           </div>
         </section>
       </div>
@@ -256,3 +256,4 @@ const Login = () => {
 };
 
 export default Login;
+

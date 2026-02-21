@@ -13,12 +13,10 @@ import {
   Loader2,
   ShoppingCart,
   Bell,
-  Sun,
-  Moon,
 } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
+import ThemeToggle from '../shared/ThemeToggle';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,7 +31,6 @@ const Navbar = () => {
   const searchRef = useRef(null);
   const mobileSearchRef = useRef(null);
   const location = useLocation();
-  const { theme, toggleTheme } = useTheme();
   const { user, loading, logOut } = useAuth();
 
   const isHome = location.pathname === '/';
@@ -139,10 +136,10 @@ const Navbar = () => {
   };
 
   const headerClass = isStitchHeader
-    ? 'border-slate-800 bg-[#07122a]/85'
-    : 'border-slate-200/80 bg-white/85 dark:border-slate-700/60 dark:bg-background-dark/80';
-  const textClass = isStitchHeader ? 'text-slate-300' : 'text-slate-600 dark:text-slate-300';
-  const hoverClass = isStitchHeader ? 'hover:text-white' : 'hover:text-slate-900 dark:hover:text-white';
+    ? 'border-slate-200 bg-white/90 dark:border-slate-800 dark:bg-[#07122a]/85'
+    : 'border-slate-200/80 bg-white/90 dark:border-slate-700/60 dark:bg-background-dark/80';
+  const textClass = isStitchHeader ? 'text-slate-600 dark:text-slate-300' : 'text-slate-600 dark:text-slate-300';
+  const hoverClass = isStitchHeader ? 'hover:text-slate-900 dark:hover:text-white' : 'hover:text-slate-900 dark:hover:text-white';
 
   return (
     <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${headerClass}`}>
@@ -152,7 +149,7 @@ const Navbar = () => {
             <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">
               <BookOpen className="h-5 w-5" />
             </div>
-            <p className={`text-2xl font-bold leading-none ${isStitchHeader ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
+            <p className={`text-2xl font-bold leading-none ${isStitchHeader ? 'text-slate-900 dark:text-white' : 'text-slate-900 dark:text-white'}`}>
               BookNest
             </p>
           </Link>
@@ -197,7 +194,7 @@ const Navbar = () => {
                 }}
                 className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
                   isStitchHeader
-                    ? 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                    ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
                     : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
                 }`}
                 aria-label="Open search"
@@ -277,13 +274,13 @@ const Navbar = () => {
             {isCatalog && (
               <>
                 <button
-                  className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-slate-200 transition-colors hover:bg-slate-700 sm:inline-flex"
+                  className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:inline-flex dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                   aria-label="Cart"
                 >
                   <ShoppingCart className="h-5 w-5" />
                 </button>
                 <button
-                  className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-slate-200 transition-colors hover:bg-slate-700 sm:inline-flex"
+                  className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:inline-flex dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                   aria-label="Notifications"
                 >
                   <Bell className="h-5 w-5" />
@@ -291,15 +288,7 @@ const Navbar = () => {
               </>
             )}
 
-            {!isStitchHeader && (
-              <button
-                onClick={toggleTheme}
-                className="hidden h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary sm:inline-flex dark:text-slate-300 dark:hover:bg-slate-800"
-                aria-label="Toggle theme"
-              >
-                {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-              </button>
-            )}
+            <ThemeToggle className="h-10 px-2.5 sm:px-3" iconClassName="h-4 w-4" label={false} />
 
             {!loading &&
               (user ? (
@@ -385,7 +374,7 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen((prev) => !prev)}
               className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors md:hidden ${
                 isStitchHeader
-                  ? 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                  ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
                   : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
               }`}
               aria-label="Toggle menu"
@@ -396,7 +385,7 @@ const Navbar = () => {
         </div>
 
         {isMenuOpen && (
-          <div className={`animate-slide-down border-t py-3 md:hidden ${isStitchHeader ? 'border-slate-800' : 'border-slate-200 dark:border-slate-700'}`}>
+          <div className={`animate-slide-down border-t py-3 md:hidden ${isStitchHeader ? 'border-slate-200 dark:border-slate-800' : 'border-slate-200 dark:border-slate-700'}`}>
             <div className="space-y-1">
               {activeLinks.map((link) => (
                 <NavLink
@@ -408,7 +397,7 @@ const Navbar = () => {
                       isActive
                         ? 'bg-primary text-white'
                         : isStitchHeader
-                          ? 'text-slate-200 hover:bg-slate-800'
+                          ? 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
                           : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
                     }`
                   }

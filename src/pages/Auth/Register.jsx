@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, User, Upload, Check, X, BookOpen } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Upload, Check, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { saveOrUpdateUser } from '../../utils/auth';
 import AuthNavbar from '../../components/layout/AuthNavbar';
@@ -8,7 +8,7 @@ import AuthNavbar from '../../components/layout/AuthNavbar';
 const PasswordRequirement = ({ met, text }) => (
   <div className="flex items-center gap-2 text-xs">
     {met ? <Check className="h-4 w-4 text-emerald-400" /> : <X className="h-4 w-4 text-slate-500" />}
-    <span className={met ? 'text-emerald-300' : 'text-slate-400'}>{text}</span>
+    <span className={met ? 'text-emerald-600 dark:text-emerald-300' : 'text-slate-500 dark:text-slate-400'}>{text}</span>
   </div>
 );
 
@@ -138,7 +138,7 @@ const Register = () => {
   const isPasswordStrong = Object.values(passwordStrength).every(Boolean);
 
   return (
-    <div className="min-h-screen bg-[#111621] text-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 text-slate-900 dark:from-[#111621] dark:via-[#0f1a33] dark:to-[#111621] dark:text-slate-100">
       <AuthNavbar />
       <div className="flex min-h-screen w-full overflow-hidden pt-20">
         <section
@@ -163,24 +163,24 @@ const Register = () => {
 
         <section className="relative flex w-full items-center justify-center px-6 py-12 lg:w-1/2 lg:px-20 xl:px-28">
           <div className="w-full max-w-md space-y-6">
-            <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800/70 p-1">
+            <div className="grid grid-cols-2 gap-1 rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-800/70">
               <Link
                 to="/login"
-                className="rounded px-4 py-2.5 text-center text-sm font-medium text-slate-400 transition-colors hover:text-slate-200"
+                className="rounded px-4 py-2.5 text-center text-sm font-medium text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="rounded bg-slate-900 px-4 py-2.5 text-center text-sm font-medium text-primary shadow-sm"
+                className="rounded bg-blue-50 px-4 py-2.5 text-center text-sm font-medium text-primary shadow-sm dark:bg-slate-900"
               >
                 Join BookNest
               </Link>
             </div>
 
             <div className="space-y-1 text-center lg:text-left">
-              <h1 className="text-3xl font-bold tracking-tight text-white">Create account</h1>
-              <p className="text-slate-400">Set up your profile and start your reading journey.</p>
+              <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Create account</h1>
+              <p className="text-slate-600 dark:text-slate-400">Set up your profile and start your reading journey.</p>
             </div>
 
             {error && (
@@ -191,16 +191,16 @@ const Register = () => {
 
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-300">Profile picture</label>
+                <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Profile picture</label>
                 <div className="flex items-center gap-4">
                   {imagePreview ? (
                     <img src={imagePreview} alt="Preview" className="h-14 w-14 rounded-full border border-primary/60 object-cover" />
                   ) : (
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-800 text-slate-500">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-200 text-slate-500 dark:bg-slate-800">
                       <User className="h-6 w-6" />
                     </div>
                   )}
-                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-700 px-4 py-2 text-sm font-medium text-slate-300 transition-colors hover:border-primary hover:text-primary">
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-transparent dark:text-slate-300">
                     <Upload className="h-4 w-4" />
                     Upload
                     <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
@@ -209,11 +209,11 @@ const Register = () => {
               </div>
 
               <div>
-                <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-slate-300">
+                <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Full name
                 </label>
                 <div className="relative">
-                  <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                   <input
                     id="name"
                     name="name"
@@ -221,17 +221,17 @@ const Register = () => {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    className="h-11 w-full rounded-lg border border-slate-300 bg-white px-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-300">
+                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Email address
                 </label>
                 <div className="relative">
-                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                   <input
                     id="email"
                     name="email"
@@ -239,17 +239,17 @@ const Register = () => {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    className="h-11 w-full rounded-lg border border-slate-300 bg-white px-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-300">
+                <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                   <input
                     id="password"
                     name="password"
@@ -257,18 +257,18 @@ const Register = () => {
                     required
                     value={formData.password}
                     onChange={handleChange}
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 pr-10 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    className="h-11 w-full rounded-lg border border-slate-300 bg-white px-10 pr-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
                 {formData.password && (
-                  <div className="mt-3 space-y-1 rounded-lg border border-slate-700 bg-slate-900/70 p-3">
+                  <div className="mt-3 space-y-1 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/70">
                     <PasswordRequirement met={passwordStrength.hasMinLength} text="At least 8 characters" />
                     <PasswordRequirement met={passwordStrength.hasUpperCase} text="One uppercase letter" />
                     <PasswordRequirement met={passwordStrength.hasLowerCase} text="One lowercase letter" />
@@ -279,11 +279,11 @@ const Register = () => {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-slate-300">
+                <label htmlFor="confirmPassword" className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Confirm password
                 </label>
                 <div className="relative">
-                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
                   <input
                     id="confirmPassword"
                     name="confirmPassword"
@@ -291,7 +291,7 @@ const Register = () => {
                     required
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    className="h-11 w-full rounded-lg border border-slate-300 bg-white px-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
                   />
                 </div>
               </div>
@@ -313,16 +313,16 @@ const Register = () => {
             </form>
 
             <div className="relative flex items-center py-1">
-              <div className="h-px flex-1 bg-slate-700"></div>
+              <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700"></div>
               <span className="mx-4 text-xs font-medium uppercase tracking-wider text-slate-500">or</span>
-              <div className="h-px flex-1 bg-slate-700"></div>
+              <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700"></div>
             </div>
 
             <button
               type="button"
               onClick={handleGoogleSignup}
               disabled={loading}
-              className="inline-flex h-11 w-full items-center justify-center gap-3 rounded-lg border border-slate-700 px-4 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800 disabled:opacity-60"
+              className="inline-flex h-11 w-full items-center justify-center gap-3 rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 disabled:opacity-60 dark:border-slate-700 dark:bg-transparent dark:text-slate-200 dark:hover:bg-slate-800"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path
@@ -345,7 +345,7 @@ const Register = () => {
               Continue with Google
             </button>
 
-            <p className="text-center text-sm text-slate-400">
+            <p className="text-center text-sm text-slate-600 dark:text-slate-400">
               Already have an account?{' '}
               <Link to="/login" className="font-semibold text-primary hover:underline">
                 Sign in

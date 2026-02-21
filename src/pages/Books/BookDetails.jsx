@@ -227,7 +227,7 @@ const BookDetails = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#111621]">
+      <div className="flex min-h-screen items-center justify-center bg-slate-100 dark:bg-[#111621]">
         <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
       </div>
     );
@@ -235,9 +235,9 @@ const BookDetails = () => {
 
   if (!book) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#111621] px-4">
-        <div className="w-full max-w-md rounded-xl border border-slate-700 bg-[#1a202c] p-8 text-center">
-          <h2 className="text-2xl font-bold text-white">Book Not Found</h2>
+      <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 dark:bg-[#111621]">
+        <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-8 text-center dark:border-slate-700 dark:bg-[#1a202c]">
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Book Not Found</h2>
           <Link to="/all-books" className="btn-primary mt-5">
             Back to All Books
           </Link>
@@ -247,7 +247,7 @@ const BookDetails = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#111621] text-slate-100 pb-24 lg:pb-10">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 pb-24 text-slate-900 dark:from-[#111621] dark:via-[#0b1733] dark:to-[#111621] dark:text-slate-100 lg:pb-10">
       <main className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-10 px-4 py-8 lg:grid-cols-12 lg:px-10">
         <section className="lg:col-span-4 xl:col-span-3">
           <div className="sticky top-24">
@@ -262,10 +262,10 @@ const BookDetails = () => {
               </div>
             </div>
 
-            <div className="mt-8 hidden rounded-xl border border-white/10 bg-[#1a202c]/75 p-6 backdrop-blur lg:block">
+            <div className="mt-8 hidden rounded-xl border border-slate-200 bg-white/90 p-6 backdrop-blur dark:border-white/10 dark:bg-[#1a202c]/75 lg:block">
               <div className="flex items-baseline justify-between">
-                <span className="text-3xl font-bold text-white">${Number(book.price || 0).toFixed(2)}</span>
-                <span className="text-sm text-slate-500 line-through">
+                <span className="text-3xl font-bold text-slate-900 dark:text-white">${Number(book.price || 0).toFixed(2)}</span>
+                <span className="text-sm text-slate-500 line-through dark:text-slate-500">
                   ${(Number(book.price || 0) + 8).toFixed(2)}
                 </span>
               </div>
@@ -288,13 +288,13 @@ const BookDetails = () => {
               <button
                 onClick={handleAddToWishlist}
                 disabled={addingToWishlist}
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-slate-600 disabled:opacity-60"
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300 disabled:opacity-60 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
               >
                 <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-current text-rose-400' : 'text-rose-400'}`} />
                 {addingToWishlist ? 'Adding...' : isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}
               </button>
 
-              <div className="mt-4 border-t border-white/10 pt-4 text-center text-xs text-slate-500">
+              <div className="mt-4 border-t border-slate-200 pt-4 text-center text-xs text-slate-500 dark:border-white/10">
                 30-Day Money Back Guarantee
               </div>
             </div>
@@ -303,7 +303,7 @@ const BookDetails = () => {
 
         <section className="flex flex-col gap-8 lg:col-span-8 xl:col-span-9">
           <div>
-            <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+            <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-500">
               <Link to="/" className="transition-colors hover:text-primary">
                 Home
               </Link>
@@ -312,19 +312,19 @@ const BookDetails = () => {
                 All Books
               </Link>
               <ChevronRight className="h-4 w-4" />
-              <span className="font-medium text-slate-300">{book.category || 'General'}</span>
+              <span className="font-medium text-slate-700 dark:text-slate-300">{book.category || 'General'}</span>
             </nav>
 
-            <h1 className="text-4xl font-black leading-[1.1] tracking-tight text-white md:text-6xl">{book.title}</h1>
+            <h1 className="text-4xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white md:text-6xl">{book.title}</h1>
             <div className="mt-4 flex flex-wrap items-center gap-4 md:gap-8">
               <p className="text-2xl font-medium text-primary">{book.author}</p>
-              <div className="hidden h-6 w-px bg-white/20 sm:block"></div>
+              <div className="hidden h-6 w-px bg-slate-300 dark:bg-white/20 sm:block"></div>
               <div className="flex items-center gap-2">
                 {renderStars(book.rating)}
-                <span className="font-bold text-white">{Number(book.rating || 0).toFixed(1)}</span>
+                <span className="font-bold text-slate-900 dark:text-white">{Number(book.rating || 0).toFixed(1)}</span>
                 <span className="text-sm text-slate-500">({Number(book.reviews || reviews.length || 0).toLocaleString()} reviews)</span>
               </div>
-              <button className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-1.5 text-sm text-slate-300 transition-colors hover:border-primary hover:text-primary">
+              <button className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 transition-colors hover:border-primary hover:text-primary dark:border-white/15 dark:text-slate-300">
                 <Share2 className="h-4 w-4" />
                 Share
               </button>
@@ -343,18 +343,18 @@ const BookDetails = () => {
                 className={`min-w-[145px] rounded-xl border p-4 text-left transition-colors ${
                   item.active
                     ? 'border-primary bg-primary/15 text-primary'
-                    : 'border-white/10 bg-transparent text-slate-400 hover:border-white/20'
+                    : 'border-slate-300 bg-transparent text-slate-600 hover:border-slate-400 dark:border-white/10 dark:text-slate-400 dark:hover:border-white/20'
                 }`}
               >
                 <p className="text-xs font-bold uppercase tracking-wider">{item.label}</p>
-                <p className="mt-1 text-lg font-bold text-white">${item.price}</p>
+                <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">${item.price}</p>
               </button>
             ))}
           </div>
 
           <section>
-            <h3 className="mb-4 text-lg font-bold text-white">About the Book</h3>
-            <div className="space-y-4 text-base leading-relaxed text-slate-300">
+            <h3 className="mb-4 text-lg font-bold text-slate-900 dark:text-white">About the Book</h3>
+            <div className="space-y-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">
               <p>{book.description || 'No description available for this book.'}</p>
               <p>
                 A thoughtful and immersive reading experience, this title continues to be one of BookNest readers&apos;
@@ -363,16 +363,16 @@ const BookDetails = () => {
             </div>
           </section>
 
-          <hr className="border-white/10" />
+          <hr className="border-slate-200 dark:border-white/10" />
 
           <section className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
             <div>
               <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Publisher</span>
-              <span className="font-medium text-white">{book.publisher || 'N/A'}</span>
+              <span className="font-medium text-slate-900 dark:text-white">{book.publisher || 'N/A'}</span>
             </div>
             <div>
               <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Release Date</span>
-              <span className="font-medium text-white">
+              <span className="font-medium text-slate-900 dark:text-white">
                 {book.publishDate
                   ? new Date(book.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
                   : 'N/A'}
@@ -380,19 +380,19 @@ const BookDetails = () => {
             </div>
             <div>
               <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Print Length</span>
-              <span className="font-medium text-white">{book.pages ? `${book.pages} Pages` : 'N/A'}</span>
+              <span className="font-medium text-slate-900 dark:text-white">{book.pages ? `${book.pages} Pages` : 'N/A'}</span>
             </div>
             <div>
               <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">ISBN</span>
-              <span className="font-medium text-white">{book.isbn || 'N/A'}</span>
+              <span className="font-medium text-slate-900 dark:text-white">{book.isbn || 'N/A'}</span>
             </div>
           </section>
 
-          <hr className="border-white/10" />
+          <hr className="border-slate-200 dark:border-white/10" />
 
           <section className="flex flex-col gap-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-2xl font-bold text-white">Community Reviews</h3>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Community Reviews</h3>
               {user && hasOrdered && !showReviewForm && (
                 <button
                   onClick={() => setShowReviewForm(true)}
@@ -404,17 +404,17 @@ const BookDetails = () => {
             </div>
 
             {user && !hasOrdered && (
-              <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-300">
+              <div className="rounded-lg border border-amber-500/30 bg-amber-100/80 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
                 You must order this book to leave a review.
               </div>
             )}
 
             {showReviewForm && (
-              <div className="rounded-xl border border-white/10 bg-[#1a202c] p-5">
-                <h4 className="text-lg font-bold text-white">Write Your Review</h4>
+              <div className="rounded-xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-[#1a202c]">
+                <h4 className="text-lg font-bold text-slate-900 dark:text-white">Write Your Review</h4>
                 <form onSubmit={handleSubmitReview} className="mt-4 space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-300">Rating</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Rating</label>
                     <div className="flex gap-1">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <button key={star} type="button" onClick={() => setReviewForm({ ...reviewForm, rating: star })}>
@@ -428,11 +428,11 @@ const BookDetails = () => {
                     </div>
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-300">Your Review</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Your Review</label>
                     <textarea
                       value={reviewForm.comment}
                       onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                      className="min-h-[130px] w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                      className="min-h-[130px] w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                       placeholder="Share your thoughts about this book..."
                       required
                       minLength="10"
@@ -443,7 +443,7 @@ const BookDetails = () => {
                     <button
                       type="button"
                       onClick={() => setShowReviewForm(false)}
-                      className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-600"
+                      className="rounded-lg bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
                     >
                       Cancel
                     </button>
@@ -460,20 +460,20 @@ const BookDetails = () => {
             )}
 
             {reviews.length === 0 ? (
-              <div className="rounded-xl border border-white/10 bg-[#1a202c] p-8 text-center text-slate-400">
+              <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-500 dark:border-white/10 dark:bg-[#1a202c] dark:text-slate-400">
                 No reviews yet. Be the first to review this book.
               </div>
             ) : (
               <div className="grid gap-4 md:grid-cols-2">
                 {reviews.map((review) => (
-                  <article key={review._id} className="rounded-xl border border-white/10 bg-[#1a202c] p-5">
+                  <article key={review._id} className="rounded-xl border border-slate-200 bg-white p-5 dark:border-white/10 dark:bg-[#1a202c]">
                     <div className="mb-3 flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
                         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                           {(review.userName || review.userEmail || 'A')[0].toUpperCase()}
                         </div>
                         <div>
-                          <h4 className="text-sm font-bold text-white">{review.userName || 'Anonymous'}</h4>
+                          <h4 className="text-sm font-bold text-slate-900 dark:text-white">{review.userName || 'Anonymous'}</h4>
                           <span className="text-xs text-slate-500">{new Date(review.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
@@ -486,7 +486,7 @@ const BookDetails = () => {
                         ))}
                       </div>
                     </div>
-                    <p className="text-sm leading-relaxed text-slate-300">{review.comment}</p>
+                    <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">{review.comment}</p>
                   </article>
                 ))}
               </div>
@@ -495,7 +495,7 @@ const BookDetails = () => {
 
           <section className="mt-2">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-white">People also liked</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">People also liked</h3>
             </div>
             <div className="flex gap-6 overflow-x-auto pb-2 no-scrollbar">
               {relatedFallbackBooks.map((item) => (
@@ -503,7 +503,7 @@ const BookDetails = () => {
                   <div className="aspect-[2/3] overflow-hidden rounded-lg shadow-lg">
                     <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
                   </div>
-                  <h4 className="mt-3 truncate text-sm font-bold text-white">{item.title}</h4>
+                  <h4 className="mt-3 truncate text-sm font-bold text-slate-900 dark:text-white">{item.title}</h4>
                   <p className="truncate text-xs text-slate-500">{item.author}</p>
                 </div>
               ))}
@@ -512,17 +512,17 @@ const BookDetails = () => {
         </section>
       </main>
 
-      <div className="fixed bottom-0 left-0 z-40 w-full border-t border-white/10 bg-[#1a202c]/90 p-4 backdrop-blur lg:hidden">
+      <div className="fixed bottom-0 left-0 z-40 w-full border-t border-slate-200 bg-white/95 p-4 backdrop-blur dark:border-white/10 dark:bg-[#1a202c]/90 lg:hidden">
         <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4">
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-white">${Number(book.price || 0).toFixed(2)}</span>
+            <span className="text-xl font-bold text-slate-900 dark:text-white">${Number(book.price || 0).toFixed(2)}</span>
             <span className="text-xs text-emerald-400">{book.published ? 'In Stock' : 'Unavailable'}</span>
           </div>
           <div className="flex flex-1 justify-end gap-2">
             <button
               onClick={handleAddToWishlist}
               disabled={addingToWishlist}
-              className="rounded-lg bg-slate-700 p-3 text-rose-400 disabled:opacity-60"
+              className="rounded-lg bg-slate-200 p-3 text-rose-500 disabled:opacity-60 dark:bg-slate-700 dark:text-rose-400"
             >
               <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-current' : ''}`} />
             </button>
@@ -539,10 +539,10 @@ const BookDetails = () => {
 
       {showWishlistModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="relative w-full max-w-md rounded-xl border border-white/10 bg-[#1a202c] p-6">
+          <div className="relative w-full max-w-md rounded-xl border border-slate-200 bg-white p-6 dark:border-white/10 dark:bg-[#1a202c]">
             <button
               onClick={() => setShowWishlistModal(false)}
-              className="absolute right-4 top-4 text-slate-500 transition-colors hover:text-slate-300"
+              className="absolute right-4 top-4 text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
             >
               <X className="h-5 w-5" />
             </button>
@@ -550,14 +550,14 @@ const BookDetails = () => {
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/20">
                 <Heart className="h-7 w-7 fill-current text-emerald-400" />
               </div>
-              <h3 className="text-xl font-bold text-white">Already in Your Wishlist</h3>
-              <p className="mt-2 text-sm text-slate-400">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">Already in Your Wishlist</h3>
+              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                 This book is already saved in your wishlist. View wishlist or continue browsing.
               </p>
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setShowWishlistModal(false)}
-                  className="rounded-lg bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-slate-600"
+                  className="rounded-lg bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
                 >
                   Continue
                 </button>
@@ -576,21 +576,21 @@ const BookDetails = () => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-black/65 p-4">
           <div className="flex min-h-full items-start justify-center py-4 sm:items-center">
-            <div className="w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-xl border border-white/10 bg-[#1a202c]">
-              <div className="flex items-center justify-between border-b border-white/10 p-5">
-                <h3 className="text-2xl font-bold text-white">Place Order</h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-slate-300">
+            <div className="max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl border border-slate-200 bg-white dark:border-white/10 dark:bg-[#1a202c]">
+              <div className="flex items-center justify-between border-b border-slate-200 p-5 dark:border-white/10">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Place Order</h3>
+                <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               <form onSubmit={handleSubmit} className="p-5">
-                <div className="mb-5 rounded-lg bg-slate-900/70 p-4">
+                <div className="mb-5 rounded-lg bg-slate-100 p-4 dark:bg-slate-900/70">
                   <div className="flex gap-3">
                     <img src={book.image} alt={book.title} className="h-24 w-16 rounded object-cover" />
                     <div>
-                      <h4 className="font-semibold text-white">{book.title}</h4>
-                      <p className="text-sm text-slate-400">{book.author}</p>
+                      <h4 className="font-semibold text-slate-900 dark:text-white">{book.title}</h4>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">{book.author}</p>
                       <p className="mt-1 text-lg font-bold text-primary">${Number(book.price || 0).toFixed(2)}</p>
                     </div>
                   </div>
@@ -598,25 +598,25 @@ const BookDetails = () => {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-300">Full Name</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Full Name</label>
                     <input
                       type="text"
                       value={formData.name}
                       readOnly
-                      className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 px-4 text-sm text-slate-300 opacity-70"
+                      className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-300 bg-slate-100 px-4 text-sm text-slate-500 opacity-70 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-300">Email Address</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Email Address</label>
                     <input
                       type="email"
                       value={formData.email}
                       readOnly
-                      className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 px-4 text-sm text-slate-300 opacity-70"
+                      className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-300 bg-slate-100 px-4 text-sm text-slate-500 opacity-70 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-300">Phone Number *</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Phone Number *</label>
                     <input
                       type="tel"
                       name="phone"
@@ -624,11 +624,11 @@ const BookDetails = () => {
                       onChange={handleChange}
                       required
                       placeholder="Enter your phone number"
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-300">Delivery Address *</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Delivery Address *</label>
                     <textarea
                       name="address"
                       value={formData.address}
@@ -636,17 +636,17 @@ const BookDetails = () => {
                       required
                       rows="3"
                       placeholder="Enter your complete delivery address"
-                      className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                      className="w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-300">Delivery Method *</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">Delivery Method *</label>
                     <select
                       name="deliveryMethod"
                       value={formData.deliveryMethod}
                       onChange={handleChange}
                       required
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 text-sm text-slate-100 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-4 text-sm text-slate-700 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     >
                       <option value="delivery">Home Delivery</option>
                       <option value="pickup">Pickup from Library</option>

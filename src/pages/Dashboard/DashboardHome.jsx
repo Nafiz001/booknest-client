@@ -9,10 +9,10 @@ const DashboardHome = () => {
     <div className="flex flex-col gap-6 md:gap-8">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white md:text-5xl">Good evening, {firstName}</h1>
-          <p className="mt-2 text-base text-slate-400 md:text-xl">Here&apos;s what&apos;s happening with your library today.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl">Good evening, {firstName}</h1>
+          <p className="mt-2 text-base text-slate-600 dark:text-slate-400 md:text-xl">Here&apos;s what&apos;s happening with your library today.</p>
         </div>
-        <div className="inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 px-4 py-2 text-sm font-medium text-slate-200">
+        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200">
           <span className="relative flex h-3 w-3">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70"></span>
             <span className="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
@@ -22,32 +22,32 @@ const DashboardHome = () => {
       </div>
 
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <article className="group relative overflow-hidden rounded-xl border border-slate-800 bg-slate-800/70 p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
           <div className="pointer-events-none absolute right-0 top-0 p-5 opacity-15 transition-opacity group-hover:opacity-25">
             <Truck className="h-12 w-12 text-primary" />
           </div>
           <div className="relative z-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-400">Active Orders</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Active Orders</p>
             <div className="mt-2 flex items-end gap-2">
-              <p className="text-4xl font-bold text-white">2</p>
+              <p className="text-4xl font-bold text-slate-900 dark:text-white">2</p>
               <p className="text-sm font-semibold text-emerald-400">In Transit</p>
             </div>
-            <div className="mt-4 h-1.5 rounded-full bg-slate-700">
+            <div className="mt-4 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700">
               <div className="h-full w-2/3 rounded-full bg-primary"></div>
             </div>
-            <p className="mt-3 text-xs text-slate-400">Arriving by Friday, Oct 24th</p>
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Arriving by Friday, Oct 24th</p>
           </div>
         </article>
 
-        <article className="group relative overflow-hidden rounded-xl border border-slate-800 bg-slate-800/70 p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
           <div className="pointer-events-none absolute right-0 top-0 p-5 opacity-15 transition-opacity group-hover:opacity-25">
             <Bookmark className="h-12 w-12 text-primary" />
           </div>
           <div className="relative z-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-400">Books in Wishlist</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Books in Wishlist</p>
             <div className="mt-2 flex items-end gap-2">
-              <p className="text-4xl font-bold text-white">14</p>
-              <p className="text-sm text-slate-400">Titles</p>
+              <p className="text-4xl font-bold text-slate-900 dark:text-white">14</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Titles</p>
             </div>
             <button className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80">
               Browse Wishlist
@@ -56,31 +56,31 @@ const DashboardHome = () => {
           </div>
         </article>
 
-        <article className="group relative overflow-hidden rounded-xl border border-slate-800 bg-slate-800/70 p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
           <div className="pointer-events-none absolute right-0 top-0 p-5 opacity-15 transition-opacity group-hover:opacity-25">
             <Wallet className="h-12 w-12 text-primary" />
           </div>
           <div className="relative z-10">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-400">Total Saved</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Total Saved</p>
             <div className="mt-2 flex items-end gap-2">
-              <p className="text-4xl font-bold text-white">$120.50</p>
+              <p className="text-4xl font-bold text-slate-900 dark:text-white">$120.50</p>
               <p className="text-sm font-semibold text-emerald-400">+12% vs last year</p>
             </div>
-            <p className="mt-6 text-xs text-slate-400">Based on retail price comparison</p>
+            <p className="mt-6 text-xs text-slate-500 dark:text-slate-400">Based on retail price comparison</p>
           </div>
         </article>
       </section>
 
       <section className="grid grid-cols-1 gap-6 xl:grid-cols-12">
         <div className="space-y-6 xl:col-span-8">
-          <article className="rounded-xl border border-slate-800 bg-slate-800/70 p-6">
+          <article className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-800/70">
             <div className="mb-5 flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-bold text-white">Reading Habits</h3>
-                <p className="text-sm text-slate-400">Pages read over the last 30 days</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Reading Habits</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Pages read over the last 30 days</p>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-bold text-white">1,240</p>
+                <p className="text-3xl font-bold text-slate-900 dark:text-white">1,240</p>
                 <p className="text-sm font-semibold text-emerald-400">+85 pages</p>
               </div>
             </div>
@@ -102,7 +102,7 @@ const DashboardHome = () => {
                 <circle cx="60" cy="15" r="1" fill="#1754cf" />
                 <circle cx="100" cy="10" r="1.35" fill="#fff" stroke="#1754cf" strokeWidth="0.5" />
               </svg>
-              <div className="mt-2 grid grid-cols-4 text-center text-xs text-slate-500">
+              <div className="mt-2 grid grid-cols-4 text-center text-xs text-slate-500 dark:text-slate-500">
                 <span>Week 1</span>
                 <span>Week 2</span>
                 <span>Week 3</span>
@@ -111,9 +111,9 @@ const DashboardHome = () => {
             </div>
           </article>
 
-          <article className="relative overflow-hidden rounded-xl border border-slate-700 bg-gradient-to-br from-slate-800 to-black p-6">
+          <article className="relative overflow-hidden rounded-xl border border-slate-200 bg-gradient-to-br from-slate-100 to-white p-6 dark:border-slate-700 dark:from-slate-800 dark:to-black">
             <div
-              className="pointer-events-none absolute inset-0 opacity-20"
+              className="pointer-events-none absolute inset-0 opacity-10 dark:opacity-20"
               style={{
                 backgroundImage: 'radial-gradient(#1754cf 1px, transparent 1px)',
                 backgroundSize: '20px 20px',
@@ -123,7 +123,7 @@ const DashboardHome = () => {
               Currently Reading
             </p>
             <div className="relative mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="h-36 w-24 shrink-0 overflow-hidden rounded-md border border-slate-700 shadow-2xl">
+              <div className="h-36 w-24 shrink-0 overflow-hidden rounded-md border border-slate-300 shadow-2xl dark:border-slate-700">
                 <img
                   src="https://images.unsplash.com/photo-1610882648335-ced8fc8fa6b6?w=300&h=450&fit=crop"
                   alt="Current reading book"
@@ -131,20 +131,20 @@ const DashboardHome = () => {
                 />
               </div>
               <div className="flex-1">
-                <h3 className="text-3xl font-bold text-white">The Great Gatsby</h3>
-                <p className="mt-1 text-sm text-slate-400">by F. Scott Fitzgerald</p>
-                <div className="mt-4 flex items-center justify-between text-sm text-slate-300">
+                <h3 className="text-3xl font-bold text-slate-900 dark:text-white">The Great Gatsby</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">by F. Scott Fitzgerald</p>
+                <div className="mt-4 flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
                   <span>Progress</span>
-                  <span className="font-semibold text-white">64%</span>
+                  <span className="font-semibold text-slate-900 dark:text-white">64%</span>
                 </div>
-                <div className="mt-2 h-2 rounded-full bg-slate-700">
+                <div className="mt-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700">
                   <div className="h-full w-[64%] rounded-full bg-primary shadow-[0_0_14px_rgba(23,84,207,0.45)]"></div>
                 </div>
                 <div className="mt-5 flex items-center gap-3">
-                  <button className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-200">
+                  <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
                     Continue Reading
                   </button>
-                  <button className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-300 transition-colors hover:bg-white/10 hover:text-white">
+                  <button className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
                     Details
                   </button>
                 </div>
@@ -153,21 +153,21 @@ const DashboardHome = () => {
           </article>
         </div>
 
-        <aside className="rounded-xl border border-slate-800 bg-slate-800/70 p-6 xl:col-span-4">
-          <h3 className="text-2xl font-bold text-white">Recent Activity</h3>
-          <div className="relative mt-6 flex-1 space-y-7 border-l border-slate-700 pl-4">
+        <aside className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-800/70 xl:col-span-4">
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Recent Activity</h3>
+          <div className="relative mt-6 flex-1 space-y-7 border-l border-slate-200 pl-4 dark:border-slate-700">
             <div className="relative">
-              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-emerald-500 ring-4 ring-slate-800"></span>
-              <p className="text-base font-semibold text-slate-200">Order #1234 Delivered</p>
+              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-emerald-500 ring-4 ring-slate-100 dark:ring-slate-800"></span>
+              <p className="text-base font-semibold text-slate-700 dark:text-slate-200">Order #1234 Delivered</p>
               <p className="text-xs text-slate-500">2 hours ago</p>
-              <p className="mt-2 rounded border border-slate-700 bg-slate-900/70 p-2 text-xs text-slate-400">
+              <p className="mt-2 rounded border border-slate-200 bg-slate-50 p-2 text-xs text-slate-500 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-400">
                 &quot;Atomic Habits&quot; arrived at your doorstep.
               </p>
             </div>
 
             <div className="relative">
-              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-primary ring-4 ring-slate-800"></span>
-              <p className="text-base font-semibold text-slate-200">Added to Wishlist</p>
+              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-primary ring-4 ring-slate-100 dark:ring-slate-800"></span>
+              <p className="text-base font-semibold text-slate-700 dark:text-slate-200">Added to Wishlist</p>
               <p className="text-xs text-slate-500">Yesterday</p>
               <div className="mt-2 inline-flex items-center gap-2">
                 <img
@@ -175,20 +175,20 @@ const DashboardHome = () => {
                   alt="Dune cover"
                   className="h-8 w-8 rounded object-cover"
                 />
-                <span className="text-sm text-slate-300">Dune</span>
+                <span className="text-sm text-slate-700 dark:text-slate-300">Dune</span>
               </div>
             </div>
 
             <div className="relative">
-              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-slate-500 ring-4 ring-slate-800"></span>
-              <p className="text-base font-semibold text-slate-200">Returned Book</p>
+              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-slate-500 ring-4 ring-slate-100 dark:ring-slate-800"></span>
+              <p className="text-base font-semibold text-slate-700 dark:text-slate-200">Returned Book</p>
               <p className="text-xs text-slate-500">Oct 20, 2023</p>
-              <p className="mt-1 text-sm text-slate-400">&quot;Project Hail Mary&quot; was returned successfully.</p>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">&quot;Project Hail Mary&quot; was returned successfully.</p>
             </div>
 
             <div className="relative">
-              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-amber-400 ring-4 ring-slate-800"></span>
-              <p className="text-base font-semibold text-slate-200">Membership Renewed</p>
+              <span className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-amber-400 ring-4 ring-slate-100 dark:ring-slate-800"></span>
+              <p className="text-base font-semibold text-slate-700 dark:text-slate-200">Membership Renewed</p>
               <p className="text-xs text-slate-500">Oct 15, 2023</p>
             </div>
           </div>

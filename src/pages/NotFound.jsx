@@ -35,7 +35,7 @@ const NotFound = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#111621] text-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 text-slate-900 dark:from-[#111621] dark:via-[#0f1a33] dark:to-[#111621] dark:text-slate-100">
       <main className="mx-auto flex w-full max-w-[1080px] flex-col gap-20 px-6 py-12 md:py-20 lg:py-24">
         <section className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <div className="flex flex-col gap-8">
@@ -44,10 +44,10 @@ const NotFound = () => {
                 <span className="h-[2px] w-8 bg-primary"></span>
                 Error 404
               </div>
-              <h1 className="text-5xl font-black leading-[1.08] tracking-tight text-white md:text-6xl">
+              <h1 className="text-5xl font-black leading-[1.08] tracking-tight text-slate-900 dark:text-white md:text-6xl">
                 A plot twist we didn&apos;t expect.
               </h1>
-              <p className="text-lg font-light leading-relaxed text-slate-400 md:text-xl">
+              <p className="text-lg font-light leading-relaxed text-slate-600 dark:text-slate-400 md:text-xl">
                 The page you are looking for seems to have been misplaced in the archives. It might have been shelved
                 incorrectly or borrowed by another reader.
               </p>
@@ -63,26 +63,26 @@ const NotFound = () => {
               </Link>
               <Link
                 to="/all-books"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-slate-700 bg-transparent px-6 text-base font-bold text-slate-200 transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-6 text-base font-bold text-slate-700 transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary dark:border-slate-700 dark:bg-transparent dark:text-slate-200"
               >
                 <BookOpen className="h-4 w-4" />
                 Browse Catalog
               </Link>
             </div>
 
-            <div className="mt-1 border-t border-slate-800 pt-6">
+            <div className="mt-1 border-t border-slate-200 pt-6 dark:border-slate-800">
               <p className="mb-3 text-sm font-medium text-slate-500">Or search for a specific title:</p>
               <form onSubmit={handleSearch} className="flex w-full max-w-[430px]">
-                <div className="flex h-12 w-full items-center overflow-hidden rounded-lg border border-slate-700 bg-transparent transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+                <div className="flex h-12 w-full items-center overflow-hidden rounded-lg border border-slate-300 bg-white transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary dark:border-slate-700 dark:bg-transparent">
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search by title, author, or genre..."
-                    className="h-full w-full bg-transparent px-4 text-sm text-slate-100 placeholder:text-slate-500 outline-none"
+                    className="h-full w-full bg-transparent px-4 text-sm text-slate-700 placeholder:text-slate-400 outline-none dark:text-slate-100 dark:placeholder:text-slate-500"
                   />
                   <button
                     type="submit"
-                    className="inline-flex h-full items-center justify-center px-4 text-slate-400 transition-colors hover:text-primary"
+                    className="inline-flex h-full items-center justify-center px-4 text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
                     aria-label="Search"
                   >
                     <Search className="h-4 w-4" />
@@ -94,23 +94,23 @@ const NotFound = () => {
 
           <div className="group relative flex justify-center lg:justify-end">
             <div className="absolute inset-0 rounded-full bg-primary/20 blur-[100px] opacity-40 transition-opacity duration-700 group-hover:opacity-60"></div>
-            <div className="relative w-full max-w-[500px] overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-black/40 transition-transform duration-700 hover:scale-[1.02] hover:rotate-1">
-              <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#111621] via-transparent to-transparent opacity-65"></div>
+            <div className="relative w-full max-w-[500px] overflow-hidden rounded-2xl border border-slate-200 shadow-2xl shadow-black/20 transition-transform duration-700 hover:scale-[1.02] hover:rotate-1 dark:border-white/10 dark:shadow-black/40">
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-slate-100 via-transparent to-transparent opacity-65 dark:from-[#111621]"></div>
               <img
                 src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1200&h=900&fit=crop"
                 alt="Empty library shelf"
                 className="h-full w-full object-cover"
               />
-              <div className="absolute right-6 top-6 z-20 rounded-lg border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-md">
-                <span className="font-mono text-xs font-bold tracking-widest text-white">ERR_FILE_NOT_FOUND</span>
+              <div className="absolute right-6 top-6 z-20 rounded-lg border border-slate-300 bg-white/85 px-4 py-2 backdrop-blur-md dark:border-white/20 dark:bg-white/10">
+                <span className="font-mono text-xs font-bold tracking-widest text-slate-800 dark:text-white">ERR_FILE_NOT_FOUND</span>
               </div>
             </div>
           </div>
         </section>
 
         <section>
-          <div className="mb-8 flex items-center justify-between border-b border-slate-800 pb-4">
-            <h3 className="flex items-center gap-2 text-xl font-bold tracking-tight text-white">
+          <div className="mb-8 flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-800">
+            <h3 className="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-900 dark:text-white">
               <TrendingUp className="h-5 w-5 text-primary" />
               While you&apos;re here, try these trending titles
             </h3>
@@ -127,10 +127,10 @@ const NotFound = () => {
                   <img src={book.image} alt={book.title} className="h-full w-full object-cover" />
                   <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/20"></div>
                 </div>
-                <h4 className="text-base font-bold leading-tight text-white transition-colors group-hover:text-primary">
+                <h4 className="text-base font-bold leading-tight text-slate-900 transition-colors group-hover:text-primary dark:text-white">
                   {book.title}
                 </h4>
-                <p className="mt-1 text-sm text-slate-400">{book.author}</p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{book.author}</p>
               </div>
             ))}
           </div>

@@ -109,25 +109,25 @@ const MyProfile = () => {
   };
 
   return (
-    <div className="text-slate-100">
+    <div className="text-slate-900 dark:text-slate-100">
       <Toaster position="top-right" />
 
       <div className="mb-8 flex flex-col gap-2">
-        <div className="flex items-center gap-2 text-sm text-slate-400">
+        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
           <span>Dashboard</span>
           <span>{'>'}</span>
-          <span className="font-medium text-slate-200">Profile Settings</span>
+          <span className="font-medium text-slate-700 dark:text-slate-200">Profile Settings</span>
         </div>
-        <h1 className="text-4xl font-bold tracking-tight text-white">Account Settings</h1>
-        <p className="text-slate-400">Manage your personal information and delivery preferences.</p>
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">Account Settings</h1>
+        <p className="text-slate-500 dark:text-slate-400">Manage your personal information and delivery preferences.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <aside className="space-y-6 lg:col-span-1">
-          <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-6 shadow-sm">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800/60">
             <div className="flex flex-col items-center text-center">
               <div className="group relative mb-4">
-                <div className="h-28 w-28 overflow-hidden rounded-full border-4 border-slate-700 shadow-lg">
+                <div className="h-28 w-28 overflow-hidden rounded-full border-4 border-slate-200 shadow-lg dark:border-slate-700">
                   <img
                     src={
                       imagePreview ||
@@ -144,8 +144,8 @@ const MyProfile = () => {
                   </label>
                 )}
               </div>
-              <h2 className="text-xl font-bold text-white">{`${formData.firstName} ${formData.lastName}`.trim()}</h2>
-              <p className="mb-3 text-sm text-slate-400">Member since 2023</p>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">{`${formData.firstName} ${formData.lastName}`.trim()}</h2>
+              <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">Member since 2023</p>
               <span className="inline-flex items-center rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/20">
                 Bibliophile Tier
               </span>
@@ -177,16 +177,16 @@ const MyProfile = () => {
         </aside>
 
         <section className="lg:col-span-2">
-          <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-800/60 shadow-sm">
-            <div className="border-b border-slate-700 px-6">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800/60">
+            <div className="border-b border-slate-200 px-6 dark:border-slate-700">
               <nav className="-mb-px flex gap-6">
                 <span className="border-b-2 border-primary py-4 text-sm font-medium text-primary">
                   General Profile
                 </span>
-                <span className="border-b-2 border-transparent py-4 text-sm font-medium text-slate-400">
+                <span className="border-b-2 border-transparent py-4 text-sm font-medium text-slate-500 dark:text-slate-400">
                   Password & Security
                 </span>
-                <span className="border-b-2 border-transparent py-4 text-sm font-medium text-slate-400">
+                <span className="border-b-2 border-transparent py-4 text-sm font-medium text-slate-500 dark:text-slate-400">
                   Notifications
                 </span>
               </nav>
@@ -194,41 +194,41 @@ const MyProfile = () => {
 
             <div className="space-y-8 p-6 md:p-8">
               <div>
-                <div className="mb-5 border-b border-slate-700 pb-2">
-                  <h3 className="text-base font-semibold text-white">Personal Information</h3>
-                  <p className="mt-1 text-sm text-slate-400">Manage your connected profile details.</p>
+                <div className="mb-5 border-b border-slate-200 pb-2 dark:border-slate-700">
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-white">Personal Information</h3>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Manage your connected profile details.</p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-200">First name</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">First name</label>
                     <input
                       type="text"
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       disabled={!isEditing}
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-200">Last name</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">Last name</label>
                     <input
                       type="text"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       disabled={!isEditing}
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="mb-2 block text-sm font-medium text-slate-200">Email address</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">Email address</label>
                     <div className="relative">
                       <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                       <input
                         type="email"
                         value={user?.email || ''}
                         disabled
-                        className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 pl-10 pr-3 text-sm text-slate-400 opacity-80"
+                        className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-300 bg-slate-100 pl-10 pr-3 text-sm text-slate-500 opacity-80 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
                       />
                     </div>
                     <p className="mt-1.5 text-xs text-slate-500">Contact support to change your email address.</p>
@@ -237,60 +237,60 @@ const MyProfile = () => {
               </div>
 
               <div>
-                <div className="mb-5 border-b border-slate-700 pb-2">
-                  <h3 className="text-base font-semibold text-white">Shipping Address</h3>
-                  <p className="mt-1 text-sm text-slate-400">Saved locally for UI preview.</p>
+                <div className="mb-5 border-b border-slate-200 pb-2 dark:border-slate-700">
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-white">Shipping Address</h3>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Saved locally for UI preview.</p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
                   <div className="col-span-full">
-                    <label className="mb-2 block text-sm font-medium text-slate-200">Street address</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">Street address</label>
                     <input
                       type="text"
                       value={formData.street}
                       onChange={(e) => setFormData({ ...formData, street: e.target.value })}
                       disabled={!isEditing}
                       placeholder="123 Library Lane, Apt 4B"
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="mb-2 block text-sm font-medium text-slate-200">City</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">City</label>
                     <input
                       type="text"
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                       disabled={!isEditing}
                       placeholder="Bookton"
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="mb-2 block text-sm font-medium text-slate-200">State / Province</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">State / Province</label>
                     <input
                       type="text"
                       value={formData.region}
                       onChange={(e) => setFormData({ ...formData, region: e.target.value })}
                       disabled={!isEditing}
                       placeholder="NY"
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="mb-2 block text-sm font-medium text-slate-200">ZIP / Postal code</label>
+                    <label className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">ZIP / Postal code</label>
                     <input
                       type="text"
                       value={formData.postalCode}
                       onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
                       disabled={!isEditing}
                       placeholder="10001"
-                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 border-t border-slate-700 pt-6">
+              <div className="flex items-center justify-end gap-3 border-t border-slate-200 pt-6 dark:border-slate-700">
                 {!isEditing ? (
                   <button
                     type="button"
@@ -305,7 +305,7 @@ const MyProfile = () => {
                       type="button"
                       onClick={resetForm}
                       disabled={uploading}
-                      className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-slate-300 transition-colors hover:bg-slate-700"
+                      className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                       <User className="h-4 w-4" />
                       Cancel
