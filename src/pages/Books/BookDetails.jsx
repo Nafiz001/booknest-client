@@ -574,93 +574,95 @@ const BookDetails = () => {
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4">
-          <div className="w-full max-w-md overflow-y-auto rounded-xl border border-white/10 bg-[#1a202c]">
-            <div className="flex items-center justify-between border-b border-white/10 p-5">
-              <h3 className="text-2xl font-bold text-white">Place Order</h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-slate-300">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/65 p-4">
+          <div className="flex min-h-full items-start justify-center py-4 sm:items-center">
+            <div className="w-full max-w-md max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-xl border border-white/10 bg-[#1a202c]">
+              <div className="flex items-center justify-between border-b border-white/10 p-5">
+                <h3 className="text-2xl font-bold text-white">Place Order</h3>
+                <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-slate-300">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-            <form onSubmit={handleSubmit} className="p-5">
-              <div className="mb-5 rounded-lg bg-slate-900/70 p-4">
-                <div className="flex gap-3">
-                  <img src={book.image} alt={book.title} className="h-24 w-16 rounded object-cover" />
-                  <div>
-                    <h4 className="font-semibold text-white">{book.title}</h4>
-                    <p className="text-sm text-slate-400">{book.author}</p>
-                    <p className="mt-1 text-lg font-bold text-primary">${Number(book.price || 0).toFixed(2)}</p>
+              <form onSubmit={handleSubmit} className="p-5">
+                <div className="mb-5 rounded-lg bg-slate-900/70 p-4">
+                  <div className="flex gap-3">
+                    <img src={book.image} alt={book.title} className="h-24 w-16 rounded object-cover" />
+                    <div>
+                      <h4 className="font-semibold text-white">{book.title}</h4>
+                      <p className="text-sm text-slate-400">{book.author}</p>
+                      <p className="mt-1 text-lg font-bold text-primary">${Number(book.price || 0).toFixed(2)}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">Full Name</label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    readOnly
-                    className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 px-4 text-sm text-slate-300 opacity-70"
-                  />
+                <div className="space-y-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-300">Full Name</label>
+                    <input
+                      type="text"
+                      value={formData.name}
+                      readOnly
+                      className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 px-4 text-sm text-slate-300 opacity-70"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-300">Email Address</label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      readOnly
+                      className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 px-4 text-sm text-slate-300 opacity-70"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-300">Phone Number *</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter your phone number"
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-300">Delivery Address *</label>
+                    <textarea
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      required
+                      rows="3"
+                      placeholder="Enter your complete delivery address"
+                      className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-300">Delivery Method *</label>
+                    <select
+                      name="deliveryMethod"
+                      value={formData.deliveryMethod}
+                      onChange={handleChange}
+                      required
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 text-sm text-slate-100 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                    >
+                      <option value="delivery">Home Delivery</option>
+                      <option value="pickup">Pickup from Library</option>
+                    </select>
+                  </div>
                 </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">Email Address</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    readOnly
-                    className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 px-4 text-sm text-slate-300 opacity-70"
-                  />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">Phone Number *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    placeholder="Enter your phone number"
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
-                  />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">Delivery Address *</label>
-                  <textarea
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    required
-                    rows="3"
-                    placeholder="Enter your complete delivery address"
-                    className="w-full resize-none rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
-                  />
-                </div>
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-slate-300">Delivery Method *</label>
-                  <select
-                    name="deliveryMethod"
-                    value={formData.deliveryMethod}
-                    onChange={handleChange}
-                    required
-                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-4 text-sm text-slate-100 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
-                  >
-                    <option value="delivery">Home Delivery</option>
-                    <option value="pickup">Pickup from Library</option>
-                  </select>
-                </div>
-              </div>
 
-              <button
-                type="submit"
-                disabled={submittingOrder}
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary-dark disabled:opacity-60"
-              >
-                {submittingOrder ? 'Placing Order...' : 'Place Order'}
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  disabled={submittingOrder}
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary-dark disabled:opacity-60"
+                >
+                  {submittingOrder ? 'Placing Order...' : 'Place Order'}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}
