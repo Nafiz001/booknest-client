@@ -52,7 +52,7 @@ const AllUsers = () => {
   }
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <Toaster position="top-right" />
       <div className="mb-8">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Administration</p>

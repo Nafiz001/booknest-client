@@ -1,8 +1,26 @@
 import { Link } from 'react-router-dom';
 import { BookOpen } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    const normalized = email.trim();
+    if (!normalized) {
+      toast.error('Please enter your email address');
+      return;
+    }
+    if (!/^\S+@\S+\.\S+$/.test(normalized)) {
+      toast.error('Please enter a valid email');
+      return;
+    }
+    toast.success('Subscribed successfully');
+    setEmail('');
+  };
 
   return (
     <footer className="border-t border-slate-200 bg-slate-100 pt-16 pb-8 text-slate-600 dark:border-white/5 dark:bg-[#07122a] dark:text-slate-300">
@@ -21,13 +39,31 @@ const Footer = () => {
             </p>
 
             <div className="flex items-center gap-3 text-slate-500">
-              <a href="#" className="text-xs transition-colors hover:text-slate-900 dark:hover:text-white" aria-label="Twitter">
+              <a
+                href="https://x.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs transition-colors hover:text-slate-900 dark:hover:text-white"
+                aria-label="Twitter"
+              >
                 TW
               </a>
-              <a href="#" className="text-xs transition-colors hover:text-slate-900 dark:hover:text-white" aria-label="Instagram">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs transition-colors hover:text-slate-900 dark:hover:text-white"
+                aria-label="Instagram"
+              >
                 IG
               </a>
-              <a href="#" className="text-xs transition-colors hover:text-slate-900 dark:hover:text-white" aria-label="LinkedIn">
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs transition-colors hover:text-slate-900 dark:hover:text-white"
+                aria-label="LinkedIn"
+              >
                 IN
               </a>
             </div>
@@ -42,19 +78,19 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-primary">
+                <Link to="/info/new-releases" className="transition-colors hover:text-primary">
                   New Releases
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-primary">
+                <Link to="/info/staff-picks" className="transition-colors hover:text-primary">
                   Staff Picks
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-primary">
+                <Link to="/info/waitlist" className="transition-colors hover:text-primary">
                   Waitlist Info
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -63,24 +99,24 @@ const Footer = () => {
             <h3 className="mb-6 text-sm font-bold text-slate-900 dark:text-white">Company</h3>
             <ul className="space-y-4 text-sm text-slate-500 dark:text-slate-400">
               <li>
-                <a href="#" className="transition-colors hover:text-primary">
+                <Link to="/info/about" className="transition-colors hover:text-primary">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-primary">
+                <Link to="/info/careers" className="transition-colors hover:text-primary">
                   Careers
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-primary">
+                <Link to="/info/press" className="transition-colors hover:text-primary">
                   Press
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="transition-colors hover:text-primary">
+                <Link to="/info/sustainability" className="transition-colors hover:text-primary">
                   Sustainability
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -88,13 +124,15 @@ const Footer = () => {
           <div>
             <h3 className="mb-6 text-sm font-bold text-slate-900 dark:text-white">Stay Updated</h3>
             <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">Get the latest book drops and literary news.</p>
-            <form className="space-y-2">
+            <form onSubmit={handleSubscribe} className="space-y-2">
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:border-primary focus:outline-none dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
               />
-              <button type="button" className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark">
+              <button type="submit" className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary-dark">
                 Subscribe
               </button>
             </form>
@@ -104,15 +142,15 @@ const Footer = () => {
         <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-xs text-slate-500 dark:border-white/5 md:flex-row">
           <p>(c) {year} BookNest Inc. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <a href="#" className="transition-colors hover:text-slate-700 dark:hover:text-slate-300">
+            <Link to="/info/privacy" className="transition-colors hover:text-slate-700 dark:hover:text-slate-300">
               Privacy Policy
-            </a>
-            <a href="#" className="transition-colors hover:text-slate-700 dark:hover:text-slate-300">
+            </Link>
+            <Link to="/info/terms" className="transition-colors hover:text-slate-700 dark:hover:text-slate-300">
               Terms of Service
-            </a>
-            <a href="#" className="transition-colors hover:text-slate-700 dark:hover:text-slate-300">
+            </Link>
+            <Link to="/info/cookies" className="transition-colors hover:text-slate-700 dark:hover:text-slate-300">
               Cookies
-            </a>
+            </Link>
           </div>
         </div>
       </div>

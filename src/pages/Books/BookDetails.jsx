@@ -53,6 +53,7 @@ const BookDetails = () => {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [submittingOrder, setSubmittingOrder] = useState(false);
   const [hasOrdered, setHasOrdered] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState('Hardcover');
   const [formData, setFormData] = useState({
     name: user?.displayName || '',
     email: user?.email || '',
@@ -183,7 +184,7 @@ const BookDetails = () => {
         bookId: book._id,
         bookTitle: book.title,
         bookImage: book.image,
-        bookPrice: book.price,
+        bookPrice: selectedPrice,
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -208,6 +209,20 @@ const BookDetails = () => {
       toast.error(error.response?.data?.message || 'Failed to place order');
     } finally {
       setSubmittingOrder(false);
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const shareUrl = window.location.href;
+      if (navigator.share) {
+        await navigator.share({ title: book?.title, text: `Check out "${book?.title}" on BookNest`, url: shareUrl });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success('Book link copied to clipboard');
+      }
+    } catch {
+      toast.error('Unable to share this book right now');
     }
   };
 
@@ -246,9 +261,19 @@ const BookDetails = () => {
     );
   }
 
+  const formatOptions = [
+    { label: 'Hardcover', price: Number(book.price || 0).toFixed(2) },
+    { label: 'Paperback', price: (Number(book.price || 0) - 2).toFixed(2) },
+    { label: 'Audiobook', price: (Number(book.price || 0) + 6).toFixed(2) },
+    { label: 'Kindle', price: (Number(book.price || 0) - 4).toFixed(2) },
+  ];
+
+  const selectedFormatOption = formatOptions.find((item) => item.label === selectedFormat) || formatOptions[0];
+  const selectedPrice = Number(selectedFormatOption?.price || book.price || 0);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 pb-24 text-slate-900 dark:from-[#111621] dark:via-[#0b1733] dark:to-[#111621] dark:text-slate-100 lg:pb-10">
-      <main className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-10 px-4 py-8 lg:grid-cols-12 lg:px-10">
+      <main className="animate-fade-in mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-10 px-4 py-8 lg:grid-cols-12 lg:px-10">
         <section className="lg:col-span-4 xl:col-span-3">
           <div className="sticky top-24">
             <div className="group relative mx-auto w-full max-w-[340px] lg:mx-0">
@@ -264,9 +289,9 @@ const BookDetails = () => {
 
             <div className="mt-8 hidden rounded-xl border border-slate-200 bg-white/90 p-6 backdrop-blur dark:border-white/10 dark:bg-[#1a202c]/75 lg:block">
               <div className="flex items-baseline justify-between">
-                <span className="text-3xl font-bold text-slate-900 dark:text-white">${Number(book.price || 0).toFixed(2)}</span>
+                <span className="text-3xl font-bold text-slate-900 dark:text-white">${selectedPrice.toFixed(2)}</span>
                 <span className="text-sm text-slate-500 line-through dark:text-slate-500">
-                  ${(Number(book.price || 0) + 8).toFixed(2)}
+                  ${(selectedPrice + 8).toFixed(2)}
                 </span>
               </div>
 
@@ -324,7 +349,11 @@ const BookDetails = () => {
                 <span className="font-bold text-slate-900 dark:text-white">{Number(book.rating || 0).toFixed(1)}</span>
                 <span className="text-sm text-slate-500">({Number(book.reviews || reviews.length || 0).toLocaleString()} reviews)</span>
               </div>
-              <button className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 transition-colors hover:border-primary hover:text-primary dark:border-white/15 dark:text-slate-300">
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-600 transition-colors hover:border-primary hover:text-primary dark:border-white/15 dark:text-slate-300"
+              >
                 <Share2 className="h-4 w-4" />
                 Share
               </button>
@@ -332,16 +361,13 @@ const BookDetails = () => {
           </div>
 
           <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-            {[
-              { label: 'Hardcover', price: Number(book.price || 0).toFixed(2), active: true },
-              { label: 'Paperback', price: (Number(book.price || 0) - 2).toFixed(2) },
-              { label: 'Audiobook', price: (Number(book.price || 0) + 6).toFixed(2) },
-              { label: 'Kindle', price: (Number(book.price || 0) - 4).toFixed(2) },
-            ].map((item) => (
+            {formatOptions.map((item) => (
               <button
+                type="button"
                 key={item.label}
+                onClick={() => setSelectedFormat(item.label)}
                 className={`min-w-[145px] rounded-xl border p-4 text-left transition-colors ${
-                  item.active
+                  selectedFormat === item.label
                     ? 'border-primary bg-primary/15 text-primary'
                     : 'border-slate-300 bg-transparent text-slate-600 hover:border-slate-400 dark:border-white/10 dark:text-slate-400 dark:hover:border-white/20'
                 }`}
@@ -515,7 +541,7 @@ const BookDetails = () => {
       <div className="fixed bottom-0 left-0 z-40 w-full border-t border-slate-200 bg-white/95 p-4 backdrop-blur dark:border-white/10 dark:bg-[#1a202c]/90 lg:hidden">
         <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4">
           <div className="flex flex-col">
-            <span className="text-xl font-bold text-slate-900 dark:text-white">${Number(book.price || 0).toFixed(2)}</span>
+            <span className="text-xl font-bold text-slate-900 dark:text-white">${selectedPrice.toFixed(2)}</span>
             <span className="text-xs text-emerald-400">{book.published ? 'In Stock' : 'Unavailable'}</span>
           </div>
           <div className="flex flex-1 justify-end gap-2">
@@ -591,7 +617,7 @@ const BookDetails = () => {
                     <div>
                       <h4 className="font-semibold text-slate-900 dark:text-white">{book.title}</h4>
                       <p className="text-sm text-slate-500 dark:text-slate-400">{book.author}</p>
-                      <p className="mt-1 text-lg font-bold text-primary">${Number(book.price || 0).toFixed(2)}</p>
+                      <p className="mt-1 text-lg font-bold text-primary">${selectedPrice.toFixed(2)}</p>
                     </div>
                   </div>
                 </div>

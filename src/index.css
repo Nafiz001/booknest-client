@@ -142,6 +142,30 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .animate-delay-75 {
+    animation-delay: 75ms;
+  }
+
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-150 {
+    animation-delay: 150ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-250 {
+    animation-delay: 250ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

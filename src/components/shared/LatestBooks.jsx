@@ -1,19 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Star, Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import api from '../../utils/api';
+import toast from 'react-hot-toast';
+import { useAuth } from '../../context/AuthContext';
 
-const BookCard = ({ book }) => {
+const BookCard = ({ book, onSave, savingId }) => {
   return (
-    <div className="card group h-full cursor-pointer overflow-hidden hover-lift">
+    <div className="card group animate-fade-in h-full cursor-pointer overflow-hidden hover-lift">
       <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800">
         <img
           src={book.image}
           alt={book.title}
           className="h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <button className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 transition-all duration-200 hover:bg-white group-hover:opacity-100 dark:bg-slate-800/85 dark:text-slate-300 dark:hover:bg-slate-700">
-          <Heart className="h-4 w-4" />
+        <button
+          type="button"
+          onClick={() => onSave(book._id || book.id)}
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-700 opacity-0 transition-all duration-200 hover:bg-white group-hover:opacity-100 dark:bg-slate-800/85 dark:text-slate-300 dark:hover:bg-slate-700"
+          aria-label="Save to wishlist"
+          title="Save to wishlist"
+        >
+          <Heart className={`h-4 w-4 ${savingId === (book._id || book.id) ? 'animate-pulse' : ''}`} />
         </button>
         {book.status === 'new' && (
           <span className="absolute left-3 top-3 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
@@ -56,7 +64,11 @@ const BookCard = ({ book }) => {
 };
 
 const LatestBooks = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [latestBooks, setLatestBooks] = useState([]);
+  const [savingId, setSavingId] = useState(null);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -70,6 +82,28 @@ const LatestBooks = () => {
     fetchBooks();
   }, []);
 
+  const handleSave = async (bookId) => {
+    if (!user) {
+      toast.error('Please login to save books');
+      navigate('/login', { state: { from: location } });
+      return;
+    }
+
+    try {
+      setSavingId(bookId);
+      await api.post('/wishlist', { bookId });
+      toast.success('Added to wishlist');
+    } catch (error) {
+      if (error.response?.status === 409) {
+        toast('Already in your wishlist');
+      } else {
+        toast.error(error.response?.data?.message || 'Failed to save book');
+      }
+    } finally {
+      setSavingId(null);
+    }
+  };
+
   return (
     <section className="section-wrap bg-background-light dark:bg-background-dark">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -82,7 +116,7 @@ const LatestBooks = () => {
 
         <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {latestBooks.map((book) => (
-            <BookCard key={book._id || book.id} book={book} />
+            <BookCard key={book._id || book.id} book={book} onSave={handleSave} savingId={savingId} />
           ))}
         </div>
 

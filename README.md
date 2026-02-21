@@ -17,6 +17,7 @@ UI/UX was fully refreshed to a professional, client-ready standard based on gene
 Implemented in recent passes:
 - Stitch-aligned Home page with editorial hero, value cards, latest catalog preview, metro coverage section, and CTA
 - Stitch-aligned All Books catalog with left filter rail, premium cards, and hover interactions
+- All Books filters are fully functional (category, search, sorting, price range, rating, pagination)
 - Stitch-aligned Dashboard shell and overview panels (KPIs, habits chart, timeline)
 - Functional navbar quick-search modal that fetches matching books and routes directly to `/books/:id`
 - Dashboard route now renders without the public navbar/footer wrapper for layout fidelity
@@ -25,11 +26,13 @@ Implemented in recent passes:
 - Stitch-aligned Profile Settings overview (`/dashboard/profile`) while preserving existing profile update API connection
 - Stitch-aligned Secure Checkout and Payment Success experiences using existing Stripe session endpoints
 - Stitch-aligned 404 page with recovery actions and trending section
+- Auth, dashboard, payment, and catalog settings/actions now avoid dead controls (buttons/tabs/settings wired)
 
 ## Core Features
 - Premium responsive UI with dark/light theme
 - Home with editorial hero, latest books, value sections, and coverage map
 - All Books catalog with search, category filters, sorting, hover actions, and skeleton loading
+- Functional price and rating filters in catalog sidebar/mobile filter sheet
 - Book Details with reviews, wishlist, order modal, and editorial layout
 - Full-screen auth experience (email/password + Google)
 - Dashboard overview with KPI cards, reading habits chart, and recent activity timeline
@@ -70,9 +73,11 @@ Implemented in recent passes:
   - `/books/:id`
   - `/login`
   - `/register`
+  - `/info/:slug`
 - Protected:
   - `/payment/:orderId`
   - `/payment-success`
+  - `/request-delivery`
   - `/dashboard`
   - `/dashboard/my-orders`
   - `/dashboard/profile`

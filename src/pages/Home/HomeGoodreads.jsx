@@ -3,8 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, CheckCircle2, Clock3, Sparkles, Truck } from 'lucide-react';
 import api from '../../utils/api';
 import CoverageMap from '../../components/shared/CoverageMap';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const HomeGoodreads = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const { data: latestBooks = [], isLoading: booksLoading } = useQuery({
     queryKey: ['home-latest-books'],
     queryFn: async () => {
@@ -16,7 +21,7 @@ const HomeGoodreads = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 text-slate-900 dark:from-[#07122a] dark:via-[#081a3e] dark:to-[#07122a] dark:text-slate-100">
       <main className="mx-auto max-w-7xl px-4 pb-16 pt-12 sm:px-6 lg:px-8">
-        <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-blue-50 to-slate-100 p-8 dark:border-slate-800/80 dark:from-[#071632] dark:via-[#081a3e] dark:to-[#06112a] md:p-12">
+        <section className="animate-fade-in relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-blue-50 to-slate-100 p-8 dark:border-slate-800/80 dark:from-[#071632] dark:via-[#081a3e] dark:to-[#06112a] md:p-12">
           <div className="pointer-events-none absolute -left-32 top-0 h-72 w-72 rounded-full bg-primary/20 blur-3xl"></div>
           <div className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-cyan-500/15 blur-3xl"></div>
 
@@ -44,7 +49,11 @@ const HomeGoodreads = () => {
                   Start Free Trial
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <button className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-transparent dark:text-slate-200 dark:hover:bg-slate-800/70">
+                <button
+                  type="button"
+                  onClick={() => navigate(user ? '/dashboard/profile' : '/register')}
+                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/70 px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-transparent dark:text-slate-200 dark:hover:bg-slate-800/70"
+                >
                   View Plans
                 </button>
               </div>
@@ -86,8 +95,8 @@ const HomeGoodreads = () => {
           </div>
         </section>
 
-        <section className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <article className="rounded-xl border border-slate-200 bg-white/85 p-5 dark:border-slate-800 dark:bg-slate-900/45">
+        <section className="animate-slide-up animate-delay-100 mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <article className="rounded-xl border border-slate-200 bg-white/85 p-5 transition-transform duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900/45">
             <div className="mb-3 inline-flex rounded-lg bg-primary/20 p-2 text-primary">
               <Truck className="h-5 w-5" />
             </div>
@@ -95,7 +104,7 @@ const HomeGoodreads = () => {
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Order by 2 PM for tracked delivery to your doorstep by tomorrow.</p>
           </article>
 
-          <article className="rounded-xl border border-slate-200 bg-white/85 p-5 dark:border-slate-800 dark:bg-slate-900/45">
+          <article className="rounded-xl border border-slate-200 bg-white/85 p-5 transition-transform duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900/45">
             <div className="mb-3 inline-flex rounded-lg bg-primary/20 p-2 text-primary">
               <Sparkles className="h-5 w-5" />
             </div>
@@ -103,7 +112,7 @@ const HomeGoodreads = () => {
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Every book is inspected and wrapped for a premium reading experience.</p>
           </article>
 
-          <article className="rounded-xl border border-slate-200 bg-white/85 p-5 dark:border-slate-800 dark:bg-slate-900/45">
+          <article className="rounded-xl border border-slate-200 bg-white/85 p-5 transition-transform duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900/45">
             <div className="mb-3 inline-flex rounded-lg bg-primary/20 p-2 text-primary">
               <Clock3 className="h-5 w-5" />
             </div>
@@ -112,7 +121,7 @@ const HomeGoodreads = () => {
           </article>
         </section>
 
-        <section className="mt-10">
+        <section className="animate-slide-up animate-delay-150 mt-10">
           <div className="mb-5 flex items-end justify-between">
             <div>
               <h2 className="font-display text-4xl font-bold text-slate-900 dark:text-white">Just Landed</h2>
@@ -135,7 +144,8 @@ const HomeGoodreads = () => {
                 <Link
                   key={book._id}
                   to={`/books/${book._id}`}
-                  className="group overflow-hidden rounded-xl border border-slate-200 bg-white/85 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 dark:border-slate-800 dark:bg-slate-900/45"
+                  className="group animate-fade-in overflow-hidden rounded-xl border border-slate-200 bg-white/85 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 dark:border-slate-800 dark:bg-slate-900/45"
+                  style={{ animationDelay: `${index * 90}ms` }}
                 >
                   <div className="relative">
                     <img src={book.image} alt={book.title} className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -155,7 +165,7 @@ const HomeGoodreads = () => {
           )}
         </section>
 
-        <section className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <section className="animate-slide-up animate-delay-200 mt-10 grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white/85 dark:border-slate-800 dark:bg-slate-900/45">
             <CoverageMap compact />
             <div className="border-t border-slate-200 bg-blue-50/80 px-4 py-3 text-xs text-slate-500 dark:border-slate-800 dark:bg-[#0a1a39]/35 dark:text-slate-400">
@@ -175,7 +185,7 @@ const HomeGoodreads = () => {
           </article>
         </section>
 
-        <section className="mt-12 rounded-2xl border border-slate-200 bg-gradient-to-r from-blue-100 via-slate-100 to-white px-6 py-12 text-center dark:border-slate-800 dark:from-[#0a1737] dark:to-[#0c214f]">
+        <section className="animate-slide-up animate-delay-300 mt-12 rounded-2xl border border-slate-200 bg-gradient-to-r from-blue-100 via-slate-100 to-white px-6 py-12 text-center dark:border-slate-800 dark:from-[#0a1737] dark:to-[#0c214f]">
           <h2 className="font-display text-4xl font-bold text-slate-900 dark:text-white">Ready to start your reading journey?</h2>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
             Join thousands of readers who trust BookNest for premium delivery and curated recommendations.

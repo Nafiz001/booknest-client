@@ -13,6 +13,14 @@ const Payment = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [saveCard, setSaveCard] = useState(false);
+  const [cardForm, setCardForm] = useState({
+    name: '',
+    number: '',
+    expiry: '',
+    cvc: '',
+  });
 
   const fetchOrder = async () => {
     try {
@@ -59,6 +67,10 @@ const Payment = () => {
       return;
     }
 
+    if (paymentMethod === 'paypal') {
+      toast('PayPal currently routes through secure card checkout.');
+    }
+
     setProcessing(true);
     try {
       const response = await api.post('/create-checkout-session', { order });
@@ -72,6 +84,10 @@ const Payment = () => {
       toast.error(err.response?.data?.message || 'Failed to initiate payment');
       setProcessing(false);
     }
+  };
+
+  const handleCardInput = (field, value) => {
+    setCardForm((prev) => ({ ...prev, [field]: value }));
   };
 
   if (loading || authLoading) {
@@ -143,9 +159,17 @@ const Payment = () => {
             <p className="mt-2 text-slate-600 dark:text-slate-400">Complete your purchase securely. All transactions are encrypted.</p>
 
             <div className="mt-8 space-y-4">
-              <label className="block cursor-pointer rounded-lg border border-primary bg-primary/10 p-4 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('card')}
+                className={`block w-full cursor-pointer rounded-lg border p-4 text-left shadow-sm transition-colors ${
+                  paymentMethod === 'card'
+                    ? 'border-primary bg-primary/10'
+                    : 'border-slate-300 bg-white hover:border-primary/50 dark:border-slate-700 dark:bg-slate-800/70'
+                }`}
+              >
                 <div className="flex items-center gap-3">
-                  <CreditCard className="h-5 w-5 text-primary" />
+                  <CreditCard className={`h-5 w-5 ${paymentMethod === 'card' ? 'text-primary' : 'text-slate-500 dark:text-slate-400'}`} />
                   <div className="flex-1">
                     <p className="font-medium text-slate-900 dark:text-white">Credit Card</p>
                   </div>
@@ -154,16 +178,24 @@ const Payment = () => {
                     <div className="h-5 w-8 rounded bg-gradient-to-br from-red-600 to-orange-500"></div>
                   </div>
                 </div>
-              </label>
+              </button>
 
-              <label className="block cursor-pointer rounded-lg border border-slate-300 bg-white p-4 transition-colors hover:border-primary/50 dark:border-slate-700 dark:bg-slate-800/70">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('paypal')}
+                className={`block w-full cursor-pointer rounded-lg border p-4 text-left transition-colors ${
+                  paymentMethod === 'paypal'
+                    ? 'border-primary bg-primary/10'
+                    : 'border-slate-300 bg-white hover:border-primary/50 dark:border-slate-700 dark:bg-slate-800/70'
+                }`}
+              >
                 <div className="flex items-center gap-3">
-                  <CreditCard className="h-5 w-5 text-slate-500 dark:text-slate-400" />
+                  <CreditCard className={`h-5 w-5 ${paymentMethod === 'paypal' ? 'text-primary' : 'text-slate-500 dark:text-slate-400'}`} />
                   <div className="flex-1">
                     <p className="font-medium text-slate-700 dark:text-slate-300">PayPal</p>
                   </div>
                 </div>
-              </label>
+              </button>
             </div>
 
             <div className="mt-8 space-y-5">
@@ -172,6 +204,8 @@ const Payment = () => {
                 <input
                   type="text"
                   placeholder={order.name || 'John Doe'}
+                  value={cardForm.name}
+                  onChange={(e) => handleCardInput('name', e.target.value)}
                   className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                 />
               </div>
@@ -180,6 +214,8 @@ const Payment = () => {
                 <input
                   type="text"
                   placeholder="0000 0000 0000 0000"
+                  value={cardForm.number}
+                  onChange={(e) => handleCardInput('number', e.target.value)}
                   className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                 />
               </div>
@@ -189,6 +225,8 @@ const Payment = () => {
                   <input
                     type="text"
                     placeholder="MM / YY"
+                    value={cardForm.expiry}
+                    onChange={(e) => handleCardInput('expiry', e.target.value)}
                     className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                   />
                 </div>
@@ -197,13 +235,20 @@ const Payment = () => {
                   <input
                     type="text"
                     placeholder="123"
+                    value={cardForm.cvc}
+                    onChange={(e) => handleCardInput('cvc', e.target.value)}
                     className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/30 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
                   />
                 </div>
               </div>
 
               <label className="inline-flex items-center gap-3 text-sm text-slate-600 dark:text-slate-400">
-                <input type="checkbox" className="h-4 w-4 rounded border-slate-300 bg-white text-primary focus:ring-primary dark:border-slate-600 dark:bg-slate-800" />
+                <input
+                  type="checkbox"
+                  checked={saveCard}
+                  onChange={(e) => setSaveCard(e.target.checked)}
+                  className="h-4 w-4 rounded border-slate-300 bg-white text-primary focus:ring-primary dark:border-slate-600 dark:bg-slate-800"
+                />
                 Save this card for future purchases
               </label>
 

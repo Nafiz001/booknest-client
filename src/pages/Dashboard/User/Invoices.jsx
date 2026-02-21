@@ -89,7 +89,7 @@ Visit us at BookNest
   }
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <div className="mb-8">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Billing</p>
         <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">Invoices</h1>

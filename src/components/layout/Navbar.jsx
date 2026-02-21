@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
   X,
@@ -31,6 +31,7 @@ const Navbar = () => {
   const searchRef = useRef(null);
   const mobileSearchRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, loading, logOut } = useAuth();
 
   const isHome = location.pathname === '/';
@@ -274,12 +275,16 @@ const Navbar = () => {
             {isCatalog && (
               <>
                 <button
+                  type="button"
+                  onClick={() => navigate(user ? '/dashboard/my-orders' : '/login')}
                   className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:inline-flex dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                   aria-label="Cart"
                 >
                   <ShoppingCart className="h-5 w-5" />
                 </button>
                 <button
+                  type="button"
+                  onClick={() => navigate(user ? '/dashboard/invoices' : '/login')}
                   className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition-colors hover:bg-slate-200 sm:inline-flex dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                   aria-label="Notifications"
                 >

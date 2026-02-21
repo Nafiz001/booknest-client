@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, NavLink, Link } from 'react-router-dom';
+import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -23,6 +23,7 @@ import ThemeToggle from '../components/shared/ThemeToggle';
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const userRole = user?.role || 'user';
 
@@ -113,7 +114,11 @@ const DashboardLayout = () => {
                 <Home className="h-4 w-4" />
                 Back to Home
               </Link>
-              <button className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/15 dark:bg-[#0b2c67] dark:text-primary dark:hover:bg-[#133781]">
+              <button
+                type="button"
+                onClick={() => navigate('/request-delivery')}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/15 dark:bg-[#0b2c67] dark:text-primary dark:hover:bg-[#133781]"
+              >
                 <PlusCircle className="h-4 w-4" />
                 Request New Book
               </button>

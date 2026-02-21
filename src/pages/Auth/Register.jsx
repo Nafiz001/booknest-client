@@ -162,7 +162,7 @@ const Register = () => {
         </section>
 
         <section className="relative flex w-full items-center justify-center px-6 py-12 lg:w-1/2 lg:px-20 xl:px-28">
-          <div className="w-full max-w-md space-y-6">
+          <div className="animate-fade-in w-full max-w-md space-y-6">
             <div className="grid grid-cols-2 gap-1 rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-800/70">
               <Link
                 to="/login"

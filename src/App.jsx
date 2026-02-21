@@ -31,6 +31,8 @@ import ManageBooks from './pages/Dashboard/Admin/ManageBooks';
 import Payment from './pages/Payment/Payment';
 import PaymentSuccess from './pages/Payment/PaymentSuccess';
 import NotFound from './pages/NotFound';
+import RequestDelivery from './pages/RequestDelivery';
+import InfoPage from './pages/Info/InfoPage';
 import PrivateRoute from './routes/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import LibrarianRoute from './components/LibrarianRoute';
@@ -56,6 +58,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/payment/:orderId" element={<PrivateRoute><Payment /></PrivateRoute>} />
             <Route path="/payment-success" element={<PrivateRoute><PaymentSuccess /></PrivateRoute>} />
+            <Route path="/request-delivery" element={<PrivateRoute><RequestDelivery /></PrivateRoute>} />
+            <Route path="/info/:slug" element={<InfoPage />} />
 
             {/* Dashboard Routes */}
             <Route path="/dashboard" element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>

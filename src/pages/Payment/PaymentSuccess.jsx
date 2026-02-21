@@ -71,10 +71,18 @@ const PaymentSuccess = () => {
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle className="h-10 w-10 rounded-full border px-0" iconClassName="h-5 w-5" label={false} />
-            <button className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard/my-orders')}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
               <ShoppingCart className="h-5 w-5" />
             </button>
-            <button className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard/profile')}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
               <UserCircle2 className="h-5 w-5" />
             </button>
           </div>

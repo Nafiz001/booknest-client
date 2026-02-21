@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -73,6 +74,8 @@ const MapCore = ({ compact = false }) => (
 );
 
 const CoverageMap = ({ compact = false }) => {
+  const navigate = useNavigate();
+
   if (compact) {
     return <MapCore compact />;
   }
@@ -112,7 +115,9 @@ const CoverageMap = ({ compact = false }) => {
               Don't see your city? We're expanding! <br />
               Request service in your area.
             </p>
-            <button className="btn-primary">Request Coverage</button>
+            <button type="button" onClick={() => navigate('/request-delivery')} className="btn-primary">
+              Request Coverage
+            </button>
           </div>
         </div>
       </div>

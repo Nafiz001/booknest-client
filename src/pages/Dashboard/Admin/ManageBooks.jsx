@@ -68,7 +68,7 @@ const ManageBooks = () => {
   }
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <Toaster position="top-right" />
       <div className="mb-8 flex justify-between items-center">
         <div>

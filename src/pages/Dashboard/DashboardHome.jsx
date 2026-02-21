@@ -1,13 +1,15 @@
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Bookmark, Truck, Wallet } from 'lucide-react';
 
 const DashboardHome = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const firstName = user?.displayName?.split(' ')[0] || 'Alex';
 
   return (
-    <div className="flex flex-col gap-6 md:gap-8">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+    <div className="animate-fade-in flex flex-col gap-6 md:gap-8">
+      <div className="animate-slide-up flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white md:text-5xl">Good evening, {firstName}</h1>
           <p className="mt-2 text-base text-slate-600 dark:text-slate-400 md:text-xl">Here&apos;s what&apos;s happening with your library today.</p>
@@ -21,8 +23,8 @@ const DashboardHome = () => {
         </div>
       </div>
 
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
+      <section className="animate-slide-up animate-delay-100 grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
           <div className="pointer-events-none absolute right-0 top-0 p-5 opacity-15 transition-opacity group-hover:opacity-25">
             <Truck className="h-12 w-12 text-primary" />
           </div>
@@ -39,7 +41,7 @@ const DashboardHome = () => {
           </div>
         </article>
 
-        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
+        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
           <div className="pointer-events-none absolute right-0 top-0 p-5 opacity-15 transition-opacity group-hover:opacity-25">
             <Bookmark className="h-12 w-12 text-primary" />
           </div>
@@ -49,14 +51,18 @@ const DashboardHome = () => {
               <p className="text-4xl font-bold text-slate-900 dark:text-white">14</p>
               <p className="text-sm text-slate-500 dark:text-slate-400">Titles</p>
             </div>
-            <button className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard/wishlist')}
+              className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+            >
               Browse Wishlist
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </article>
 
-        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
+        <article className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-800/70">
           <div className="pointer-events-none absolute right-0 top-0 p-5 opacity-15 transition-opacity group-hover:opacity-25">
             <Wallet className="h-12 w-12 text-primary" />
           </div>
@@ -71,7 +77,7 @@ const DashboardHome = () => {
         </article>
       </section>
 
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-12">
+      <section className="animate-slide-up animate-delay-150 grid grid-cols-1 gap-6 xl:grid-cols-12">
         <div className="space-y-6 xl:col-span-8">
           <article className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-800/70">
             <div className="mb-5 flex items-center justify-between">
@@ -141,10 +147,18 @@ const DashboardHome = () => {
                   <div className="h-full w-[64%] rounded-full bg-primary shadow-[0_0_14px_rgba(23,84,207,0.45)]"></div>
                 </div>
                 <div className="mt-5 flex items-center gap-3">
-                  <button className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/all-books')}
+                    className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
+                  >
                     Continue Reading
                   </button>
-                  <button className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/all-books')}
+                    className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                  >
                     Details
                   </button>
                 </div>
@@ -192,7 +206,11 @@ const DashboardHome = () => {
               <p className="text-xs text-slate-500">Oct 15, 2023</p>
             </div>
           </div>
-          <button className="mt-6 w-full rounded-lg py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-primary/80">
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard/my-orders')}
+            className="mt-6 w-full rounded-lg py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 hover:text-primary/80"
+          >
             View Full History
           </button>
         </aside>

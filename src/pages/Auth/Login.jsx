@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, LogIn, Github } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { saveOrUpdateUser } from '../../utils/auth';
 import AuthNavbar from '../../components/layout/AuthNavbar';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -67,6 +68,10 @@ const Login = () => {
     }
   };
 
+  const handleGithubLogin = () => {
+    toast('GitHub sign-in is not configured yet. Use Google or email/password.');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 text-slate-900 dark:from-[#111621] dark:via-[#0f1a33] dark:to-[#111621] dark:text-slate-100">
       <AuthNavbar />
@@ -92,7 +97,7 @@ const Login = () => {
         </section>
 
         <section className="relative flex w-full items-center justify-center px-6 py-12 lg:w-1/2 lg:px-20 xl:px-28">
-          <div className="w-full max-w-md space-y-7">
+          <div className="animate-fade-in w-full max-w-md space-y-7">
             <div className="grid grid-cols-2 gap-1 rounded-lg border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-800/70">
               <Link
                 to="/login"
@@ -149,7 +154,7 @@ const Login = () => {
 
               <button
                 type="button"
-                disabled
+                onClick={handleGithubLogin}
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-400 dark:border-slate-700 dark:bg-transparent dark:text-slate-500"
                 title="GitHub auth is not configured for this app"
               >
@@ -190,9 +195,9 @@ const Login = () => {
                   <label htmlFor="password" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     Password
                   </label>
-                  <Link to="#" className="text-sm font-medium text-primary hover:text-blue-400">
+                  <button type="button" onClick={() => navigate('/info/support')} className="text-sm font-medium text-primary hover:text-blue-400">
                     Forgot password?
-                  </Link>
+                  </button>
                 </div>
                 <div className="relative">
                   <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
@@ -237,11 +242,11 @@ const Login = () => {
 
             <p className="text-center text-sm text-slate-500 dark:text-slate-500">
               By clicking continue, you agree to our{' '}
-              <Link to="#" className="font-medium text-primary hover:underline">
+              <Link to="/info/terms" className="font-medium text-primary hover:underline">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link to="#" className="font-medium text-primary hover:underline">
+              <Link to="/info/privacy" className="font-medium text-primary hover:underline">
                 Privacy Policy
               </Link>
               .
