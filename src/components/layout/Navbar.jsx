@@ -42,7 +42,7 @@ const Navbar = () => {
 
   const homeLinks = [
     { name: 'Browse', path: '/all-books' },
-    { name: 'Membership', path: '/register' },
+    { name: 'Membership', path: user ? '/dashboard/profile' : '/register' },
     { name: 'Gifts', path: '/all-books' },
   ];
 

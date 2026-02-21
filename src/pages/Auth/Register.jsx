@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, User, Upload, Check, X, BookOpen } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { saveOrUpdateUser } from '../../utils/auth';
+import AuthNavbar from '../../components/layout/AuthNavbar';
 
 const PasswordRequirement = ({ met, text }) => (
   <div className="flex items-center gap-2 text-xs">
@@ -138,7 +139,8 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-[#111621] text-slate-100">
-      <div className="flex min-h-screen w-full overflow-hidden">
+      <AuthNavbar />
+      <div className="flex min-h-screen w-full overflow-hidden pt-20">
         <section
           className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-cover bg-center bg-no-repeat p-12 lg:flex"
           style={{
@@ -148,12 +150,12 @@ const Register = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
 
-          <div className="relative z-10 flex items-center gap-3">
+          <Link to="/" className="relative z-10 flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded bg-primary text-white">
               <BookOpen className="h-5 w-5" />
             </div>
             <span className="text-xl font-bold text-white">BookNest</span>
-          </div>
+          </Link>
 
           <div className="relative z-10 mb-10 max-w-lg">
             <div className="mb-8 h-1 w-12 rounded-full bg-primary"></div>
@@ -165,13 +167,6 @@ const Register = () => {
         </section>
 
         <section className="relative flex w-full items-center justify-center px-6 py-12 lg:w-1/2 lg:px-20 xl:px-28">
-          <div className="absolute left-6 top-6 flex items-center gap-2 lg:hidden">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-white">
-              <BookOpen className="h-4 w-4" />
-            </div>
-            <span className="text-lg font-bold text-white">BookNest</span>
-          </div>
-
           <div className="w-full max-w-md space-y-6">
             <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800/70 p-1">
               <Link
