@@ -150,12 +150,7 @@ const Register = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
 
-          <Link to="/" className="relative z-10 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded bg-primary text-white">
-              <BookOpen className="h-5 w-5" />
-            </div>
-            <span className="text-xl font-bold text-white">BookNest</span>
-          </Link>
+          
 
           <div className="relative z-10 mb-10 max-w-lg">
             <div className="mb-8 h-1 w-12 rounded-full bg-primary"></div>
