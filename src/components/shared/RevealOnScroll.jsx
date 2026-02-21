@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 const RevealOnScroll = ({
   children,
   className = '',
-  delay = 200,
+  delay = 500,
   duration = 700,
   y = 24,
   threshold = 0.15,
