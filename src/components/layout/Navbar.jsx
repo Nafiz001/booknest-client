@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import {
   Menu,
   X,
-  Sun,
-  Moon,
   User,
   BookOpen,
   Home,
@@ -13,6 +11,10 @@ import {
   UserPlus,
   Search,
   Loader2,
+  ShoppingCart,
+  Bell,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
@@ -27,21 +29,37 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const searchContainerRef = useRef(null);
+  const profileRef = useRef(null);
+  const searchRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { user, loading, logOut } = useAuth();
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isProfileOpen && !event.target.closest('.profile-dropdown')) {
-        setIsProfileOpen(false);
-      }
-    };
+  const isHome = location.pathname === '/';
+  const isCatalog = location.pathname.startsWith('/all-books') || location.pathname.startsWith('/books/');
+  const isStitchHeader = isHome || isCatalog;
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isProfileOpen]);
+  const homeLinks = [
+    { name: 'Browse', path: '/all-books' },
+    { name: 'Membership', path: '/register' },
+    { name: 'Gifts', path: '/all-books' },
+  ];
+
+  const catalogLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Catalog', path: '/all-books' },
+    { name: 'My Library', path: user ? '/dashboard/my-orders' : '/login' },
+    { name: 'Wishlist', path: user ? '/dashboard/wishlist' : '/login' },
+  ];
+
+  const defaultLinks = [
+    { name: 'Home', path: '/', icon: Home },
+    { name: 'All Books', path: '/all-books', icon: BookOpen },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, protected: true },
+  ];
+
+  const activeLinks = isHome ? homeLinks : isCatalog ? catalogLinks : defaultLinks;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -77,13 +95,15 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      const clickedOutsideDesktopSearch =
-        searchContainerRef.current && !searchContainerRef.current.contains(event.target);
-      const clickedOutsideMobileSearch =
-        mobileSearchRef.current && !mobileSearchRef.current.contains(event.target);
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setIsProfileOpen(false);
+      }
 
+      const clickedOutsideDesktopSearch = searchRef.current && !searchRef.current.contains(event.target);
+      const clickedOutsideMobileSearch = mobileSearchRef.current && !mobileSearchRef.current.contains(event.target);
       if (clickedOutsideDesktopSearch && clickedOutsideMobileSearch) {
         setIsSearchOpen(false);
+        setIsMobileSearchOpen(false);
       }
     };
 
@@ -114,80 +134,104 @@ const Navbar = () => {
     closeSearchDropdowns();
   };
 
-  const handleSearchInputChange = (value) => {
-    setSearchQuery(value);
-    setIsSearchOpen(true);
-  };
-
   const handleResultClick = () => {
     clearSearchState();
   };
 
-  const navLinks = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'All Books', path: '/all-books', icon: BookOpen },
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, protected: true },
-  ];
+  const headerClass = isStitchHeader
+    ? 'border-slate-800 bg-[#07122a]/85'
+    : 'border-slate-200/80 bg-white/85 dark:border-slate-700/60 dark:bg-background-dark/80';
+  const textClass = isStitchHeader ? 'text-slate-300' : 'text-slate-600 dark:text-slate-300';
+  const hoverClass = isStitchHeader ? 'hover:text-white' : 'hover:text-slate-900 dark:hover:text-white';
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl dark:border-slate-700/60 dark:bg-background-dark/80">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${headerClass}`}>
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between gap-4">
-          <Link to="/" className="group flex items-center gap-3">
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/30 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-3">
-              <BookOpen className="h-6 w-6" />
-              <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-emerald-400 ring-2 ring-white dark:ring-background-dark"></span>
+          <Link to="/" className="flex items-center gap-3">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">
+              <BookOpen className="h-5 w-5" />
             </div>
-            <div>
-              <p className="font-display text-2xl font-bold leading-none text-slate-900 dark:text-white">
-                Book<span className="bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">Nest</span>
-              </p>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-                Premium Library
-              </p>
-            </div>
+            <p className={`text-2xl font-bold leading-none ${isStitchHeader ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
+              BookNest
+            </p>
           </Link>
 
-          <nav className="hidden items-center gap-1 md:flex">
-            {navLinks.map((link) => {
+          <nav className="hidden items-center gap-8 md:flex">
+            {activeLinks.map((link) => {
               if (link.protected && !user) return null;
               return (
                 <NavLink
                   key={link.path}
                   to={link.path}
                   className={({ isActive }) =>
-                    `inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
-                      isActive
-                        ? 'bg-primary text-white shadow-md shadow-primary/25'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white'
+                    `${textClass} ${hoverClass} text-sm font-medium transition-colors ${
+                      isActive ? 'font-bold text-primary' : ''
                     }`
                   }
                 >
-                  <link.icon className="h-4 w-4" />
-                  <span>{link.name}</span>
+                  {link.icon ? (
+                    <span className="inline-flex items-center gap-1">
+                      <link.icon className="h-4 w-4" />
+                      {link.name}
+                    </span>
+                  ) : (
+                    link.name
+                  )}
                 </NavLink>
               );
             })}
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <div ref={searchContainerRef} className="group relative hidden lg:block">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary" />
-              <input
-                type="text"
-                placeholder="Search books..."
-                value={searchQuery}
-                onChange={(e) => handleSearchInputChange(e.target.value)}
-                onFocus={() => setIsSearchOpen(true)}
-                className="h-10 w-56 rounded-full border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/25 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
-              />
+            <div ref={searchRef} className="relative">
+              <button
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsMobileSearchOpen(true);
+                    setIsSearchOpen(false);
+                  } else {
+                    setIsSearchOpen((prev) => !prev);
+                  }
+                  setIsMenuOpen(false);
+                }}
+                className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
+                  isStitchHeader
+                    ? 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                    : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
+                }`}
+                aria-label="Open search"
+              >
+                <Search className="h-5 w-5" />
+              </button>
 
               {isSearchOpen && (
-                <div className="absolute right-0 z-50 mt-2 w-96 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-surface-dark dark:shadow-black/40">
-                  <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-700">
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
-                      Search Results
-                    </p>
+                <div className="absolute right-0 z-50 mt-2 w-[370px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-surface-dark dark:shadow-black/40">
+                  <div className="border-b border-slate-200 p-3 dark:border-slate-700">
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      <input
+                        autoFocus
+                        type="text"
+                        placeholder="Search books..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/25 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                      />
+                      {searchQuery && (
+                        <button
+                          onClick={() => {
+                            setSearchQuery('');
+                            setDebouncedQuery('');
+                            setSearchResults([]);
+                          }}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                          aria-label="Clear search"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="max-h-96 overflow-y-auto">
@@ -217,69 +261,57 @@ const Navbar = () => {
                         onClick={handleResultClick}
                         className="flex items-center gap-3 border-b border-slate-100 px-4 py-3 transition-colors hover:bg-slate-50 last:border-b-0 dark:border-slate-700/70 dark:hover:bg-slate-800"
                       >
-                        <img
-                          src={book.image}
-                          alt={book.title}
-                          className="h-14 w-10 rounded object-cover"
-                        />
+                        <img src={book.image} alt={book.title} className="h-14 w-10 rounded object-cover" />
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{book.title}</p>
                           <p className="truncate text-xs text-slate-500 dark:text-slate-400">by {book.author}</p>
-                          <div className="mt-1 flex items-center gap-2">
-                            {book.category && (
-                              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-                                {book.category}
-                              </span>
-                            )}
-                            <span className="text-xs font-semibold text-primary">${book.price}</span>
-                          </div>
+                          <span className="mt-1 block text-xs font-semibold text-primary">${book.price}</span>
                         </div>
                       </Link>
                     ))}
                   </div>
-
-                  {searchResults.length > 0 && (
-                    <div className="border-t border-slate-200 px-4 py-2 dark:border-slate-700">
-                      <Link
-                        to="/all-books"
-                        onClick={closeSearchDropdowns}
-                        className="text-xs font-semibold text-primary hover:underline"
-                      >
-                        View full catalog
-                      </Link>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
 
-            <button
-              onClick={() => {
-                setIsMobileSearchOpen(true);
-                setIsSearchOpen(true);
-                setIsMenuOpen(false);
-                setIsProfileOpen(false);
-              }}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 lg:hidden dark:text-slate-200 dark:hover:bg-slate-800"
-              aria-label="Open search"
-            >
-              <Search className="h-5 w-5" />
-            </button>
+            {isCatalog && (
+              <>
+                <button
+                  className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-slate-200 transition-colors hover:bg-slate-700 sm:inline-flex"
+                  aria-label="Cart"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                </button>
+                <button
+                  className="hidden h-10 w-10 items-center justify-center rounded-lg bg-slate-800 text-slate-200 transition-colors hover:bg-slate-700 sm:inline-flex"
+                  aria-label="Notifications"
+                >
+                  <Bell className="h-5 w-5" />
+                </button>
+              </>
+            )}
 
-            <button
-              onClick={toggleTheme}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary dark:text-slate-300 dark:hover:bg-slate-800"
-              aria-label="Toggle theme"
-            >
-              {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-            </button>
+            {!isStitchHeader && (
+              <button
+                onClick={toggleTheme}
+                className="hidden h-10 w-10 items-center justify-center rounded-full text-slate-600 transition-colors hover:bg-slate-100 hover:text-primary sm:inline-flex dark:text-slate-300 dark:hover:bg-slate-800"
+                aria-label="Toggle theme"
+              >
+                {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+              </button>
+            )}
 
             {!loading &&
               (user ? (
-                <div className="relative profile-dropdown">
+                <div ref={profileRef} className="relative">
                   <button
-                    onClick={() => setIsProfileOpen((prev) => !prev)}
-                    className="flex items-center rounded-full ring-2 ring-transparent transition-all hover:ring-primary/30"
+                    onClick={() => {
+                      setIsProfileOpen((prev) => !prev);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border transition-colors ${
+                      isStitchHeader ? 'border-slate-700' : 'border-slate-200 dark:border-slate-700'
+                    }`}
                   >
                     <img
                       src={
@@ -287,12 +319,12 @@ const Navbar = () => {
                         `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || 'User')}&size=40&background=1754cf&color=fff`
                       }
                       alt={user.displayName || 'User'}
-                      className="h-10 w-10 rounded-full border border-slate-200 object-cover dark:border-slate-700"
+                      className="h-10 w-10 rounded-full object-cover"
                     />
                   </button>
 
                   {isProfileOpen && (
-                    <div className="absolute right-0 mt-3 w-60 rounded-xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/10 animate-slide-down dark:border-slate-700 dark:bg-surface-dark dark:shadow-black/40">
+                    <div className="absolute right-0 mt-3 w-60 rounded-xl border border-slate-200 bg-white p-2 shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-surface-dark dark:shadow-black/40">
                       <div className="mb-2 border-b border-slate-200 px-3 py-3 dark:border-slate-700">
                         <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">
                           {user.displayName || 'User'}
@@ -301,16 +333,16 @@ const Navbar = () => {
                       </div>
                       <Link
                         to="/dashboard"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                         onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                       >
                         <LayoutDashboard className="h-4 w-4" />
                         Dashboard
                       </Link>
                       <Link
                         to="/dashboard/profile"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                         onClick={() => setIsProfileOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
                       >
                         <User className="h-4 w-4" />
                         My Profile
@@ -329,21 +361,33 @@ const Navbar = () => {
                   )}
                 </div>
               ) : (
-                <div className="hidden items-center gap-2 md:flex">
-                  <Link to="/register" className="btn-ghost">
-                    <UserPlus className="h-4 w-4" />
-                    Register
-                  </Link>
-                  <Link to="/login" className="btn-primary">
-                    <LogIn className="h-4 w-4" />
-                    Login
-                  </Link>
-                </div>
+                <>
+                  {isStitchHeader ? (
+                    <Link to="/login" className="inline-flex rounded-full bg-primary px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                      Login
+                    </Link>
+                  ) : (
+                    <div className="hidden items-center gap-2 md:flex">
+                      <Link to="/register" className="btn-ghost">
+                        <UserPlus className="h-4 w-4" />
+                        Register
+                      </Link>
+                      <Link to="/login" className="btn-primary">
+                        <LogIn className="h-4 w-4" />
+                        Login
+                      </Link>
+                    </div>
+                  )}
+                </>
               ))}
 
             <button
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 md:hidden dark:text-slate-200 dark:hover:bg-slate-800"
+              className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors md:hidden ${
+                isStitchHeader
+                  ? 'bg-slate-800 text-slate-200 hover:bg-slate-700'
+                  : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
+              }`}
               aria-label="Toggle menu"
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -352,29 +396,28 @@ const Navbar = () => {
         </div>
 
         {isMenuOpen && (
-          <div className="animate-slide-down border-t border-slate-200 py-3 md:hidden dark:border-slate-700">
+          <div className={`animate-slide-down border-t py-3 md:hidden ${isStitchHeader ? 'border-slate-800' : 'border-slate-200 dark:border-slate-700'}`}>
             <div className="space-y-1">
-              {navLinks.map((link) => {
-                if (link.protected && !user) return null;
-                return (
-                  <NavLink
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
-                        isActive
-                          ? 'bg-primary text-white'
+              {activeLinks.map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
+                      isActive
+                        ? 'bg-primary text-white'
+                        : isStitchHeader
+                          ? 'text-slate-200 hover:bg-slate-800'
                           : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
-                      }`
-                    }
-                  >
-                    <link.icon className="h-4 w-4" />
-                    <span>{link.name}</span>
-                  </NavLink>
-                );
-              })}
-              {!loading && !user && (
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+
+              {!loading && !user && !isStitchHeader && (
                 <div className="grid grid-cols-2 gap-2 pt-2">
                   <Link to="/register" onClick={() => setIsMenuOpen(false)} className="btn-secondary text-sm">
                     Register
@@ -400,7 +443,7 @@ const Navbar = () => {
                   type="text"
                   placeholder="Search books..."
                   value={searchQuery}
-                  onChange={(e) => handleSearchInputChange(e.target.value)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/25 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                 />
                 <button
@@ -452,26 +495,11 @@ const Navbar = () => {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{book.title}</p>
                     <p className="truncate text-xs text-slate-500 dark:text-slate-400">by {book.author}</p>
-                    <div className="mt-1 flex items-center gap-2">
-                      {book.category && (
-                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-                          {book.category}
-                        </span>
-                      )}
-                      <span className="text-xs font-semibold text-primary">${book.price}</span>
-                    </div>
+                    <span className="mt-1 block text-xs font-semibold text-primary">${book.price}</span>
                   </div>
                 </Link>
               ))}
             </div>
-
-            {searchResults.length > 0 && (
-              <div className="border-t border-slate-200 px-4 py-2 dark:border-slate-700">
-                <Link to="/all-books" onClick={closeSearchDropdowns} className="text-xs font-semibold text-primary hover:underline">
-                  View full catalog
-                </Link>
-              </div>
-            )}
           </div>
         </div>
       )}

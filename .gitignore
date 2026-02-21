@@ -34,3 +34,5 @@ dist-ssr
 test-*.js
 add-*.js
 *.ps1
+
+stitch.zip

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, LogIn, BookOpen } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, LogIn, BookOpen, Github } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { saveOrUpdateUser } from '../../utils/auth';
 
@@ -67,125 +67,74 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark">
-      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
+    <div className="min-h-screen bg-[#111621] text-slate-100">
+      <div className="flex min-h-screen w-full overflow-hidden">
         <section
-          className="relative hidden overflow-hidden lg:block"
+          className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-cover bg-center bg-no-repeat p-12 lg:flex"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=1200&h=1600&fit=crop')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+              "url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1400&h=1800&fit=crop')",
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-black/30"></div>
-          <div className="relative flex h-full flex-col justify-between p-10 text-white">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white">
-                <BookOpen className="h-5 w-5" />
-              </div>
-              <p className="font-display text-3xl font-bold">BookNest</p>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30"></div>
+
+          <div className="relative z-10 flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded bg-primary text-white">
+              <BookOpen className="h-5 w-5" />
             </div>
-            <div className="max-w-md">
-              <div className="mb-6 h-1 w-12 rounded-full bg-primary"></div>
-              <p className="font-display text-5xl italic leading-tight">
-                "A room without books is like a body without a soul."
-              </p>
-              <p className="mt-5 text-lg text-slate-200">Marcus Tullius Cicero</p>
-            </div>
+            <span className="text-xl font-bold text-white">BookNest</span>
+          </div>
+
+          <div className="relative z-10 mb-10 max-w-lg">
+            <div className="mb-8 h-1 w-12 rounded-full bg-primary"></div>
+            <h2 className="font-display text-5xl italic leading-tight text-white">
+              "A room without books is like a body without a soul."
+            </h2>
+            <p className="mt-6 text-lg text-slate-300">- Marcus Tullius Cicero</p>
           </div>
         </section>
 
-        <section className="flex items-center justify-center px-4 py-12 sm:px-8">
-          <div className="w-full max-w-md">
-            <div className="mb-8 text-center lg:text-left">
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Welcome back</h2>
-              <p className="mt-2 text-slate-600 dark:text-slate-400">Sign in to continue your reading journey.</p>
+        <section className="relative flex w-full items-center justify-center px-6 py-12 lg:w-1/2 lg:px-20 xl:px-28">
+          <div className="absolute left-6 top-6 flex items-center gap-2 lg:hidden">
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-white">
+              <BookOpen className="h-4 w-4" />
+            </div>
+            <span className="text-lg font-bold text-white">BookNest</span>
+          </div>
+
+          <div className="w-full max-w-md space-y-7">
+            <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-800/70 p-1">
+              <Link
+                to="/login"
+                className="rounded px-4 py-2.5 text-center text-sm font-medium text-primary shadow-sm bg-slate-900"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/register"
+                className="rounded px-4 py-2.5 text-center text-sm font-medium text-slate-400 transition-colors hover:text-slate-200"
+              >
+                Join BookNest
+              </Link>
             </div>
 
-            <div className="card p-7 sm:p-8">
-              {error && (
-                <div className="mb-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900/40 dark:bg-rose-900/20 dark:text-rose-400">
-                  {error}
-                </div>
-              )}
+            <div className="space-y-1 text-center lg:text-left">
+              <h1 className="text-3xl font-bold tracking-tight text-white">Welcome back</h1>
+              <p className="text-slate-400">Enter your details to access your personal library.</p>
+            </div>
 
-              <form className="space-y-5" onSubmit={handleSubmit}>
-                <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="input-field pl-10"
-                      placeholder="you@example.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="mb-2 flex items-center justify-between">
-                    <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                      Password
-                    </label>
-                    <Link to="#" className="text-xs font-semibold text-primary hover:underline">
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <div className="relative">
-                    <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <input
-                      id="password"
-                      name="password"
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      value={formData.password}
-                      onChange={handleChange}
-                      className="input-field pl-10 pr-10"
-                      placeholder="••••••••"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                <button type="submit" disabled={loading} className="btn-primary w-full py-3">
-                  {loading ? (
-                    <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                      Signing In...
-                    </>
-                  ) : (
-                    <>
-                      <LogIn className="h-4 w-4" />
-                      Sign In
-                    </>
-                  )}
-                </button>
-              </form>
-
-              <div className="my-5 flex items-center gap-3">
-                <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
-                <span className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">or</span>
-                <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
+            {error && (
+              <div className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
+                {error}
               </div>
+            )}
 
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={handleGoogleLogin}
-                className="inline-flex w-full items-center justify-center gap-3 rounded-lg border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                disabled={loading}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800 disabled:opacity-60"
               >
                 <svg className="h-5 w-5" viewBox="0 0 24 24">
                   <path
@@ -205,16 +154,110 @@ const Login = () => {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                Continue with Google
+                Google
               </button>
 
-              <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
-                Don&apos;t have an account?{' '}
-                <Link to="/register" className="font-semibold text-primary hover:underline">
-                  Create one
-                </Link>
-              </p>
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-500"
+                title="GitHub auth is not configured for this app"
+              >
+                <Github className="h-4 w-4" />
+                GitHub
+              </button>
             </div>
+
+            <div className="relative flex items-center py-1">
+              <div className="h-px flex-1 bg-slate-700"></div>
+              <span className="mx-4 text-xs font-medium uppercase tracking-wider text-slate-500">Or continue with</span>
+              <div className="h-px flex-1 bg-slate-700"></div>
+            </div>
+
+            <form className="space-y-5" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-300">
+                  Email address
+                </label>
+                <div className="relative">
+                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <label htmlFor="password" className="text-sm font-medium text-slate-300">
+                    Password
+                  </label>
+                  <Link to="#" className="text-sm font-medium text-primary hover:text-blue-400">
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="********"
+                    className="h-11 w-full rounded-lg border border-slate-700 bg-slate-800 px-10 pr-10 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-300"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? (
+                  <>
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="h-4 w-4" />
+                    Sign in
+                  </>
+                )}
+              </button>
+            </form>
+
+            <p className="text-center text-sm text-slate-500">
+              By clicking continue, you agree to our{' '}
+              <Link to="#" className="font-medium text-primary hover:underline">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link to="#" className="font-medium text-primary hover:underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
+
+            <p className="text-center text-xs text-slate-600">© {new Date().getFullYear()} BookNest Inc.</p>
           </div>
         </section>
       </div>

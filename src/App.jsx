@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/layout/Navbar';
@@ -36,52 +36,64 @@ import AdminRoute from './components/AdminRoute';
 import LibrarianRoute from './components/LibrarianRoute';
 
 function App() {
+  const AppShell = () => {
+    const location = useLocation();
+    const isDashboardRoute = location.pathname.startsWith('/dashboard');
+    const isAuthRoute = location.pathname === '/login' || location.pathname === '/register';
+    const isCheckoutRoute =
+      location.pathname.startsWith('/payment/') || location.pathname === '/payment-success';
+    const useImmersiveLayout = isDashboardRoute || isAuthRoute || isCheckoutRoute;
+
+    return (
+      <div className="flex min-h-screen flex-col">
+        {!useImmersiveLayout && <Navbar />}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<HomeGoodreads />} />
+            <Route path="/all-books" element={<AllBooks />} />
+            <Route path="/books/:id" element={<BookDetails />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/payment/:orderId" element={<PrivateRoute><Payment /></PrivateRoute>} />
+            <Route path="/payment-success" element={<PrivateRoute><PaymentSuccess /></PrivateRoute>} />
+
+            {/* Dashboard Routes */}
+            <Route path="/dashboard" element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
+              <Route index element={<DashboardHome />} />
+              {/* User Routes */}
+              <Route path="my-orders" element={<MyOrders />} />
+              <Route path="profile" element={<MyProfile />} />
+              <Route path="invoices" element={<Invoices />} />
+              <Route path="wishlist" element={<MyWishlist />} />
+
+              {/* Librarian Routes */}
+              <Route path="add-book" element={<LibrarianRoute><AddBook /></LibrarianRoute>} />
+              <Route path="my-books" element={<LibrarianRoute><MyBooks /></LibrarianRoute>} />
+              <Route path="orders" element={<LibrarianRoute><Orders /></LibrarianRoute>} />
+
+              {/* Admin Routes */}
+              <Route path="all-users" element={<AdminRoute><AllUsers /></AdminRoute>} />
+              <Route path="manage-books" element={<AdminRoute><ManageBooks /></AdminRoute>} />
+            </Route>
+
+            {/* 404 - Catch all unmatched routes */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        {!useImmersiveLayout && <Footer />}
+      </div>
+    );
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <Router>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">
-              <Routes>
-              <Route path="/" element={<HomeGoodreads />} />
-              <Route path="/all-books" element={<AllBooks />} />
-              <Route path="/books/:id" element={<BookDetails />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/payment/:orderId" element={<PrivateRoute><Payment /></PrivateRoute>} />
-              <Route path="/payment-success" element={<PrivateRoute><PaymentSuccess /></PrivateRoute>} />
-              
-              {/* Dashboard Routes */}
-              <Route path="/dashboard" element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
-                <Route index element={<DashboardHome />} />
-                {/* User Routes */}
-                <Route path="my-orders" element={<MyOrders />} />
-                <Route path="profile" element={<MyProfile />} />
-                <Route path="invoices" element={<Invoices />} />
-                <Route path="wishlist" element={<MyWishlist />} />
-                
-                {/* Librarian Routes */}
-                <Route path="add-book" element={<LibrarianRoute><AddBook /></LibrarianRoute>} />
-                <Route path="my-books" element={<LibrarianRoute><MyBooks /></LibrarianRoute>} />
-                <Route path="orders" element={<LibrarianRoute><Orders /></LibrarianRoute>} />
-                
-                {/* Admin Routes */}
-                <Route path="all-users" element={<AdminRoute><AllUsers /></AdminRoute>} />
-                <Route path="manage-books" element={<AdminRoute><ManageBooks /></AdminRoute>} />
-              </Route>
-
-              {/* 404 - Catch all unmatched routes */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </ThemeProvider>
+          <AppShell />
+        </Router>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
 
 export default App;
-

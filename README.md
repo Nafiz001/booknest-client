@@ -14,15 +14,28 @@ UI/UX was fully refreshed to a professional, client-ready standard based on gene
 - Payment/order/review/wishlist data contracts
 - Route paths and backend connectivity
 
+Implemented in recent passes:
+- Stitch-aligned Home page with editorial hero, value cards, latest catalog preview, metro coverage section, and CTA
+- Stitch-aligned All Books catalog with left filter rail, premium cards, and hover interactions
+- Stitch-aligned Dashboard shell and overview panels (KPIs, habits chart, timeline)
+- Functional navbar quick-search modal that fetches matching books and routes directly to `/books/:id`
+- Dashboard route now renders without the public navbar/footer wrapper for layout fidelity
+- Stitch-aligned Book Details editorial page with preserved review/wishlist/order flows
+- Stitch-aligned Authentication screens (Login/Register) with immersive full-screen layout
+- Stitch-aligned Profile Settings overview (`/dashboard/profile`) while preserving existing profile update API connection
+- Stitch-aligned Secure Checkout and Payment Success experiences using existing Stripe session endpoints
+- Stitch-aligned 404 page with recovery actions and trending section
+
 ## Core Features
 - Premium responsive UI with dark/light theme
-- Home with hero slider, featured feed, latest books, value sections, and coverage map
-- All Books catalog with search, category filters, sorting, and skeleton loading
-- Book Details with reviews, wishlist, and order modal
-- Firebase auth (email/password + Google)
+- Home with editorial hero, latest books, value sections, and coverage map
+- All Books catalog with search, category filters, sorting, hover actions, and skeleton loading
+- Book Details with reviews, wishlist, order modal, and editorial layout
+- Full-screen auth experience (email/password + Google)
+- Dashboard overview with KPI cards, reading habits chart, and recent activity timeline
 - User dashboard:
   - My Orders
-  - My Profile
+  - My Profile (settings-style UI)
   - Invoices
   - Wishlist
 - Librarian dashboard:
@@ -33,8 +46,9 @@ UI/UX was fully refreshed to a professional, client-ready standard based on gene
   - All Users (role management)
   - Manage Books
 - Stripe checkout flow:
-  - Payment page
+  - Secure payment page
   - Payment success confirmation
+- Custom 404 discovery page
 
 ## Tech Stack
 - React `19`

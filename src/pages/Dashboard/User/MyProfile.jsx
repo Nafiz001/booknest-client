@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { User, Mail, Camera } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Camera, Lock, User } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import api from '../../../utils/api';
 import toast, { Toaster } from 'react-hot-toast';
@@ -11,16 +11,26 @@ const MyProfile = () => {
   const [imagePreview, setImagePreview] = useState(user?.photoURL);
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const [firstName, lastName] = useMemo(() => {
+    const parts = (user?.displayName || '').trim().split(/\s+/).filter(Boolean);
+    return [parts[0] || 'Alex', parts.slice(1).join(' ') || 'Reader'];
+  }, [user?.displayName]);
+
   const [formData, setFormData] = useState({
-    name: user?.displayName || '',
-    photoURL: user?.photoURL || ''
+    firstName,
+    lastName,
+    photoURL: user?.photoURL || '',
+    street: '',
+    city: '',
+    region: '',
+    postalCode: '',
   });
 
-  // Show loading spinner until user data with MongoDB ID is loaded
-  if (loading || !user?._id && !user?.id) {
+  if (loading || !user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -30,23 +40,35 @@ const MyProfile = () => {
     if (file) {
       setSelectedFile(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
+      reader.onloadend = () => setImagePreview(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
   const uploadImageToImgBB = async (file) => {
-    const formData = new FormData();
-    formData.append('image', file);
-    
+    const payload = new FormData();
+    payload.append('image', file);
     const response = await axios.post(
       `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
-      formData
+      payload
     );
-    
     return response.data.data.url;
+  };
+
+  const resetForm = () => {
+    const nameParts = (user?.displayName || '').trim().split(/\s+/).filter(Boolean);
+    setFormData({
+      firstName: nameParts[0] || 'Alex',
+      lastName: nameParts.slice(1).join(' ') || 'Reader',
+      photoURL: user?.photoURL || '',
+      street: '',
+      city: '',
+      region: '',
+      postalCode: '',
+    });
+    setImagePreview(user?.photoURL);
+    setSelectedFile(null);
+    setIsEditing(false);
   };
 
   const handleSubmit = async () => {
@@ -54,33 +76,29 @@ const MyProfile = () => {
       toast.error('User ID not found. Please try logging in again.');
       return;
     }
-    
+
     try {
       setUploading(true);
       let photoURL = formData.photoURL;
 
-      // If a new image was selected, upload it to ImgBB first
       if (selectedFile) {
-        toast.loading('Uploading image...');
+        const uploadToast = toast.loading('Uploading image...');
         photoURL = await uploadImageToImgBB(selectedFile);
-        toast.dismiss();
+        toast.dismiss(uploadToast);
       }
 
-      // Update Firebase profile
-      await updateUserProfile(formData.name, photoURL);
-      
-      // Sync with backend
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+      await updateUserProfile(fullName, photoURL);
+
       const userId = user._id || user.id;
       await api.patch(`/users/${userId}`, {
-        name: formData.name,
-        photoURL: photoURL
+        name: fullName,
+        photoURL: photoURL,
       });
-      
-      // Update local state
-      setFormData({ ...formData, photoURL });
+
+      setFormData((prev) => ({ ...prev, photoURL }));
       setSelectedFile(null);
-      
-      toast.success('Profile updated successfully!');
+      toast.success('Profile updated successfully');
       setIsEditing(false);
     } catch (error) {
       console.error('Update error:', error);
@@ -91,124 +109,221 @@ const MyProfile = () => {
   };
 
   return (
-    <div>
+    <div className="text-slate-100">
       <Toaster position="top-right" />
-      <div className="mb-8">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Account</p>
-        <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">My Profile</h1>
-        <p className="text-gray-600 dark:text-gray-400">Manage your account information</p>
+
+      <div className="mb-8 flex flex-col gap-2">
+        <div className="flex items-center gap-2 text-sm text-slate-400">
+          <span>Dashboard</span>
+          <span>{'>'}</span>
+          <span className="font-medium text-slate-200">Profile Settings</span>
+        </div>
+        <h1 className="text-4xl font-bold tracking-tight text-white">Account Settings</h1>
+        <p className="text-slate-400">Manage your personal information and delivery preferences.</p>
       </div>
 
-      <div className="max-w-3xl">
-        <div className="card p-8">
-          <div className="space-y-6">
-            {/* Profile Picture */}
-            <div className="flex flex-col items-center rounded-xl bg-slate-50 p-6 dark:bg-slate-800/50">
-              <div className="relative">
-                <img
-                  src={imagePreview || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=150&background=2563eb&color=fff`}
-                  alt="Profile"
-                  className="h-28 w-28 rounded-full border-4 border-primary object-cover"
-                />
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <aside className="space-y-6 lg:col-span-1">
+          <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-6 shadow-sm">
+            <div className="flex flex-col items-center text-center">
+              <div className="group relative mb-4">
+                <div className="h-28 w-28 overflow-hidden rounded-full border-4 border-slate-700 shadow-lg">
+                  <img
+                    src={
+                      imagePreview ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.displayName || 'User')}&size=150&background=2563eb&color=fff`
+                    }
+                    alt="Profile"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
                 {isEditing && (
-                  <label className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-primary p-2 text-white transition-colors hover:bg-primary-dark">
-                    <Camera className="h-5 w-5" />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                    />
+                  <label className="absolute bottom-0 right-0 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-110">
+                    <Camera className="h-4 w-4" />
+                    <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                   </label>
                 )}
               </div>
-              <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">Click camera icon to update your avatar</p>
-            </div>
-
-            {/* Name Field */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Full Name
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  disabled={!isEditing}
-                  className="input-field pl-10 disabled:cursor-not-allowed disabled:opacity-60"
-                />
-              </div>
-            </div>
-
-            {/* Email Field (Read-only) */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="email"
-                  value={user?.email || ''}
-                  disabled
-                  className="input-field cursor-not-allowed pl-10 opacity-60"
-                />
-              </div>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                Email cannot be changed
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex space-x-4">
-              {!isEditing ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    console.log('Edit Profile clicked');
-                    setIsEditing(true);
-                  }}
-                  className="btn-primary px-6 py-2"
-                >
-                  Edit Profile
-                </button>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    onClick={handleSubmit}
-                    disabled={uploading}
-                    className="btn-primary px-6 py-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {uploading ? 'Saving...' : 'Save Changes'}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setFormData({
-                        name: user?.displayName || '',
-                        photoURL: user?.photoURL || ''
-                      });
-                      setImagePreview(user?.photoURL);
-                      setSelectedFile(null);
-                    }}
-                    disabled={uploading}
-                    className="btn-secondary px-6 py-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Cancel
-                  </button>
-                </>
-              )}
+              <h2 className="text-xl font-bold text-white">{`${formData.firstName} ${formData.lastName}`.trim()}</h2>
+              <p className="mb-3 text-sm text-slate-400">Member since 2023</p>
+              <span className="inline-flex items-center rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/20">
+                Bibliophile Tier
+              </span>
             </div>
           </div>
-        </div>
+
+          <div className="rounded-xl bg-gradient-to-br from-primary to-blue-600 p-6 text-white shadow-lg">
+            <div className="mb-4 flex items-center justify-between">
+              <span className="rounded-lg bg-white/20 p-2 backdrop-blur-sm text-xs font-semibold">PRO</span>
+              <span className="rounded-full bg-white/15 px-2 py-1 text-xs font-medium">Auto-Renew On</span>
+            </div>
+            <h3 className="text-lg font-bold">Premium Subscription</h3>
+            <p className="mt-1 text-sm text-blue-100">
+              Your next billing date is <span className="font-semibold text-white">December 15, 2026</span>.
+            </p>
+            <div className="mt-5">
+              <div className="mb-2 flex justify-between text-xs font-medium text-blue-100">
+                <span>Usage</span>
+                <span>8/10 Books</span>
+              </div>
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-black/20">
+                <div className="h-full w-[80%] rounded-full bg-white"></div>
+              </div>
+            </div>
+            <button className="mt-6 w-full rounded-lg bg-white/15 py-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/25">
+              Manage Subscription
+            </button>
+          </div>
+        </aside>
+
+        <section className="lg:col-span-2">
+          <div className="overflow-hidden rounded-xl border border-slate-700 bg-slate-800/60 shadow-sm">
+            <div className="border-b border-slate-700 px-6">
+              <nav className="-mb-px flex gap-6">
+                <span className="border-b-2 border-primary py-4 text-sm font-medium text-primary">
+                  General Profile
+                </span>
+                <span className="border-b-2 border-transparent py-4 text-sm font-medium text-slate-400">
+                  Password & Security
+                </span>
+                <span className="border-b-2 border-transparent py-4 text-sm font-medium text-slate-400">
+                  Notifications
+                </span>
+              </nav>
+            </div>
+
+            <div className="space-y-8 p-6 md:p-8">
+              <div>
+                <div className="mb-5 border-b border-slate-700 pb-2">
+                  <h3 className="text-base font-semibold text-white">Personal Information</h3>
+                  <p className="mt-1 text-sm text-slate-400">Manage your connected profile details.</p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-200">First name</label>
+                    <input
+                      type="text"
+                      value={formData.firstName}
+                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                      disabled={!isEditing}
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-slate-200">Last name</label>
+                    <input
+                      type="text"
+                      value={formData.lastName}
+                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                      disabled={!isEditing}
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-slate-200">Email address</label>
+                    <div className="relative">
+                      <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                      <input
+                        type="email"
+                        value={user?.email || ''}
+                        disabled
+                        className="h-11 w-full cursor-not-allowed rounded-lg border border-slate-700 bg-slate-800 pl-10 pr-3 text-sm text-slate-400 opacity-80"
+                      />
+                    </div>
+                    <p className="mt-1.5 text-xs text-slate-500">Contact support to change your email address.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-5 border-b border-slate-700 pb-2">
+                  <h3 className="text-base font-semibold text-white">Shipping Address</h3>
+                  <p className="mt-1 text-sm text-slate-400">Saved locally for UI preview.</p>
+                </div>
+
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-6">
+                  <div className="col-span-full">
+                    <label className="mb-2 block text-sm font-medium text-slate-200">Street address</label>
+                    <input
+                      type="text"
+                      value={formData.street}
+                      onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+                      disabled={!isEditing}
+                      placeholder="123 Library Lane, Apt 4B"
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-slate-200">City</label>
+                    <input
+                      type="text"
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      disabled={!isEditing}
+                      placeholder="Bookton"
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-slate-200">State / Province</label>
+                    <input
+                      type="text"
+                      value={formData.region}
+                      onChange={(e) => setFormData({ ...formData, region: e.target.value })}
+                      disabled={!isEditing}
+                      placeholder="NY"
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="mb-2 block text-sm font-medium text-slate-200">ZIP / Postal code</label>
+                    <input
+                      type="text"
+                      value={formData.postalCode}
+                      onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                      disabled={!isEditing}
+                      placeholder="10001"
+                      className="h-11 w-full rounded-lg border border-slate-700 bg-slate-900 px-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-70"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 border-t border-slate-700 pt-6">
+                {!isEditing ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(true)}
+                    className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark"
+                  >
+                    Edit Profile
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      disabled={uploading}
+                      className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-slate-300 transition-colors hover:bg-slate-700"
+                    >
+                      <User className="h-4 w-4" />
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={uploading}
+                      className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {uploading ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
