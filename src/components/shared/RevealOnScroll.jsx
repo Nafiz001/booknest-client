@@ -3,13 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 const RevealOnScroll = ({
   children,
   className = '',
-  delay = 2000,
+  delay = 500,
   duration = 700,
   y = 24,
   threshold = 0.15,
   once = true,
 }) => {
   const ref = useRef(null);
+  const timerRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -19,14 +20,16 @@ const RevealOnScroll = ({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
-          if (once) {
-            observer.unobserve(node);
-          }
+          // delay the state change so transition starts after timeout
+          timerRef.current = setTimeout(() => {
+            setIsVisible(true);
+            if (once) observer.unobserve(node);
+          }, delay);
           return;
         }
 
         if (!once) {
+          clearTimeout(timerRef.current);
           setIsVisible(false);
         }
       },
@@ -40,8 +43,9 @@ const RevealOnScroll = ({
 
     return () => {
       observer.disconnect();
+      clearTimeout(timerRef.current);
     };
-  }, [once, threshold]);
+  }, [once, threshold, delay]);
 
   return (
     <div
@@ -53,7 +57,7 @@ const RevealOnScroll = ({
         transitionProperty: 'opacity, transform',
         transitionDuration: `${duration}ms`,
         transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        transitionDelay: `${delay}ms`,
+        transitionDelay: `0ms`, // optional: avoid double-delay if using JS timeout
         willChange: 'opacity, transform',
       }}
     >
