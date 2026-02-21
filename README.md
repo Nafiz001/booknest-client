@@ -1,165 +1,119 @@
-# BookNest - Library-to-Home Delivery System (Client)
+# BookNest Client
 
-A modern, responsive React application for library book delivery services built with Vite, Tailwind CSS, and React Router.
+BookNest is a production-focused React client for a library-to-home book delivery platform.  
+It includes public browsing, authentication, role-based dashboards (user, librarian, admin), wishlist/reviews, and Stripe checkout.
 
-## 🚀 Live Demo
+## Live
+- Production: `https://booknest-client-jet.vercel.app`
+- Local dev: `http://localhost:5173`
 
-**Production:** https://booknest-client-jet.vercel.app
+## Recent Update
+UI/UX was fully refreshed to a professional, client-ready standard based on generated design directions from Stitch, while preserving:
+- Existing server API endpoints
+- Auth flow and user roles
+- Payment/order/review/wishlist data contracts
+- Route paths and backend connectivity
 
-**Development:** http://localhost:5173/
+## Core Features
+- Premium responsive UI with dark/light theme
+- Home with hero slider, featured feed, latest books, value sections, and coverage map
+- All Books catalog with search, category filters, sorting, and skeleton loading
+- Book Details with reviews, wishlist, and order modal
+- Firebase auth (email/password + Google)
+- User dashboard:
+  - My Orders
+  - My Profile
+  - Invoices
+  - Wishlist
+- Librarian dashboard:
+  - Add Book
+  - My Books
+  - Orders management
+- Admin dashboard:
+  - All Users (role management)
+  - Manage Books
+- Stripe checkout flow:
+  - Payment page
+  - Payment success confirmation
 
-## ✨ Features Implemented
+## Tech Stack
+- React `19`
+- Vite `7`
+- React Router DOM `7`
+- Tailwind CSS `3`
+- TanStack Query `5`
+- Firebase Auth
+- Axios
+- Stripe (`@stripe/react-stripe-js`, `@stripe/stripe-js`)
+- React Leaflet + Leaflet
+- Lucide React
+- React Hot Toast
 
-### ✅ Completed Features
+## Routes
+- Public:
+  - `/`
+  - `/all-books`
+  - `/books/:id`
+  - `/login`
+  - `/register`
+- Protected:
+  - `/payment/:orderId`
+  - `/payment-success`
+  - `/dashboard`
+  - `/dashboard/my-orders`
+  - `/dashboard/profile`
+  - `/dashboard/invoices`
+  - `/dashboard/wishlist`
+- Librarian:
+  - `/dashboard/add-book`
+  - `/dashboard/my-books`
+  - `/dashboard/orders`
+- Admin:
+  - `/dashboard/all-users`
+  - `/dashboard/manage-books`
 
-1. **Modern UI Design**
-   - Clean, professional interface inspired by Goodreads and Amazon
-   - Fully responsive design (mobile, tablet, desktop)
-   - Dark/Light theme toggle with persistent storage
-   - Smooth animations and transitions
-
-2. **Layout Components**
-   - ✅ Responsive Navbar with hamburger menu
-   - ✅ Theme toggle (Sun/Moon icons)
-   - ✅ Profile dropdown menu
-   - ✅ Footer with social links (X logo, not Twitter)
-   - ✅ Collapsible dashboard sidebar (ready for implementation)
-
-3. **Home Page**
-   - ✅ Hero slider with 4 slides (auto-play, manual navigation)
-   - ✅ Latest Books section (6 book cards with ratings)
-   - ✅ Why Choose Us section (6 feature cards with icons)
-   - ✅ Coverage Map (interactive US map with 10 cities)
-   - ✅ How It Works (animated 3-step process)
-   - ✅ Testimonials section
-   - ✅ Newsletter signup section
-
-4. **Authentication Pages**
-   - ✅ Login page (email/password + Google OAuth)
-   - ✅ Registration page with file upload for profile picture
-   - ✅ Password strength validation (5 criteria)
-   - ✅ Responsive form design
-
-5. **All Books Page**
-   - ✅ Book grid with search and filters
-   - ✅ Category filtering (Fiction, Non-Fiction, Science, etc.)
-   - ✅ Price sorting (Newest, High-Low, Low-High)
-   - ✅ Debounced search functionality
-   - ✅ Skeleton loading states
-
-6. **Book Details Page**
-   - ✅ Complete book information display
-   - ✅ Order modal with Stripe integration
-   - ✅ Review and rating system
-   - ✅ Responsive image gallery
-   - ✅ Related books section
-
-7. **User Dashboard**
-   - ✅ My Orders (view all orders with status)
-   - ✅ My Profile (update profile with image upload)
-   - ✅ Invoices (view and download paid orders)
-   - ✅ Wishlist (save favorite books)
-   - ✅ Responsive sidebar navigation
-
-8. **Librarian Dashboard**
-   - ✅ Add Book (create new books with image upload)
-   - ✅ My Books (manage librarian's books)
-   - ✅ Orders management
-   - ✅ Book editing and deletion
-
-9. **Admin Dashboard**
-   - ✅ All Users management (view, role change, delete)
-   - ✅ Manage Books (all books CRUD)
-   - ✅ User role switching (User/Librarian/Admin)
-   - ✅ Statistics and overview
-
-10. **Payment Integration**
-    - ✅ Stripe checkout integration
-    - ✅ Payment success/cancel pages
-    - ✅ Order status updates
-    - ✅ Invoice generation
-
-11. **Technical Features**
-    - ✅ React Router v7 with nested routes
-    - ✅ Firebase Authentication (Email/Password + Google)
-    - ✅ Theme Context (dark/light mode with persistence)
-    - ✅ Tailwind CSS 4.0 with custom configuration
-    - ✅ Tanstack Query for data fetching
-    - ✅ Axios interceptors for auth
-    - ✅ React Leaflet for interactive maps
-    - ✅ ImgBB for image uploads
-    - ✅ Lucide React icons
-    - ✅ Protected routes (User, Librarian, Admin)
-
-## 📦 Technologies Used
-
-- **React 18** - UI library
-- **Vite** - Build tool
-- **Tailwind CSS 3** - Styling
-- **React Router v6** - Routing
-- **Lucide React** - Icons
-- **Framer Motion** - Animations
-- **Firebase** (ready for integration) - Authentication
-
-## 🛠️ Installation & Setup
-
+## Setup
+### 1) Install
 ```bash
-# Install dependencies
 npm install
+```
 
-# Start development server
+### 2) Configure environment
+Create `.env.local` (or `.env`) with:
+```env
+VITE_API_URL=http://localhost:5000/api
+
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+
+VITE_IMGBB_API_KEY=
+VITE_STRIPE_PUBLISHABLE_KEY=
+```
+
+### 3) Run
+```bash
 npm run dev
+```
 
-# Build for production
+### 4) Build
+```bash
 npm run build
 ```
 
-## 🎨 Design System
+### 5) Preview production build
+```bash
+npm run preview
+```
 
-### Color Palette
-- **Primary**: #1e3a8a (Navy Blue) - Trust & reliability
-- **Secondary**: #0ea5e9 (Sky Blue)  
-- **Accent**: #f59e0b (Amber)
+### 6) Lint
+```bash
+npm run lint
+```
 
-### Typography
-- **Display Font**: Lato
-- **Body Font**: Inter
-
-## 🌐 UI Inspiration Sources
-
-1. **Goodreads** - Book layouts, ratings
-2. **Amazon** - Product grid, filters
-3. **Notion** - Sidebar, theme toggle
-4. **Tailwind UI** - Component structure
-5. **Dribbble & Behance** - Visual direction
-
-## 📱 Responsive Breakpoints
-
-- **Mobile**: < 640px
-- **Tablet**: 640px - 1024px  
-- **Desktop**: > 1024px
-
-## 🎯 Assignment Requirements Status
-
-- [x] Responsive navbar with theme toggle
-- [x] Footer with X logo
-- [x] Home page with 3+ slider
-- [x] Latest books section
-- [x] Coverage map
-- [x] Why Choose Us section
-- [x] Animated section
-- [x] 2 extra sections
-- [x] Login/Register pages
-- [x] Dark/light mode
-- [ ] All Books with search/filter
-- [ ] Book Details with order modal
-- [ ] User dashboard
-- [ ] Librarian dashboard
-- [ ] Admin dashboard
-- [ ] Firebase integration
-- [ ] Payment integration
-
-## 👨‍💻 Developer
-
-Built with ❤️ for the BookCourier assignment project
-
+## Notes
+- Build is passing.
+- Lint has no errors; only a few existing React hook dependency warnings in dashboard pages.
