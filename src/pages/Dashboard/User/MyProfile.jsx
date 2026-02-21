@@ -5,6 +5,7 @@ import { useAuth } from '../../../context/AuthContext';
 import api from '../../../utils/api';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
+import RevealOnScroll from '../../../components/shared/RevealOnScroll';
 
 const MyProfile = () => {
   const { user, updateUserProfile, loading } = useAuth();
@@ -167,18 +168,21 @@ const MyProfile = () => {
     <div className="text-slate-900 dark:text-slate-100">
       <Toaster position="top-right" />
 
-      <div className="mb-8 flex flex-col gap-2">
-        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-          <span>Dashboard</span>
-          <span>{'>'}</span>
-          <span className="font-medium text-slate-700 dark:text-slate-200">Profile Settings</span>
+      <RevealOnScroll y={12}>
+        <div className="mb-8 flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+            <span>Dashboard</span>
+            <span>{'>'}</span>
+            <span className="font-medium text-slate-700 dark:text-slate-200">Profile Settings</span>
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">Account Settings</h1>
+          <p className="text-slate-500 dark:text-slate-400">Manage your personal information and delivery preferences.</p>
         </div>
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">Account Settings</h1>
-        <p className="text-slate-500 dark:text-slate-400">Manage your personal information and delivery preferences.</p>
-      </div>
+      </RevealOnScroll>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <aside className="space-y-6 lg:col-span-1">
+        <RevealOnScroll className="lg:col-span-1" y={14}>
+          <aside className="space-y-6">
           <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800/60">
             <div className="flex flex-col items-center text-center">
               <div className="group relative mb-4">
@@ -233,9 +237,11 @@ const MyProfile = () => {
               Manage Subscription
             </button>
           </div>
-        </aside>
+          </aside>
+        </RevealOnScroll>
 
-        <section className="animate-slide-up animate-delay-100 lg:col-span-2">
+        <RevealOnScroll className="lg:col-span-2" delay={80} y={14}>
+          <section>
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800/60">
             <div className="border-b border-slate-200 px-6 dark:border-slate-700">
               <nav className="-mb-px flex gap-6">
@@ -495,7 +501,8 @@ const MyProfile = () => {
               </div>
             )}
           </div>
-        </section>
+          </section>
+        </RevealOnScroll>
       </div>
     </div>
   );

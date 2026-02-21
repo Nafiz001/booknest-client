@@ -5,6 +5,7 @@ import api from '../../utils/api';
 import toast from 'react-hot-toast';
 import BookCardSkeleton from '../../components/shared/BookCardSkeleton';
 import { useAuth } from '../../context/AuthContext';
+import RevealOnScroll from '../../components/shared/RevealOnScroll';
 
 const categories = [
   { value: 'all', label: 'All Books', count: 124 },
@@ -303,189 +304,199 @@ const AllBooks = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 text-slate-900 dark:from-[#07122a] dark:via-[#081a3e] dark:to-[#07122a] dark:text-slate-100">
       <div className="mx-auto flex w-full max-w-[1500px]">
-        <aside className="animate-slide-up sticky top-20 hidden h-[calc(100vh-80px)] w-72 shrink-0 border-r border-slate-200 bg-white/80 px-6 py-8 dark:border-slate-800 dark:bg-[#06112a]/70 lg:block">
-          {renderFiltersPanel()}
-        </aside>
+        <RevealOnScroll className="hidden lg:block" y={18}>
+          <aside className="sticky top-20 h-[calc(100vh-80px)] w-72 shrink-0 border-r border-slate-200 bg-white/80 px-6 py-8 dark:border-slate-800 dark:bg-[#06112a]/70">
+            {renderFiltersPanel()}
+          </aside>
+        </RevealOnScroll>
 
-        <main className="animate-fade-in min-w-0 flex-1 px-4 py-8 md:px-8">
-          <div className="mb-6 lg:hidden">
-            <button
-              type="button"
-              onClick={() => setIsMobileFiltersOpen(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
-            >
-              <Filter className="h-4 w-4" />
-              Open Filters
-            </button>
-          </div>
-
-          <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <div>
-              <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white md:text-5xl">The Collection</h1>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                Showing {loading ? '...' : filteredBooks.length} premium books curated for you.
-              </p>
+        <main className="min-w-0 flex-1 px-4 py-8 md:px-8">
+          <RevealOnScroll y={14}>
+            <div className="mb-6 lg:hidden">
+              <button
+                type="button"
+                onClick={() => setIsMobileFiltersOpen(true)}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+              >
+                <Filter className="h-4 w-4" />
+                Open Filters
+              </button>
             </div>
 
-            <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
-              <div className="group relative w-full md:w-96">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary dark:text-slate-500" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by title, author, or ISBN..."
-                  className="h-11 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/25 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
+            <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+              <div>
+                <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white md:text-5xl">The Collection</h1>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                  Showing {loading ? '...' : filteredBooks.length} premium books curated for you.
+                </p>
               </div>
 
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="h-11 rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200"
-              >
-                <option value="default">Newest Arrivals</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="title">Title: A-Z</option>
-                <option value="newest">Newest First</option>
-              </select>
+              <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto">
+                <div className="group relative w-full md:w-96">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary dark:text-slate-500" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by title, author, or ISBN..."
+                    className="h-11 w-full rounded-lg border border-slate-300 bg-white pl-10 pr-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/25 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="h-11 rounded-lg border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-200"
+                >
+                  <option value="default">Newest Arrivals</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="title">Title: A-Z</option>
+                  <option value="newest">Newest First</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div className="mb-6 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-            {categoryPills.map((pill) => (
-              <button
-                key={pill.value}
-                onClick={() => setSelectedCategory(pill.value)}
-                className={`whitespace-nowrap rounded-full border px-4 py-1.5 text-sm font-semibold transition-all ${
-                  selectedCategory === pill.value
-                    ? 'border-primary bg-primary text-white shadow-lg shadow-primary/30'
-                    : 'border-slate-300 bg-white text-slate-700 hover:border-primary/40 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-white'
-                }`}
-              >
-                {pill.label}
-              </button>
-            ))}
-          </div>
-
-          {loading ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-              {[...Array(10)].map((_, i) => (
-                <BookCardSkeleton key={i} />
+            <div className="mb-6 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+              {categoryPills.map((pill) => (
+                <button
+                  key={pill.value}
+                  onClick={() => setSelectedCategory(pill.value)}
+                  className={`whitespace-nowrap rounded-full border px-4 py-1.5 text-sm font-semibold transition-all ${
+                    selectedCategory === pill.value
+                      ? 'border-primary bg-primary text-white shadow-lg shadow-primary/30'
+                      : 'border-slate-300 bg-white text-slate-700 hover:border-primary/40 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-white'
+                  }`}
+                >
+                  {pill.label}
+                </button>
               ))}
             </div>
+          </RevealOnScroll>
+
+          {loading ? (
+            <RevealOnScroll>
+              <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                {[...Array(10)].map((_, i) => (
+                  <BookCardSkeleton key={i} />
+                ))}
+              </div>
+            </RevealOnScroll>
           ) : filteredBooks.length === 0 ? (
-            <div className="rounded-xl border border-slate-200 bg-white/90 py-16 text-center dark:border-slate-800 dark:bg-slate-900/50">
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white">No books found</h3>
-              <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Try adjusting search or filters.</p>
-              <button onClick={clearFilters} className="btn-primary mt-5 text-sm">
-                Clear Filters
-              </button>
-            </div>
+            <RevealOnScroll>
+              <div className="rounded-xl border border-slate-200 bg-white/90 py-16 text-center dark:border-slate-800 dark:bg-slate-900/50">
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">No books found</h3>
+                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Try adjusting search or filters.</p>
+                <button onClick={clearFilters} className="btn-primary mt-5 text-sm">
+                  Clear Filters
+                </button>
+              </div>
+            </RevealOnScroll>
           ) : (
             <>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {paginatedBooks.map((book, index) => (
-                  <Link
-                  key={book._id}
-                  to={`/books/${book._id}`}
-                  className="group animate-fade-in relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-900/70"
-                  style={{ animationDelay: `${index * 80}ms` }}
-                >
-                    <div className="relative aspect-[2/3] overflow-hidden bg-slate-200 dark:bg-slate-800">
-                      <img
-                        src={book.image}
-                        alt={book.title}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <button
-                        type="button"
-                        onClick={(e) => handleAddToWishlist(book._id, e)}
-                        className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-primary"
-                        aria-label="Save"
-                        title="Save to wishlist"
-                      >
-                        <Heart className={`h-4 w-4 ${savingWishlistId === book._id ? 'animate-pulse' : ''}`} />
-                      </button>
+                  <RevealOnScroll key={book._id} delay={index * 70}>
+                    <Link
+                      to={`/books/${book._id}`}
+                      className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white/90 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 dark:border-slate-800 dark:bg-slate-900/70"
+                    >
+                      <div className="relative aspect-[2/3] overflow-hidden bg-slate-200 dark:bg-slate-800">
+                        <img
+                          src={book.image}
+                          alt={book.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <button
+                          type="button"
+                          onClick={(e) => handleAddToWishlist(book._id, e)}
+                          className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition-colors hover:bg-primary"
+                          aria-label="Save"
+                          title="Save to wishlist"
+                        >
+                          <Heart className={`h-4 w-4 ${savingWishlistId === book._id ? 'animate-pulse' : ''}`} />
+                        </button>
 
-                      {index === 2 && (
-                        <span className="absolute left-3 top-3 rounded bg-amber-500 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-black">
-                          Bestseller
-                        </span>
-                      )}
+                        {index === 2 && (
+                          <span className="absolute left-3 top-3 rounded bg-amber-500 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-black">
+                            Bestseller
+                          </span>
+                        )}
 
-                      <div className="absolute bottom-0 left-0 right-0 translate-y-full bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 transition-transform duration-300 group-hover:translate-y-0">
-                        <div className="rounded-lg bg-primary py-2 text-center text-sm font-bold text-white">View Details</div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-1 flex-col gap-2 p-4">
-                      <h3 className="line-clamp-2 text-xl font-bold leading-tight text-slate-900 transition-colors group-hover:text-primary dark:text-white">
-                        {book.title}
-                      </h3>
-                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{book.author}</p>
-                      <div className="mt-auto flex items-center justify-between border-t border-slate-200 pt-3 dark:border-slate-700/60">
-                        <div className="inline-flex items-center gap-1 text-amber-400">
-                          <Star className="h-4 w-4 fill-current" />
-                          <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">{(book.rating || 4.8).toFixed(1)}</span>
-                          <span className="text-xs text-slate-500">({(book.reviews || 1200).toLocaleString()})</span>
+                        <div className="absolute bottom-0 left-0 right-0 translate-y-full bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 transition-transform duration-300 group-hover:translate-y-0">
+                          <div className="rounded-lg bg-primary py-2 text-center text-sm font-bold text-white">View Details</div>
                         </div>
-                        <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">${Number(book.price || 0).toFixed(2)}</p>
                       </div>
-                    </div>
-                  </Link>
+
+                      <div className="flex flex-1 flex-col gap-2 p-4">
+                        <h3 className="line-clamp-2 text-xl font-bold leading-tight text-slate-900 transition-colors group-hover:text-primary dark:text-white">
+                          {book.title}
+                        </h3>
+                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{book.author}</p>
+                        <div className="mt-auto flex items-center justify-between border-t border-slate-200 pt-3 dark:border-slate-700/60">
+                          <div className="inline-flex items-center gap-1 text-amber-400">
+                            <Star className="h-4 w-4 fill-current" />
+                            <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">{(book.rating || 4.8).toFixed(1)}</span>
+                            <span className="text-xs text-slate-500">({(book.reviews || 1200).toLocaleString()})</span>
+                          </div>
+                          <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">${Number(book.price || 0).toFixed(2)}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  </RevealOnScroll>
                 ))}
               </div>
 
-              <div className="mt-10 flex items-center justify-center gap-2 text-sm">
-                <button
-                  type="button"
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="h-10 w-10 rounded border border-slate-300 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
-                >
-                  {'<'}
-                </button>
+              <RevealOnScroll>
+                <div className="mt-10 flex items-center justify-center gap-2 text-sm">
+                  <button
+                    type="button"
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="h-10 w-10 rounded border border-slate-300 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+                  >
+                    {'<'}
+                  </button>
 
-                {pageNumbers.map((page, idx) =>
-                  page === null ? (
-                    <span key={`ellipsis-${idx}`} className="px-1 text-slate-500">
-                      ...
-                    </span>
-                  ) : (
-                    <button
-                      key={page}
-                      type="button"
-                      onClick={() => goToPage(page)}
-                      className={`h-10 w-10 rounded transition-colors ${
-                        currentPage === page
-                          ? 'bg-primary font-bold text-white shadow-lg shadow-primary/30'
-                          : 'border border-slate-300 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  )
-                )}
+                  {pageNumbers.map((page, idx) =>
+                    page === null ? (
+                      <span key={`ellipsis-${idx}`} className="px-1 text-slate-500">
+                        ...
+                      </span>
+                    ) : (
+                      <button
+                        key={page}
+                        type="button"
+                        onClick={() => goToPage(page)}
+                        className={`h-10 w-10 rounded transition-colors ${
+                          currentPage === page
+                            ? 'bg-primary font-bold text-white shadow-lg shadow-primary/30'
+                            : 'border border-slate-300 text-slate-600 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    )
+                  )}
 
-                <button
-                  type="button"
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="h-10 w-10 rounded border border-slate-300 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
-                >
-                  {'>'}
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => goToPage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="h-10 w-10 rounded border border-slate-300 text-slate-500 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+                  >
+                    {'>'}
+                  </button>
+                </div>
+              </RevealOnScroll>
             </>
           )}
         </main>

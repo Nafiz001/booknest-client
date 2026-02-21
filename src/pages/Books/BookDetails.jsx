@@ -13,6 +13,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
+import RevealOnScroll from '../../components/shared/RevealOnScroll';
 
 const relatedFallbackBooks = [
   {
@@ -273,61 +274,65 @@ const BookDetails = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-100 pb-24 text-slate-900 dark:from-[#111621] dark:via-[#0b1733] dark:to-[#111621] dark:text-slate-100 lg:pb-10">
-      <main className="animate-fade-in mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-10 px-4 py-8 lg:grid-cols-12 lg:px-10">
-        <section className="lg:col-span-4 xl:col-span-3">
-          <div className="sticky top-24">
-            <div className="group relative mx-auto w-full max-w-[340px] lg:mx-0">
-              <div className="absolute -inset-1 rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 opacity-40 blur-2xl transition-opacity duration-500 group-hover:opacity-60"></div>
-              <div className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10">
-                <img
-                  src={book.image}
-                  alt={book.title}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+      <main className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-10 px-4 py-8 lg:grid-cols-12 lg:px-10">
+        <RevealOnScroll className="lg:col-span-4 xl:col-span-3" y={16}>
+          <section>
+            <div className="sticky top-24">
+              <div className="group relative mx-auto w-full max-w-[340px] lg:mx-0">
+                <div className="absolute -inset-1 rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 opacity-40 blur-2xl transition-opacity duration-500 group-hover:opacity-60"></div>
+                <div className="relative aspect-[2/3] overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/10">
+                  <img
+                    src={book.image}
+                    alt={book.title}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                </div>
+              </div>
+
+              <div className="mt-8 hidden rounded-xl border border-slate-200 bg-white/90 p-6 backdrop-blur dark:border-white/10 dark:bg-[#1a202c]/75 lg:block">
+                <div className="flex items-baseline justify-between">
+                  <span className="text-3xl font-bold text-slate-900 dark:text-white">${selectedPrice.toFixed(2)}</span>
+                  <span className="text-sm text-slate-500 line-through dark:text-slate-500">
+                    ${(selectedPrice + 8).toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-emerald-400">
+                  <CheckCircle2 className="h-4 w-4" />
+                  {book.published ? 'In Stock & Ready to Ship' : 'Currently unavailable'}
+                </div>
+
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  disabled={!book.published}
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  Order Now
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+
+                <button
+                  onClick={handleAddToWishlist}
+                  disabled={addingToWishlist}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300 disabled:opacity-60 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+                >
+                  <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-current text-rose-400' : 'text-rose-400'}`} />
+                  {addingToWishlist ? 'Adding...' : isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}
+                </button>
+
+                <div className="mt-4 border-t border-slate-200 pt-4 text-center text-xs text-slate-500 dark:border-white/10">
+                  30-Day Money Back Guarantee
+                </div>
               </div>
             </div>
+          </section>
+        </RevealOnScroll>
 
-            <div className="mt-8 hidden rounded-xl border border-slate-200 bg-white/90 p-6 backdrop-blur dark:border-white/10 dark:bg-[#1a202c]/75 lg:block">
-              <div className="flex items-baseline justify-between">
-                <span className="text-3xl font-bold text-slate-900 dark:text-white">${selectedPrice.toFixed(2)}</span>
-                <span className="text-sm text-slate-500 line-through dark:text-slate-500">
-                  ${(selectedPrice + 8).toFixed(2)}
-                </span>
-              </div>
-
-              <div className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-emerald-400">
-                <CheckCircle2 className="h-4 w-4" />
-                {book.published ? 'In Stock & Ready to Ship' : 'Currently unavailable'}
-              </div>
-
-              <button
-                onClick={() => setIsModalOpen(true)}
-                disabled={!book.published}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                Order Now
-                <ArrowRight className="h-4 w-4" />
-              </button>
-
-              <button
-                onClick={handleAddToWishlist}
-                disabled={addingToWishlist}
-                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-slate-200 px-4 py-3 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-300 disabled:opacity-60 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
-              >
-                <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-current text-rose-400' : 'text-rose-400'}`} />
-                {addingToWishlist ? 'Adding...' : isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}
-              </button>
-
-              <div className="mt-4 border-t border-slate-200 pt-4 text-center text-xs text-slate-500 dark:border-white/10">
-                30-Day Money Back Guarantee
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="flex flex-col gap-8 lg:col-span-8 xl:col-span-9">
-          <div>
+        <RevealOnScroll className="lg:col-span-8 xl:col-span-9" y={18}>
+          <section className="flex flex-col gap-8">
+            <RevealOnScroll y={14}>
+              <div>
             <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-500">
               <Link to="/" className="transition-colors hover:text-primary">
                 Home
@@ -358,65 +363,73 @@ const BookDetails = () => {
                 Share
               </button>
             </div>
-          </div>
+              </div>
+            </RevealOnScroll>
 
-          <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-            {formatOptions.map((item) => (
-              <button
-                type="button"
-                key={item.label}
-                onClick={() => setSelectedFormat(item.label)}
-                className={`min-w-[145px] rounded-xl border p-4 text-left transition-colors ${
-                  selectedFormat === item.label
-                    ? 'border-primary bg-primary/15 text-primary'
-                    : 'border-slate-300 bg-transparent text-slate-600 hover:border-slate-400 dark:border-white/10 dark:text-slate-400 dark:hover:border-white/20'
-                }`}
-              >
-                <p className="text-xs font-bold uppercase tracking-wider">{item.label}</p>
-                <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">${item.price}</p>
-              </button>
-            ))}
-          </div>
+            <RevealOnScroll delay={60} y={14}>
+              <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
+                {formatOptions.map((item) => (
+                  <button
+                    type="button"
+                    key={item.label}
+                    onClick={() => setSelectedFormat(item.label)}
+                    className={`min-w-[145px] rounded-xl border p-4 text-left transition-colors ${
+                      selectedFormat === item.label
+                        ? 'border-primary bg-primary/15 text-primary'
+                        : 'border-slate-300 bg-transparent text-slate-600 hover:border-slate-400 dark:border-white/10 dark:text-slate-400 dark:hover:border-white/20'
+                    }`}
+                  >
+                    <p className="text-xs font-bold uppercase tracking-wider">{item.label}</p>
+                    <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">${item.price}</p>
+                  </button>
+                ))}
+              </div>
+            </RevealOnScroll>
 
-          <section>
-            <h3 className="mb-4 text-lg font-bold text-slate-900 dark:text-white">About the Book</h3>
-            <div className="space-y-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">
-              <p>{book.description || 'No description available for this book.'}</p>
-              <p>
-                A thoughtful and immersive reading experience, this title continues to be one of BookNest readers&apos;
-                most recommended picks.
-              </p>
-            </div>
-          </section>
+            <RevealOnScroll delay={100} y={14}>
+              <section>
+                <h3 className="mb-4 text-lg font-bold text-slate-900 dark:text-white">About the Book</h3>
+                <div className="space-y-4 text-base leading-relaxed text-slate-600 dark:text-slate-300">
+                  <p>{book.description || 'No description available for this book.'}</p>
+                  <p>
+                    A thoughtful and immersive reading experience, this title continues to be one of BookNest readers&apos;
+                    most recommended picks.
+                  </p>
+                </div>
+              </section>
+            </RevealOnScroll>
 
-          <hr className="border-slate-200 dark:border-white/10" />
+            <hr className="border-slate-200 dark:border-white/10" />
 
-          <section className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
-            <div>
-              <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Publisher</span>
-              <span className="font-medium text-slate-900 dark:text-white">{book.publisher || 'N/A'}</span>
-            </div>
-            <div>
-              <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Release Date</span>
-              <span className="font-medium text-slate-900 dark:text-white">
-                {book.publishDate
-                  ? new Date(book.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-                  : 'N/A'}
-              </span>
-            </div>
-            <div>
-              <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Print Length</span>
-              <span className="font-medium text-slate-900 dark:text-white">{book.pages ? `${book.pages} Pages` : 'N/A'}</span>
-            </div>
-            <div>
-              <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">ISBN</span>
-              <span className="font-medium text-slate-900 dark:text-white">{book.isbn || 'N/A'}</span>
-            </div>
-          </section>
+            <RevealOnScroll delay={130} y={14}>
+              <section className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
+                <div>
+                  <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Publisher</span>
+                  <span className="font-medium text-slate-900 dark:text-white">{book.publisher || 'N/A'}</span>
+                </div>
+                <div>
+                  <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Release Date</span>
+                  <span className="font-medium text-slate-900 dark:text-white">
+                    {book.publishDate
+                      ? new Date(book.publishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+                      : 'N/A'}
+                  </span>
+                </div>
+                <div>
+                  <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">Print Length</span>
+                  <span className="font-medium text-slate-900 dark:text-white">{book.pages ? `${book.pages} Pages` : 'N/A'}</span>
+                </div>
+                <div>
+                  <span className="mb-1 block text-xs font-bold uppercase tracking-wider text-slate-500">ISBN</span>
+                  <span className="font-medium text-slate-900 dark:text-white">{book.isbn || 'N/A'}</span>
+                </div>
+              </section>
+            </RevealOnScroll>
 
-          <hr className="border-slate-200 dark:border-white/10" />
+            <hr className="border-slate-200 dark:border-white/10" />
 
-          <section className="flex flex-col gap-6">
+            <RevealOnScroll delay={170} y={14}>
+              <section className="flex flex-col gap-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Community Reviews</h3>
               {user && hasOrdered && !showReviewForm && (
@@ -517,25 +530,29 @@ const BookDetails = () => {
                 ))}
               </div>
             )}
-          </section>
+              </section>
+            </RevealOnScroll>
 
-          <section className="mt-2">
-            <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">People also liked</h3>
-            </div>
-            <div className="flex gap-6 overflow-x-auto pb-2 no-scrollbar">
-              {relatedFallbackBooks.map((item) => (
-                <div key={item.title} className="min-w-[145px] cursor-pointer">
-                  <div className="aspect-[2/3] overflow-hidden rounded-lg shadow-lg">
-                    <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
-                  </div>
-                  <h4 className="mt-3 truncate text-sm font-bold text-slate-900 dark:text-white">{item.title}</h4>
-                  <p className="truncate text-xs text-slate-500">{item.author}</p>
+            <RevealOnScroll delay={210} y={14}>
+              <section className="mt-2">
+                <div className="mb-4 flex items-center justify-between">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">People also liked</h3>
                 </div>
-              ))}
-            </div>
+                <div className="flex gap-6 overflow-x-auto pb-2 no-scrollbar">
+                  {relatedFallbackBooks.map((item) => (
+                    <div key={item.title} className="min-w-[145px] cursor-pointer">
+                      <div className="aspect-[2/3] overflow-hidden rounded-lg shadow-lg">
+                        <img src={item.image} alt={item.title} className="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
+                      </div>
+                      <h4 className="mt-3 truncate text-sm font-bold text-slate-900 dark:text-white">{item.title}</h4>
+                      <p className="truncate text-xs text-slate-500">{item.author}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </RevealOnScroll>
           </section>
-        </section>
+        </RevealOnScroll>
       </main>
 
       <div className="fixed bottom-0 left-0 z-40 w-full border-t border-slate-200 bg-white/95 p-4 backdrop-blur dark:border-white/10 dark:bg-[#1a202c]/90 lg:hidden">
