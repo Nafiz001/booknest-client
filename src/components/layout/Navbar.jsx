@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import {
   Menu,
@@ -12,13 +12,23 @@ import {
   LogIn,
   UserPlus,
   Search,
+  Loader2,
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../utils/api';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchContainerRef = useRef(null);
+  const mobileSearchRef = useRef(null);
   const { theme, toggleTheme } = useTheme();
   const { user, loading, logOut } = useAuth();
 
@@ -32,6 +42,86 @@ const Navbar = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isProfileOpen]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery.trim());
+    }, 350);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (debouncedQuery.length < 2) {
+        setSearchResults([]);
+        setIsSearching(false);
+        return;
+      }
+
+      try {
+        setIsSearching(true);
+        const response = await api.get(`/books?search=${encodeURIComponent(debouncedQuery)}`);
+        const books = Array.isArray(response.data?.books) ? response.data.books : [];
+        setSearchResults(books.slice(0, 6));
+      } catch (error) {
+        console.error('Navbar search failed:', error);
+        setSearchResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    fetchSearchResults();
+  }, [debouncedQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const clickedOutsideDesktopSearch =
+        searchContainerRef.current && !searchContainerRef.current.contains(event.target);
+      const clickedOutsideMobileSearch =
+        mobileSearchRef.current && !mobileSearchRef.current.contains(event.target);
+
+      if (clickedOutsideDesktopSearch && clickedOutsideMobileSearch) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setIsSearchOpen(false);
+        setIsMobileSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
+  const closeSearchDropdowns = () => {
+    setIsSearchOpen(false);
+    setIsMobileSearchOpen(false);
+  };
+
+  const clearSearchState = () => {
+    setSearchQuery('');
+    setDebouncedQuery('');
+    setSearchResults([]);
+    closeSearchDropdowns();
+  };
+
+  const handleSearchInputChange = (value) => {
+    setSearchQuery(value);
+    setIsSearchOpen(true);
+  };
+
+  const handleResultClick = () => {
+    clearSearchState();
+  };
 
   const navLinks = [
     { name: 'Home', path: '/', icon: Home },
@@ -81,14 +171,100 @@ const Navbar = () => {
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="group relative hidden lg:block">
+            <div ref={searchContainerRef} className="group relative hidden lg:block">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-primary" />
               <input
                 type="text"
                 placeholder="Search books..."
+                value={searchQuery}
+                onChange={(e) => handleSearchInputChange(e.target.value)}
+                onFocus={() => setIsSearchOpen(true)}
                 className="h-10 w-56 rounded-full border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/25 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
               />
+
+              {isSearchOpen && (
+                <div className="absolute right-0 z-50 mt-2 w-96 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-surface-dark dark:shadow-black/40">
+                  <div className="border-b border-slate-200 px-4 py-3 dark:border-slate-700">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                      Search Results
+                    </p>
+                  </div>
+
+                  <div className="max-h-96 overflow-y-auto">
+                    {searchQuery.trim().length < 2 && (
+                      <p className="px-4 py-6 text-sm text-slate-500 dark:text-slate-400">
+                        Type at least 2 characters to search books.
+                      </p>
+                    )}
+
+                    {searchQuery.trim().length >= 2 && isSearching && (
+                      <div className="flex items-center gap-2 px-4 py-6 text-sm text-slate-500 dark:text-slate-400">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Searching books...
+                      </div>
+                    )}
+
+                    {searchQuery.trim().length >= 2 && !isSearching && searchResults.length === 0 && (
+                      <p className="px-4 py-6 text-sm text-slate-500 dark:text-slate-400">
+                        No matching books found.
+                      </p>
+                    )}
+
+                    {searchResults.map((book) => (
+                      <Link
+                        key={book._id}
+                        to={`/books/${book._id}`}
+                        onClick={handleResultClick}
+                        className="flex items-center gap-3 border-b border-slate-100 px-4 py-3 transition-colors hover:bg-slate-50 last:border-b-0 dark:border-slate-700/70 dark:hover:bg-slate-800"
+                      >
+                        <img
+                          src={book.image}
+                          alt={book.title}
+                          className="h-14 w-10 rounded object-cover"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{book.title}</p>
+                          <p className="truncate text-xs text-slate-500 dark:text-slate-400">by {book.author}</p>
+                          <div className="mt-1 flex items-center gap-2">
+                            {book.category && (
+                              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                                {book.category}
+                              </span>
+                            )}
+                            <span className="text-xs font-semibold text-primary">${book.price}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+
+                  {searchResults.length > 0 && (
+                    <div className="border-t border-slate-200 px-4 py-2 dark:border-slate-700">
+                      <Link
+                        to="/all-books"
+                        onClick={closeSearchDropdowns}
+                        className="text-xs font-semibold text-primary hover:underline"
+                      >
+                        View full catalog
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
+
+            <button
+              onClick={() => {
+                setIsMobileSearchOpen(true);
+                setIsSearchOpen(true);
+                setIsMenuOpen(false);
+                setIsProfileOpen(false);
+              }}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-700 transition-colors hover:bg-slate-100 lg:hidden dark:text-slate-200 dark:hover:bg-slate-800"
+              aria-label="Open search"
+            >
+              <Search className="h-5 w-5" />
+            </button>
 
             <button
               onClick={toggleTheme}
@@ -212,6 +388,93 @@ const Navbar = () => {
           </div>
         )}
       </div>
+
+      {isMobileSearchOpen && (
+        <div className="fixed inset-0 z-[60] bg-black/45 px-4 pt-24 lg:hidden">
+          <div ref={mobileSearchRef} className="mx-auto max-w-lg overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-surface-dark">
+            <div className="border-b border-slate-200 p-3 dark:border-slate-700">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="Search books..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearchInputChange(e.target.value)}
+                  className="h-11 w-full rounded-lg border border-slate-200 bg-white pl-10 pr-10 text-sm text-slate-700 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/25 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                />
+                <button
+                  onClick={() => {
+                    if (searchQuery) {
+                      setSearchQuery('');
+                      setDebouncedQuery('');
+                      setSearchResults([]);
+                    } else {
+                      closeSearchDropdowns();
+                    }
+                  }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  aria-label={searchQuery ? 'Clear search' : 'Close search'}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="max-h-[60vh] overflow-y-auto">
+              {searchQuery.trim().length < 2 && (
+                <p className="px-4 py-6 text-sm text-slate-500 dark:text-slate-400">
+                  Type at least 2 characters to search books.
+                </p>
+              )}
+
+              {searchQuery.trim().length >= 2 && isSearching && (
+                <div className="flex items-center gap-2 px-4 py-6 text-sm text-slate-500 dark:text-slate-400">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Searching books...
+                </div>
+              )}
+
+              {searchQuery.trim().length >= 2 && !isSearching && searchResults.length === 0 && (
+                <p className="px-4 py-6 text-sm text-slate-500 dark:text-slate-400">
+                  No matching books found.
+                </p>
+              )}
+
+              {searchResults.map((book) => (
+                <Link
+                  key={book._id}
+                  to={`/books/${book._id}`}
+                  onClick={handleResultClick}
+                  className="flex items-center gap-3 border-b border-slate-100 px-4 py-3 transition-colors hover:bg-slate-50 last:border-b-0 dark:border-slate-700/70 dark:hover:bg-slate-800"
+                >
+                  <img src={book.image} alt={book.title} className="h-14 w-10 rounded object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{book.title}</p>
+                    <p className="truncate text-xs text-slate-500 dark:text-slate-400">by {book.author}</p>
+                    <div className="mt-1 flex items-center gap-2">
+                      {book.category && (
+                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                          {book.category}
+                        </span>
+                      )}
+                      <span className="text-xs font-semibold text-primary">${book.price}</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {searchResults.length > 0 && (
+              <div className="border-t border-slate-200 px-4 py-2 dark:border-slate-700">
+                <Link to="/all-books" onClick={closeSearchDropdowns} className="text-xs font-semibold text-primary hover:underline">
+                  View full catalog
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };
