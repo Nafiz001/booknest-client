@@ -143,14 +143,14 @@ const Navbar = () => {
   const hoverClass = isStitchHeader ? 'hover:text-slate-900 dark:hover:text-white' : 'hover:text-slate-900 dark:hover:text-white';
 
   return (
-    <header className={`sticky top-0 z-50 border-b backdrop-blur-xl ${headerClass}`}>
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white">
+    <header className={`sticky top-0 z-50 overflow-x-clip border-b backdrop-blur-xl ${headerClass}`}>
+      <div className="mx-auto max-w-[1440px] px-3 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between gap-2 sm:gap-4">
+          <Link to="/" className="flex min-w-0 shrink items-center gap-2 sm:gap-3">
+            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-white sm:h-9 sm:w-9">
               <BookOpen className="h-5 w-5" />
             </div>
-            <p className={`text-2xl font-bold leading-none ${isStitchHeader ? 'text-slate-900 dark:text-white' : 'text-slate-900 dark:text-white'}`}>
+            <p className={`hidden truncate text-xl font-bold leading-none min-[360px]:block sm:text-2xl ${isStitchHeader ? 'text-slate-900 dark:text-white' : 'text-slate-900 dark:text-white'}`}>
               BookNest
             </p>
           </Link>
@@ -181,7 +181,7 @@ const Navbar = () => {
             })}
           </nav>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-1.5 min-[400px]:gap-2 sm:gap-3">
             <div ref={searchRef} className="relative">
               <button
                 onClick={() => {
@@ -193,7 +193,7 @@ const Navbar = () => {
                   }
                   setIsMenuOpen(false);
                 }}
-                className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors sm:h-10 sm:w-10 ${
                   isStitchHeader
                     ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
                     : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
@@ -293,7 +293,7 @@ const Navbar = () => {
               </>
             )}
 
-            <ThemeToggle className="h-10 px-2.5 sm:px-3" iconClassName="h-4 w-4" label={false} />
+            <ThemeToggle className="hidden h-9 w-9 px-0 min-[360px]:inline-flex sm:h-10 sm:w-auto sm:px-3" iconClassName="h-4 w-4" label={false} />
 
             {!loading &&
               (user ? (
@@ -357,7 +357,7 @@ const Navbar = () => {
               ) : (
                 <>
                   {isStitchHeader ? (
-                    <Link to="/login" className="inline-flex rounded-full bg-primary px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-primary-dark">
+                    <Link to="/login" className="inline-flex rounded-full bg-primary px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-primary-dark min-[380px]:px-4 min-[380px]:text-sm sm:px-5">
                       Login
                     </Link>
                   ) : (
@@ -377,7 +377,7 @@ const Navbar = () => {
 
             <button
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              className={`inline-flex h-10 w-10 items-center justify-center rounded-lg transition-colors md:hidden ${
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors md:hidden sm:h-10 sm:w-10 ${
                 isStitchHeader
                   ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'
                   : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800'
